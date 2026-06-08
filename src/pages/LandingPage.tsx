@@ -17,11 +17,8 @@ import {
   Zap,
   Lock,
   Camera,
-  Sparkles,
-  ChevronRight,
   HeartPulse,
-  BrainCircuit,
-  MessageSquare
+  BrainCircuit
 } from 'lucide-react';
 
 const LandingPage: React.FC = () => {
@@ -31,8 +28,10 @@ const LandingPage: React.FC = () => {
   const navigate = useNavigate();
 
   // Scroll Reveal Observer
-  const [sectionsRevealed, setSectionsRevealed] = useState<Record<string, boolean>>({});
-  
+  const statsRef = useRef<HTMLDivElement>(null);
+  const howItWorksRef = useRef<HTMLDivElement>(null);
+  const [howItWorksRevealed, setHowItWorksRevealed] = useState(false);
+
   // Stats counters
   const [statsTriggered, setStatsTriggered] = useState(false);
   const [statPredictors, setStatPredictors] = useState(0);
@@ -40,9 +39,6 @@ const LandingPage: React.FC = () => {
   const [statScanners, setStatScanners] = useState(0);
   const [statLanguages, setStatLanguages] = useState(0);
 
-  const statsRef = useRef<HTMLDivElement>(null);
-  const howItWorksRef = useRef<HTMLDivElement>(null);
-  const [howItWorksRevealed, setHowItWorksRevealed] = useState(false);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -50,7 +46,6 @@ const LandingPage: React.FC = () => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const id = entry.target.id;
-            setSectionsRevealed(prev => ({ ...prev, [id]: true }));
             entry.target.classList.add('revealed');
             
             if (id === 'how-it-works') {
@@ -59,6 +54,7 @@ const LandingPage: React.FC = () => {
           }
         });
       },
+
       { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
     );
 
