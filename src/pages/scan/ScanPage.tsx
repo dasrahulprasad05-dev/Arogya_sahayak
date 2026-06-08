@@ -122,7 +122,7 @@ const ScanPage: React.FC = () => {
       setErrorMsg(err.message || 'Failed to submit feature vectors to cloud analyzer.');
       
       // Fallback
-      const fallbackResult = {
+      const fallbackResult: PredictionData = {
         risk: 'Insufficient Data',
         confidence: Math.round(cnnResult.score * 100),
         reasoning: [
