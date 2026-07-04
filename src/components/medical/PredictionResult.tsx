@@ -86,28 +86,25 @@ const PredictionResult: React.FC<PredictionResultProps> = ({ predictorId, data }
 
   // Animation variants — deliberate for high risk, springy for low risk
   const badgeVariant = prefersReducedMotion
-    ? { initial: {}, animate: {} }
+    ? { initial: { opacity: 1 }, animate: { opacity: 1 } }
     : isHighRisk
       ? { initial: { opacity: 0 }, animate: { opacity: 1, transition: { duration: 0.6 } } }
-      : { initial: { scale: 0, opacity: 0 }, animate: { scale: 1, opacity: 1, transition: { type: 'spring', stiffness: 300, damping: 20 } } };
-
-  const barVariant = prefersReducedMotion
-    ? {}
-    : { initial: { width: 0 }, animate: { width: `${data.confidence}%`, transition: { duration: 0.6, delay: 0.15, ease: 'easeOut' } } };
+      : { initial: { scale: 0, opacity: 0 }, animate: { scale: 1, opacity: 1, transition: { type: 'spring' as const, stiffness: 300, damping: 20 } } };
 
   const staggerContainer = {
+    initial: {},
     animate: {
       transition: { staggerChildren: prefersReducedMotion ? 0 : 0.06, delayChildren: prefersReducedMotion ? 0 : 0.3 }
     }
   };
 
   const staggerItem = prefersReducedMotion
-    ? {}
+    ? { initial: { opacity: 1 }, animate: { opacity: 1 } }
     : { initial: { opacity: 0, y: 6 }, animate: { opacity: 1, y: 0, transition: { duration: 0.25 } } };
 
-  const slideUp = prefersReducedMotion
+  const slideUpProps = prefersReducedMotion
     ? {}
-    : { initial: { opacity: 0, y: 12 }, animate: { opacity: 1, y: 0, transition: { duration: 0.35, delay: 0.6 } } };
+    : { initial: { opacity: 0, y: 12 } as const, animate: { opacity: 1, y: 0 } as const, transition: { duration: 0.35, delay: 0.6 } };
 
   return (
     <motion.div
@@ -164,7 +161,7 @@ const PredictionResult: React.FC<PredictionResultProps> = ({ predictorId, data }
       </motion.div>
 
       {/* Recommendations — 600ms: slides up */}
-      <motion.div className="space-y-3" {...slideUp}>
+      <motion.div className="space-y-3" {...slideUpProps}>
         <span className="text-xs font-bold text-foreground block uppercase tracking-wide flex items-center gap-1.5">
           <Sparkles className="w-4 h-4 text-amber-500 shrink-0" />
           <span>India-Specific Actionable Recommendations:</span>

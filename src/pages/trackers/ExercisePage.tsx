@@ -5,7 +5,6 @@ import { useHealthDispatch } from '../../context/HealthDispatchContext';
 import { 
   Info, 
   Flame, 
-  AlertCircle, 
   Clock, 
   Trophy, 
   Play, 
@@ -14,11 +13,9 @@ import {
   X, 
   Search, 
   Sparkles, 
-  ChevronRight, 
   Check,
   CheckCircle,
-  Activity,
-  Heart
+  Activity
 } from 'lucide-react';
 import { showToast } from '../../utils/toast';
 
@@ -1471,7 +1468,7 @@ const ExercisePage: React.FC = () => {
 
   // Timer Effect
   useEffect(() => {
-    let interval: NodeJS.Timeout | null = null;
+    let interval: ReturnType<typeof setInterval> | null = null;
     if (isTimerRunning && timerSeconds > 0) {
       interval = setInterval(() => {
         setTimerSeconds(prev => {
