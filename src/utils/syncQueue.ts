@@ -6,14 +6,13 @@ export interface SyncItem {
   value: any;
   /** When the event actually happened (client timestamp, preserved across offline) */
   logged_at: string;
-  /** @deprecated — kept for backward compat with old local history entries */
-  created_at?: string;
+  /** When the item was created/enqueued (always set) */
+  created_at: string;
   user_id: string;
 }
 
 const QUEUE_KEY = 'arogya_sync_queue';
 const LOCAL_HISTORY_KEY = 'arogya_local_history';
-const BACKOFF_KEY = 'arogya_sync_backoff';
 
 // --- Backoff state ---
 let currentBackoffMs = 0;
