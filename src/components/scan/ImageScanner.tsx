@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { loadMobileNetModel, extractFeatures } from '../../lib/cnn/mobilenet';
 import { Upload, RefreshCw, ShieldAlert, Sparkles, Lock } from 'lucide-react';
 
@@ -111,27 +111,53 @@ const ImageScanner: React.FC<ImageScannerProps> = ({
     }
   };
 
+  // Model download stage label
+  const stageLabel = useMemo(() => {
+    if (modelProgress < 30) return 'Downloading TensorFlow.js engine...';
+    if (modelProgress < 50) return 'Preparing WebGL backend...';
+    if (modelProgress < 70) return 'Loading MobileNetV2 weights...';
+    if (modelProgress < 100) return 'Warming up classifier...';
+    return 'Ready!';
+  }, [modelProgress]);
+
   return (
     <div className="bg-card/40 border border-slate-800/80 rounded-2xl p-6 shadow-xl backdrop-blur-md space-y-6">
       
       {/* 1. Model Loading Progress Indicator */}
       {!modelReady && (
         <div className="flex flex-col items-center justify-center p-8 text-center space-y-4 border border-slate-800/50 bg-slate-900/30 rounded-xl backdrop-blur-sm">
-          <RefreshCw className={`w-8 h-8 ${textClass} animate-spin`} />
+          {/* Circular progress */}
+          <div className="relative w-20 h-20">
+            <svg className="w-full h-full" style={{ transform: 'rotate(-90deg)' }}>
+              <circle
+                cx="40" cy="40" r="34"
+                fill="transparent"
+                stroke="currentColor"
+                className="text-slate-800"
+                strokeWidth="5"
+              />
+              <circle
+                cx="40" cy="40" r="34"
+                fill="transparent"
+                strokeWidth="5"
+                strokeLinecap="round"
+                strokeDasharray={213.6}
+                strokeDashoffset={213.6 - (213.6 * modelProgress) / 100}
+                style={{ 
+                  stroke: `rgb(${rgb})`,
+                  transition: 'stroke-dashoffset 0.3s ease',
+                  filter: `drop-shadow(0 0 6px rgba(${rgb}, 0.5))`
+                }}
+              />
+            </svg>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="font-mono text-sm font-bold text-white">{modelProgress}%</span>
+            </div>
+          </div>
           <div>
-            <span className="font-bold text-sm text-white block">Initializing On-Device CNN...</span>
-            <p className="text-[10px] text-slate-400 mt-1">Downloading MobileNetV2 parameters directly to browser cache.</p>
+            <span className="font-bold text-sm text-white block">{stageLabel}</span>
+            <p className="text-[10px] text-slate-400 mt-1">MobileNetV2 (~17MB) caches in browser for offline use.</p>
           </div>
-          <div className="w-full max-w-xs h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-850">
-            <div 
-              className="h-full bg-gradient-to-r transition-all duration-300"
-              style={{ 
-                width: `${modelProgress}%`,
-                backgroundImage: `linear-gradient(to right, rgb(${rgb}), #a855f7)` 
-              }}
-            ></div>
-          </div>
-          <span className="font-mono text-xs font-bold text-white">{modelProgress}%</span>
         </div>
       )}
 
@@ -202,11 +228,20 @@ const ImageScanner: React.FC<ImageScannerProps> = ({
               </div>
             )}
 
-            {/* Spinner Overlay during prediction */}
+            {/* Spinner Overlay during prediction — scanning line sweep */}
             {processing && (
               <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm flex flex-col items-center justify-center text-white text-xs font-bold gap-3">
+                {/* Scanning sweep line */}
+                <div 
+                  className="absolute left-0 right-0 h-0.5 animate-scan-sweep"
+                  style={{ 
+                    background: `linear-gradient(90deg, transparent, rgb(${rgb}), transparent)`,
+                    boxShadow: `0 0 12px rgb(${rgb})`
+                  }}
+                />
                 <RefreshCw className={`w-8 h-8 ${textClass} animate-spin`} />
-                <span className="tracking-wide text-slate-200">Running On-Device classification...</span>
+                <span className="tracking-wide text-slate-200">Analyzing image features...</span>
+                <span className="text-[10px] text-slate-400">Running 1024-dim feature extraction</span>
               </div>
             )}
           </div>

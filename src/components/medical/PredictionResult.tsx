@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
 import { useHealthDispatch } from '../../context/HealthDispatchContext';
 import { PhoneCall, ShieldAlert, Sparkles, CheckCircle, Save } from 'lucide-react';
@@ -21,8 +22,12 @@ interface PredictionResultProps {
 
 const PredictionResult: React.FC<PredictionResultProps> = ({ predictorId, data }) => {
   const { t, formatNumber } = useLanguage();
-  const { logSymptom } = useHealthDispatch(); // we can reuse logSymptom as a generic log dispatcher or write logs
+  const { logSymptom } = useHealthDispatch();
   const [saved, setSaved] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
+
+  // For High/Critical: use slow, deliberate animations — no bounce/spring
+  const isHighRisk = data.risk === 'High' || data.risk === 'Critical';
 
   const getRiskColors = (risk: string) => {
     switch (risk) {
@@ -30,31 +35,36 @@ const PredictionResult: React.FC<PredictionResultProps> = ({ predictorId, data }
         return {
           bg: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400',
           bar: 'bg-emerald-500',
-          label: 'Low Risk'
+          label: 'Low Risk',
+          border: 'border-l-emerald-500'
         };
       case 'Moderate':
         return {
           bg: 'bg-amber-500/10 border-amber-500/20 text-amber-600 dark:text-amber-400',
           bar: 'bg-amber-500',
-          label: 'Moderate Risk'
+          label: 'Moderate Risk',
+          border: 'border-l-amber-500'
         };
       case 'High':
         return {
           bg: 'bg-rose-500/10 border-rose-500/20 text-rose-600 dark:text-rose-400',
           bar: 'bg-rose-500',
-          label: 'High Risk'
+          label: 'High Risk',
+          border: 'border-l-rose-500'
         };
       case 'Critical':
         return {
-          bg: 'bg-red-600/10 border-red-600/20 text-red-600 dark:text-red-400 animate-pulse',
+          bg: 'bg-red-600/10 border-red-600/20 text-red-600 dark:text-red-400',
           bar: 'bg-red-600',
-          label: 'Critical Risk'
+          label: 'Critical Risk',
+          border: 'border-l-red-600'
         };
       default:
         return {
           bg: 'bg-muted border-border text-muted-foreground',
           bar: 'bg-muted-foreground/30',
-          label: 'Insufficient Data'
+          label: 'Insufficient Data',
+          border: 'border-l-border'
         };
     }
   };
@@ -62,8 +72,6 @@ const PredictionResult: React.FC<PredictionResultProps> = ({ predictorId, data }
   const colors = getRiskColors(data.risk);
 
   const handleSaveToHistory = () => {
-    // Reuse dispatch to write an AI history log entry
-    // In our HealthDispatchContext, we log AI predictions as generic or symptom logs
     logSymptom([`${predictorId.toUpperCase()} Prediction`], {
       risk: data.risk,
       confidence: data.confidence,
@@ -76,50 +84,87 @@ const PredictionResult: React.FC<PredictionResultProps> = ({ predictorId, data }
 
   const showSos = data.risk === 'High' || data.risk === 'Critical' || data.urgency === 'emergency' || data.urgency === 'urgent';
 
+  // Animation variants — deliberate for high risk, springy for low risk
+  const badgeVariant = prefersReducedMotion
+    ? { initial: {}, animate: {} }
+    : isHighRisk
+      ? { initial: { opacity: 0 }, animate: { opacity: 1, transition: { duration: 0.6 } } }
+      : { initial: { scale: 0, opacity: 0 }, animate: { scale: 1, opacity: 1, transition: { type: 'spring', stiffness: 300, damping: 20 } } };
+
+  const barVariant = prefersReducedMotion
+    ? {}
+    : { initial: { width: 0 }, animate: { width: `${data.confidence}%`, transition: { duration: 0.6, delay: 0.15, ease: 'easeOut' } } };
+
+  const staggerContainer = {
+    animate: {
+      transition: { staggerChildren: prefersReducedMotion ? 0 : 0.06, delayChildren: prefersReducedMotion ? 0 : 0.3 }
+    }
+  };
+
+  const staggerItem = prefersReducedMotion
+    ? {}
+    : { initial: { opacity: 0, y: 6 }, animate: { opacity: 1, y: 0, transition: { duration: 0.25 } } };
+
+  const slideUp = prefersReducedMotion
+    ? {}
+    : { initial: { opacity: 0, y: 12 }, animate: { opacity: 1, y: 0, transition: { duration: 0.35, delay: 0.6 } } };
+
   return (
-    <div className="bg-card border border-border rounded-2xl shadow-lg p-6 glass space-y-6">
+    <motion.div
+      className={`bg-card border rounded-2xl shadow-lg p-6 glass space-y-6 ${isHighRisk ? `border-l-4 ${colors.border} border-border` : 'border-border'}`}
+      initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: isHighRisk ? 0.5 : 0.3, ease: 'easeOut' }}
+    >
       
-      {/* Header and Risk Badge */}
+      {/* Header and Risk Badge — 0ms: badge scales in */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-4">
         <div>
           <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">Screening Result Indicator</span>
           <h3 className="font-heading font-extrabold text-lg text-foreground mt-0.5">AI Preventive Risk Report</h3>
         </div>
         
-        <span className={`px-4 py-1.5 border rounded-xl text-xs font-extrabold uppercase tracking-wide shrink-0 ${colors.bg}`}>
+        <motion.span
+          className={`px-4 py-1.5 border rounded-xl text-xs font-extrabold uppercase tracking-wide shrink-0 ${colors.bg}`}
+          {...badgeVariant}
+        >
           {colors.label}
-        </span>
+        </motion.span>
       </div>
 
-      {/* Confidence gauge bar */}
+      {/* Confidence gauge bar — 150ms: fills left-to-right */}
       <div className="space-y-2">
         <div className="flex justify-between items-center text-xs font-semibold">
           <span className="text-muted-foreground">Predictive Confidence Index:</span>
           <span className="font-mono text-foreground font-bold">{formatNumber(data.confidence)}%</span>
         </div>
         <div className="w-full h-3 bg-muted rounded-full overflow-hidden border border-border/40">
-          <div 
-            className={`h-full transition-all duration-1000 ease-out ${colors.bar}`}
-            style={{ width: `${data.confidence}%` }}
-          ></div>
+          <motion.div 
+            className={`h-full ${colors.bar}`}
+            initial={{ width: 0 }}
+            animate={{ width: `${data.confidence}%` }}
+            transition={{ duration: 0.6, delay: prefersReducedMotion ? 0 : 0.15, ease: 'easeOut' }}
+          />
         </div>
       </div>
 
-      {/* Reasoning List */}
-      <div className="space-y-3">
+      {/* Reasoning List — 300ms: staggered 60ms apart */}
+      <motion.div className="space-y-3" variants={staggerContainer} initial="initial" animate="animate">
         <span className="text-xs font-bold text-foreground block uppercase tracking-wide flex items-center gap-1.5">
           <ShieldAlert className="w-4 h-4 text-primary shrink-0" />
           <span>Reasoning Indices (Citing patient inputs):</span>
         </span>
         <ul className="space-y-2 pl-4 text-xs text-muted-foreground leading-relaxed list-disc">
           {data.reasoning.map((reason, idx) => (
-            <li key={idx} className="break-words font-medium">{reason}</li>
+            <motion.li key={idx} className="break-words font-medium" variants={staggerItem}>
+              {reason}
+            </motion.li>
           ))}
         </ul>
-      </div>
+      </motion.div>
 
-      {/* Recommendations */}
-      <div className="space-y-3">
+      {/* Recommendations — 600ms: slides up */}
+      <motion.div className="space-y-3" {...slideUp}>
         <span className="text-xs font-bold text-foreground block uppercase tracking-wide flex items-center gap-1.5">
           <Sparkles className="w-4 h-4 text-amber-500 shrink-0" />
           <span>India-Specific Actionable Recommendations:</span>
@@ -129,7 +174,7 @@ const PredictionResult: React.FC<PredictionResultProps> = ({ predictorId, data }
             <li key={idx} className="break-words font-medium">{rec}</li>
           ))}
         </ul>
-      </div>
+      </motion.div>
 
       {/* non-dismissible screening disclaimer in active language */}
       <div className="p-4 bg-muted/40 border border-border rounded-xl flex items-start gap-2.5">
@@ -145,8 +190,9 @@ const PredictionResult: React.FC<PredictionResultProps> = ({ predictorId, data }
           <a
             href="tel:108"
             className="flex-1 bg-rose-600 hover:bg-rose-700 text-white font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-rose-500/20 transition-all text-sm touch-target"
+            style={isHighRisk ? { animation: 'pulse 2s ease-in-out infinite' } : {}}
           >
-            <PhoneCall className="w-4 h-4 animate-bounce" />
+            <PhoneCall className="w-4 h-4" />
             <span>Emergency SOS (108)</span>
           </a>
         )}
@@ -174,7 +220,7 @@ const PredictionResult: React.FC<PredictionResultProps> = ({ predictorId, data }
         </button>
       </div>
 
-    </div>
+    </motion.div>
   );
 };
 

@@ -14,7 +14,10 @@ interface AuthContextProps {
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
-const mockUser: User = {
+// 🔒 PRODUCTION SAFETY: Mock data only exists in DEV builds.
+// Vite tree-shakes `import.meta.env.DEV` branches in production,
+// ensuring no auth backdoor ships to prod.
+const mockUser: User | null = import.meta.env.DEV ? {
   id: '00000000-0000-0000-0000-000000000000',
   app_metadata: {},
   user_metadata: {
@@ -27,15 +30,15 @@ const mockUser: User = {
   created_at: new Date().toISOString(),
   role: 'authenticated',
   updated_at: new Date().toISOString()
-};
+} : null;
 
-const mockSession: Session = {
+const mockSession: Session | null = import.meta.env.DEV && mockUser ? {
   access_token: 'mock-access-token',
   token_type: 'bearer',
   expires_in: 3600,
   refresh_token: 'mock-refresh-token',
   user: mockUser
-};
+} : null;
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);

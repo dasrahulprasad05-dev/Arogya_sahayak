@@ -1,0 +1,44 @@
+# ============================================
+# Keep Supabase Free Tier Alive
+# ============================================
+# Supabase pauses free-tier projects after 7 days of inactivity.
+# This workflow pings the database every 4 days to prevent that.
+#
+# SETUP (one-time):
+#   1. Go to your GitHub repo → Settings → Secrets → Actions
+#   2. Add these 2 secrets:
+#      - SUPABASE_URL        = https://reoskksryeqgehisaaho.supabase.co
+#      - SUPABASE_ANON_KEY   = your anon key from .env
+#   3. Push this file. Done!
+
+name: Keep Supabase Alive
+
+on:
+  schedule:
+    # Runs every 4 days at 06:00 UTC (11:30 AM IST)
+    - cron: '0 6 */4 * *'
+  
+  # Also allows manual trigger from GitHub Actions tab
+  workflow_dispatch:
+
+jobs:
+  ping-supabase:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase to prevent sleep
+        run: |
+          echo "🏥 Pinging Aarogya Sahayak Supabase project..."
+          
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            "${{ secrets.SUPABASE_URL }}/rest/v1/profiles?select=id&limit=1" \
+            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}")
+          
+          echo "Response status: $HTTP_STATUS"
+          
+          if [ "$HTTP_STATUS" -ge 200 ] && [ "$HTTP_STATUS" -lt 300 ]; then
+            echo "✅ Supabase is alive and responding!"
+          else
+            echo "⚠️ Supabase returned status $HTTP_STATUS — project may need manual restart at https://supabase.com/dashboard"
+            exit 1
+          fi

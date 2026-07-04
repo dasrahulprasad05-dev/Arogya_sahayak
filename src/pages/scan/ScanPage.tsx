@@ -154,6 +154,20 @@ const ScanPage: React.FC = () => {
       <div className="absolute top-[35%] right-[-10%] w-[550px] h-[550px] bg-violet-500/3 dark:bg-violet-500/10 rounded-full blur-[120px] pointer-events-none -z-10 animate-mesh-move" style={{ animationDuration: '25s', animationDelay: '-5s' }}></div>
       <div className="absolute bottom-[-10%] left-[15%] w-[500px] h-[500px] bg-cyan-500/3 dark:bg-cyan-500/10 rounded-full blur-[110px] pointer-events-none -z-10 animate-mesh-move" style={{ animationDuration: '30s', animationDelay: '-10s' }}></div>
 
+      {/* ⚠️ PROMINENT DISCLAIMER — This is NOT a diagnostic tool */}
+      <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 flex items-start gap-3">
+        <ShieldAlert className="w-6 h-6 text-amber-500 shrink-0 mt-0.5" />
+        <div>
+          <p className="text-sm font-bold text-amber-600 dark:text-amber-400">⚠️ This is NOT a medical diagnosis tool</p>
+          <p className="text-xs text-amber-600/80 dark:text-amber-400/80 leading-relaxed mt-1">
+            This scanner uses a general-purpose MobileNetV2 model (trained on everyday objects, not medical images). 
+            Results are <strong>experimental image quality assessments</strong>, not clinical diagnoses. 
+            Always consult a qualified healthcare professional. If you notice concerning symptoms, 
+            please visit your nearest Primary Health Centre (PHC).
+          </p>
+        </div>
+      </div>
+
       {/* Header Area */}
       <div className="flex items-center gap-4 animate-fade-in">
         {selectedTool && (
@@ -177,11 +191,14 @@ const ScanPage: React.FC = () => {
             <h1 className="text-3xl md:text-4xl font-extrabold font-heading tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-rose-600 via-violet-600 to-cyan-500 dark:from-rose-400 dark:via-violet-400 dark:to-cyan-400">
               {selectedTool ? selectedTool.name : t('nav.scanners')}
             </h1>
+            <span className="text-[9px] font-bold px-2 py-0.5 bg-amber-500/15 text-amber-600 dark:text-amber-400 rounded-full border border-amber-500/30 uppercase tracking-wider">
+              Experimental Preview
+            </span>
           </div>
           <p className="text-slate-500 dark:text-slate-400 text-sm max-w-2xl leading-relaxed">
             {selectedTool 
-              ? 'Run local client-side deep neural network inference on your medical image to extract features and obtain blended cloud analysis.' 
-              : 'Log raw medical scans for local CNN evaluation. Diagnostic files are triaged entirely on-device to protect patient privacy.'
+              ? 'Upload an image for on-device feature extraction. Results provide general guidance only — this is NOT a diagnosis. Please consult a doctor for clinical interpretation.' 
+              : 'Experimental image triage tools running entirely on-device. These provide general observations only and cannot replace a trained medical professional.'
             }
           </p>
         </div>
@@ -221,7 +238,7 @@ const ScanPage: React.FC = () => {
                     color: `rgb(${cfg.rgb})`
                   }}
                 >
-                  CNN • On-Device
+                  Experimental • On-Device
                 </div>
 
                 <div className="space-y-4">

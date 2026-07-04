@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 import type { Language } from '../../context/LanguageContext';
@@ -34,6 +35,8 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
   const [syncing, setSyncing] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
+  const [syncSuccess, setSyncSuccess] = useState(false);
 
   // Track connection status
   useEffect(() => {
@@ -69,8 +72,12 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
   const handleManualSync = async () => {
     if (!isOnline) return;
     setSyncing(true);
-    await triggerSync();
+    const result = await triggerSync();
     setSyncing(false);
+    if (result) {
+      setSyncSuccess(true);
+      setTimeout(() => setSyncSuccess(false), 2000);
+    }
   };
 
   const navItems = [
@@ -186,7 +193,16 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
               {isOnline ? (
                 <div className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 text-xs font-medium">
                   <Wifi className="w-4 h-4" />
-                  {syncQueueLength > 0 && (
+                  {syncSuccess ? (
+                    <motion.span
+                      className="text-emerald-500 font-bold"
+                      initial={{ scale: 0.8, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ type: 'spring', stiffness: 400 }}
+                    >
+                      ✓ Synced!
+                    </motion.span>
+                  ) : syncQueueLength > 0 ? (
                     <button 
                       onClick={handleManualSync}
                       disabled={syncing}
@@ -194,9 +210,12 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
                       title={t('state.syncing')}
                     >
                       <RefreshCw className={`w-3 h-3 ${syncing ? 'animate-spin' : ''}`} />
-                      <span>{syncQueueLength} logs pending</span>
+                      <span className="relative">
+                        {syncQueueLength} logs pending
+                        <span className="absolute -top-1 -right-2 w-2 h-2 bg-amber-500 rounded-full animate-pulse" />
+                      </span>
                     </button>
-                  )}
+                  ) : null}
                 </div>
               ) : (
                 <div className="flex items-center gap-1 text-amber-600 dark:text-amber-500 text-xs font-medium">
@@ -235,16 +254,34 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
           </div>
         </header>
 
-        {/* Offline Warning Banner */}
-        {!isOnline && (
-          <div className="bg-amber-500 text-white text-xs font-semibold py-2 px-4 text-center animate-pulse shadow-inner">
-            {t('state.offline')}
-          </div>
-        )}
+        {/* Offline Warning Banner — animated slide */}
+        <AnimatePresence>
+          {!isOnline && (
+            <motion.div
+              className="bg-amber-500 text-white text-xs font-semibold py-2 px-4 text-center shadow-inner"
+              initial={prefersReducedMotion ? false : { height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              {t('state.offline')}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-        {/* Content Body */}
+        {/* Content Body — route transition wrapper */}
         <main className="flex-1 p-4 md:p-6 overflow-y-auto max-w-7xl mx-auto w-full">
-          {children}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={location.pathname}
+              initial={prefersReducedMotion ? false : { opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={prefersReducedMotion ? undefined : { opacity: 0, y: -8 }}
+              transition={{ duration: 0.18, ease: 'easeOut' }}
+            >
+              {children}
+            </motion.div>
+          </AnimatePresence>
         </main>
       </div>
 

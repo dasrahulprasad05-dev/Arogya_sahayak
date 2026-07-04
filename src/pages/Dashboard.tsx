@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, Suspense, lazy, useMemo } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -187,8 +188,23 @@ const Dashboard: React.FC = () => {
     return 'Good Evening';
   };
 
+  const prefersReducedMotion = useReducedMotion();
+
+  // Gauge color interpolation: red(0) → amber(50) → teal(80) → emerald(100)
+  const gaugeColor = useMemo(() => {
+    if (healthScore < 30) return '#ef4444';       // red
+    if (healthScore < 50) return '#f59e0b';        // amber
+    if (healthScore < 80) return '#14b8a6';         // teal
+    return '#10b981';                               // emerald
+  }, [healthScore]);
+
   return (
-    <div className="space-y-8 animate-fade-in relative pb-12">
+    <motion.div
+      className="space-y-8 relative pb-12"
+      initial={prefersReducedMotion ? false : { opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, ease: 'easeOut' }}
+    >
       {/* Background drifting blobs */}
       <div className="absolute top-[-10%] left-[-15%] w-[450px] h-[450px] bg-cyan-500/3 dark:bg-cyan-500/10 rounded-full blur-[100px] pointer-events-none -z-10 animate-mesh-move"></div>
       <div className="absolute top-[35%] right-[-10%] w-[550px] h-[550px] bg-purple-500/3 dark:bg-purple-500/10 rounded-full blur-[120px] pointer-events-none -z-10 animate-mesh-move" style={{ animationDuration: '25s', animationDelay: '-5s' }}></div>
@@ -219,10 +235,10 @@ const Dashboard: React.FC = () => {
           <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-2xl -z-10"></div>
           
           <div className="relative w-36 h-36 flex items-center justify-center animate-float-slow">
-            <svg className="w-full h-full transform -rotate-90">
+            <svg className="w-full h-full health-gauge-ring">
               <defs>
                 <linearGradient id="healthScoreGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#06b6d4" />
+                  <stop offset="0%" stopColor={gaugeColor} />
                   <stop offset="100%" stopColor="#8b5cf6" />
                 </linearGradient>
               </defs>
@@ -231,33 +247,32 @@ const Dashboard: React.FC = () => {
                 cx="72"
                 cy="72"
                 r="68"
-                stroke="url(#healthScoreGrad)"
+                stroke={gaugeColor}
                 strokeWidth="1.5"
                 strokeDasharray="4 6"
                 fill="transparent"
                 className="opacity-30"
-                style={{ transformOrigin: '72px 72px', animation: 'spin 30s linear infinite' }}
+                style={{ transformOrigin: '72px 72px', animation: prefersReducedMotion ? 'none' : 'spin 30s linear infinite' }}
               />
+              {/* Background track */}
               <circle
                 cx="72"
                 cy="72"
                 r="60"
-                className="stroke-muted/20 dark:stroke-muted/10"
-                strokeWidth="6"
+                className="health-gauge-track stroke-muted/20 dark:stroke-muted/10"
                 fill="transparent"
               />
+              {/* Animated progress arc */}
               <circle
                 cx="72"
                 cy="72"
                 r="60"
                 stroke="url(#healthScoreGrad)"
-                className="transition-all duration-300 ease-out"
-                strokeWidth="8"
+                className="health-gauge-progress"
                 fill="transparent"
                 strokeDasharray={377}
                 strokeDashoffset={377 - (377 * displayHealthScore) / 100}
-                strokeLinecap="round"
-                style={{ filter: 'drop-shadow(0 0 12px rgba(6, 182, 212, 0.5))' }}
+                style={{ filter: `drop-shadow(0 0 12px ${gaugeColor}80)` }}
               />
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center">
@@ -617,7 +632,7 @@ const Dashboard: React.FC = () => {
         )}
       </div>
 
-    </div>
+    </motion.div>
   );
 };
 

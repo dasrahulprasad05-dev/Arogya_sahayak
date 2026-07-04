@@ -67,7 +67,7 @@ export default defineConfig({
             if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom') || id.includes('scheduler')) {
               return 'react-vendor';
             }
-            if (id.includes('lucide-react') || id.includes('@radix-ui')) {
+            if (id.includes('lucide-react') || id.includes('@radix-ui') || id.includes('framer-motion')) {
               return 'ui-vendor';
             }
             if (id.includes('recharts')) {

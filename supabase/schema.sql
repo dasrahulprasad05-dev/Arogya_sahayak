@@ -17,8 +17,9 @@ CREATE TABLE IF NOT EXISTS public.profiles (
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 
 -- RLS Policies for Profiles
-CREATE POLICY "Allow public read access to profiles" ON public.profiles
-  FOR SELECT USING (true);
+-- 🔒 SECURITY FIX: Users can only read their OWN profile (was public before)
+CREATE POLICY "Users read own profile" ON public.profiles
+  FOR SELECT USING (auth.uid() = id);
 
 CREATE POLICY "Allow individual write access to profiles" ON public.profiles
   FOR UPDATE USING (auth.uid() = id);
@@ -34,7 +35,19 @@ CREATE TABLE IF NOT EXISTS public.health_logs (
   user_id UUID REFERENCES auth.users ON DELETE CASCADE NOT NULL,
   type TEXT NOT NULL,
   value JSONB NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+  -- logged_at: when the event actually happened (set by client, preserves offline timing)
+  logged_at TIMESTAMP WITH TIME ZONE NOT NULL,
+  -- created_at: when the record was synced/inserted to the database
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+
+  -- 🔒 CONSTRAINT: Only allow known log types to prevent arbitrary JSONB injection
+  CONSTRAINT valid_log_type CHECK (
+    type IN (
+      'water', 'sleep', 'mood', 'temperature', 'vitals', 'stress',
+      'symptom', 'medicine', 'exercise', 'vaccine', 'diet',
+      'prediction', 'scan'
+    )
+  )
 );
 
 -- Enable Row Level Security
@@ -75,3 +88,29 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 CREATE OR REPLACE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE PROCEDURE public.handle_new_user();
+
+
+-- ==========================================
+-- MIGRATION SCRIPT (run on existing database)
+-- ==========================================
+-- If you already have a live database, run these ALTER statements
+-- in the Supabase SQL Editor to apply the changes:
+--
+-- -- Fix profiles RLS
+-- DROP POLICY IF EXISTS "Allow public read access to profiles" ON public.profiles;
+-- CREATE POLICY "Users read own profile" ON public.profiles
+--   FOR SELECT USING (auth.uid() = id);
+--
+-- -- Add logged_at column
+-- ALTER TABLE public.health_logs
+--   ADD COLUMN IF NOT EXISTS logged_at TIMESTAMP WITH TIME ZONE;
+-- UPDATE public.health_logs SET logged_at = created_at WHERE logged_at IS NULL;
+-- ALTER TABLE public.health_logs ALTER COLUMN logged_at SET NOT NULL;
+--
+-- -- Add type constraint
+-- ALTER TABLE public.health_logs
+--   ADD CONSTRAINT valid_log_type CHECK (
+--     type IN ('water','sleep','mood','temperature','vitals','stress',
+--              'symptom','medicine','exercise','vaccine','diet',
+--              'prediction','scan')
+--   );

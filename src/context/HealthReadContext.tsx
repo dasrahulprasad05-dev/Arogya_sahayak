@@ -63,7 +63,9 @@ export const HealthReadProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     let vitals: { bp: string; hr: number; spo2: number } | null = null;
 
     logs.forEach(log => {
-      const logDate = new Date(log.created_at).toDateString();
+      // Use logged_at (actual event time) with fallback to created_at for older entries
+      const eventTime = (log as any).logged_at || log.created_at;
+      const logDate = new Date(eventTime).toDateString();
       if (logDate === todayStr) {
         if (log.type === 'water') {
           water += Number(log.value.glasses || 0);
@@ -136,7 +138,7 @@ export const HealthReadProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     }
 
     // 5. Exercise Log (up to +10)
-    const exerciseLoggedToday = logs.some(l => l.type === 'exercise' && new Date(l.created_at).toDateString() === todayStr);
+    const exerciseLoggedToday = logs.some(l => l.type === 'exercise' && new Date((l as any).logged_at || l.created_at).toDateString() === todayStr);
     if (exerciseLoggedToday) {
       score += 10;
     }
