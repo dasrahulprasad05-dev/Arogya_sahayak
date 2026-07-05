@@ -630,3 +630,30 @@
 .loader-ring-pulse {
   animation: loader-ring-pulse 1.8s infinite;
 }
+
+/* ============================================ */
+/* Button shine sweep effect                    */
+/* ============================================ */
+.btn-shine {
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.35),
+    transparent
+  );
+  transform: skewX(-20deg);
+  z-index: 1;
+  pointer-events: none;
+}
+.group:hover .btn-shine {
+  animation: btn-shine-sweep 0.8s ease;
+}
+@keyframes btn-shine-sweep {
+  0% { left: -75%; }
+  100% { left: 130%; }
+}
