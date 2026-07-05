@@ -119,103 +119,56 @@
   min-width: 48px;
 }
 
-/* Premium custom-colorized glassmorphism predictor cards */
-.predictor-card {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.75)) !important;
-  backdrop-filter: blur(16px) !important;
-  -webkit-backdrop-filter: blur(16px) !important;
-  border: 1px solid rgba(var(--card-accent-rgb), 0.25) !important;
-  box-shadow: 0 4px 24px rgba(var(--card-accent-rgb), 0.1), 0 1px 4px rgba(0, 0, 0, 0.06) !important;
-  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+/* One unified glass card with animated gradient border */
+.feature-card {
+  --card-accent-rgb: 139, 92, 246;
   position: relative;
   overflow: hidden;
+  background: linear-gradient(135deg, rgba(255,255,255,.9), rgba(255,255,255,.72));
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(var(--card-accent-rgb), .22);
+  box-shadow: 0 4px 24px rgba(var(--card-accent-rgb), .08);
+  transition: border-color .3s ease, box-shadow .3s ease;
 }
-
-.predictor-card::before {
+.feature-card:hover {
+  border-color: rgba(var(--card-accent-rgb), .5);
+  box-shadow: 0 14px 40px rgba(var(--card-accent-rgb), .22);
+}
+.dark .feature-card {
+  background: linear-gradient(135deg, rgba(var(--card-accent-rgb), .08), rgba(var(--card-accent-rgb), .02));
+  border-color: rgba(var(--card-accent-rgb), .15);
+  box-shadow: 0 8px 24px rgba(0,0,0,.3);
+}
+.dark .feature-card:hover {
+  box-shadow: 0 0 24px rgba(var(--card-accent-rgb), .3), 0 12px 32px rgba(0,0,0,.4);
+}
+/* cursor spotlight */
+.feature-card::before {
   content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(800px circle at var(--mouse-x, 0) var(--mouse-y, 0), rgba(var(--card-accent-rgb), 0.06), transparent 40%);
-  z-index: 1;
+  position: absolute; inset: 0;
+  background: radial-gradient(500px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(var(--card-accent-rgb), .1), transparent 40%);
+  opacity: 0;
+  transition: opacity .3s;
   pointer-events: none;
 }
-
-.predictor-card:hover {
-  transform: translateY(-4px) !important;
-  border-color: rgba(var(--card-accent-rgb), 0.45) !important;
-  box-shadow: 0 12px 32px rgba(var(--card-accent-rgb), 0.25), 0 4px 8px rgba(0, 0, 0, 0.08) !important;
+.feature-card:hover::before { opacity: 1; }
+/* animated gradient sweep on top edge */
+.feature-card::after {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1.5px;
+  background: linear-gradient(90deg, transparent,
+    rgba(var(--card-accent-rgb), .8), transparent);
+  background-size: 200% 100%;
+  animation: border-sweep 3s linear infinite;
+  opacity: 0;
+  transition: opacity .3s;
 }
-
-.dark .predictor-card {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01)) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  box-shadow: 0 0 0 1px rgba(var(--card-accent-rgb), 0.15), 0 8px 32px rgba(0, 0, 0, 0.3) !important;
-}
-
-.dark .predictor-card:hover {
-  border-color: rgba(255, 255, 255, 0.25) !important;
-  box-shadow: 0 0 20px 2px rgba(var(--card-accent-rgb), 0.35), 0 12px 40px rgba(0, 0, 0, 0.45) !important;
-}
-
-/* Premium custom-colorized glassmorphism tracker cards */
-.tracker-card {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.75)) !important;
-  backdrop-filter: blur(16px) !important;
-  -webkit-backdrop-filter: blur(16px) !important;
-  border: 1px solid rgba(var(--tracker-accent-rgb), 0.25) !important;
-  box-shadow: 0 4px 24px rgba(var(--tracker-accent-rgb), 0.1), 0 1px 4px rgba(0, 0, 0, 0.06) !important;
-  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1) !important;
-  position: relative;
-  overflow: hidden;
-}
-
-.tracker-card:hover {
-  transform: translateY(-4px) !important;
-  border-color: rgba(var(--tracker-accent-rgb), 0.45) !important;
-  box-shadow: 0 12px 32px rgba(var(--tracker-accent-rgb), 0.25), 0 4px 8px rgba(0, 0, 0, 0.08) !important;
-}
-
-.dark .tracker-card {
-  background: linear-gradient(135deg, rgba(var(--tracker-accent-rgb), 0.08), rgba(var(--tracker-accent-rgb), 0.03)) !important;
-  border: 1px solid rgba(var(--tracker-accent-rgb), 0.15) !important;
-  box-shadow: 0 0 0 1px rgba(var(--tracker-accent-rgb), 0.1), 0 8px 24px rgba(0, 0, 0, 0.3) !important;
-}
-
-.dark .tracker-card:hover {
-  border-color: rgba(var(--tracker-accent-rgb), 0.3) !important;
-  box-shadow: 0 0 20px 2px rgba(var(--tracker-accent-rgb), 0.25), 0 12px 32px rgba(0, 0, 0, 0.4) !important;
-}
-
-/* Premium custom-colorized glassmorphism scan cards */
-.scan-card {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.75)) !important;
-  backdrop-filter: blur(16px) !important;
-  -webkit-backdrop-filter: blur(16px) !important;
-  border: 1px solid rgba(var(--scan-accent-rgb), 0.25) !important;
-  box-shadow: 0 4px 24px rgba(var(--scan-accent-rgb), 0.1), 0 1px 4px rgba(0, 0, 0, 0.06) !important;
-  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1) !important;
-  position: relative;
-  overflow: hidden;
-}
-
-.scan-card:hover {
-  transform: translateY(-4px) !important;
-  border-color: rgba(var(--scan-accent-rgb), 0.45) !important;
-  box-shadow: 0 12px 32px rgba(var(--scan-accent-rgb), 0.25), 0 4px 8px rgba(0, 0, 0, 0.08) !important;
-}
-
-.dark .scan-card {
-  background: linear-gradient(135deg, rgba(var(--scan-accent-rgb), 0.08), rgba(var(--scan-accent-rgb), 0.03)) !important;
-  border: 1px solid rgba(var(--scan-accent-rgb), 0.15) !important;
-  box-shadow: 0 0 0 1px rgba(var(--scan-accent-rgb), 0.1), 0 8px 24px rgba(0, 0, 0, 0.3) !important;
-}
-
-.dark .scan-card:hover {
-  border-color: rgba(var(--scan-accent-rgb), 0.3) !important;
-  box-shadow: 0 0 20px 2px rgba(var(--scan-accent-rgb), 0.25), 0 12px 32px rgba(0, 0, 0, 0.4) !important;
+.feature-card:hover::after { opacity: 1; }
+@keyframes border-sweep {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
 
