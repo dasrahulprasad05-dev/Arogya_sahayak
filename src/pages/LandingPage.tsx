@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
 import {
-  Activity, ArrowRight, Sun, Moon, Globe, Check, Lock, HeartPulse, HelpCircle,
+  Activity, ArrowRight, Sun, Moon, Globe, Check, Lock, HeartPulse,
 } from 'lucide-react';
 import {
   marqueeItems, stats, features, steps, scanTypes, testimonials, faqItems,
