@@ -184,11 +184,12 @@ export const MarqueeStrip: React.FC<{ items: string[] }> = ({ items }) => {
         {doubled.map((item, i) => (
           <motion.div
             key={i}
-            whileHover={{ scale: 1.08, y: -2, boxShadow: '0 0 15px rgba(6, 182, 212, 0.4)' }}
-            className="flex items-center gap-3 px-5 py-2 rounded-full bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 whitespace-nowrap flex-shrink-0 cursor-default hover:border-cyan-500/50 transition-colors"
+            whileHover={{ scale: 1.08, y: -2, boxShadow: '0 0 15px rgba(6, 182, 212, 0.6)' }}
+            className="relative flex items-center gap-3 px-5 py-2 rounded-full bg-white dark:bg-slate-900 whitespace-nowrap flex-shrink-0 cursor-default shadow-md"
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-purple-500 to-cyan-500" />
-            <span className="text-xs font-bold text-slate-600 dark:text-slate-300 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">{item}</span>
+            <div className="pill-border-glow" />
+            <span className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-purple-500 to-cyan-500 relative z-10" />
+            <span className="text-xs font-bold text-slate-600 dark:text-slate-200 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors relative z-10">{item}</span>
           </motion.div>
         ))}
       </div>
