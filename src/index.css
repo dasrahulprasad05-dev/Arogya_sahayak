@@ -69,12 +69,20 @@
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+    text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+  }
   * {
     @apply border-border;
+    box-sizing: border-box;
   }
   body {
     @apply bg-background text-foreground font-body antialiased;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch; /* iOS momentum scroll */
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-heading font-bold tracking-tight;
@@ -103,20 +111,46 @@
 
 /* Custom Webkit scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
-  @apply bg-background;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  @apply bg-muted-foreground/30 rounded-full hover:bg-muted-foreground/50;
+  @apply bg-muted-foreground/25 rounded-full;
+  transition: background 0.3s ease;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-primary/50;
 }
 
 /* Touch targets validation */
 .touch-target {
   min-height: 48px;
   min-width: 48px;
+}
+
+/* ============================================ */
+/* Smooth Scroll Performance Hints             */
+/* ============================================ */
+/* GPU-accelerated layers for animated sections */
+.section-animate {
+  will-change: transform, opacity;
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* ============================================ */
