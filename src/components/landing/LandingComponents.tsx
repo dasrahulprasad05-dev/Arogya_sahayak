@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Heart, Activity, Moon, Star, Activity as ActivityIcon, BrainCircuit, Zap } from 'lucide-react';
+import { Heart, Activity, Moon, Star, BrainCircuit, Zap } from 'lucide-react';
 import { useCountUp } from '../../hooks/useCountUp';
 
 const iconMap: Record<string, React.ComponentType<any>> = { Heart, Activity, Moon, BrainCircuit, Zap };
