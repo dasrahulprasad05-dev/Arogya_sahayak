@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { useTheme } from '../../context/ThemeContext';
 import { supabase } from '../../integrations/supabase/client';
+import { sendWelcomeEmail } from '../../lib/emailService';
 import { Activity, Mail, Lock, User as UserIcon, ShieldAlert, ArrowRight } from 'lucide-react';
 
 const Register: React.FC = () => {
@@ -45,6 +46,9 @@ const Register: React.FC = () => {
       });
       if (error) throw error;
       setSuccessMsg('Registration successful! Please check your email for the confirmation link.');
+
+      // Fire welcome email (non-blocking — doesn't affect signup flow)
+      sendWelcomeEmail(email, name, language).catch(() => {});
     } catch (err: any) {
       setErrorMsg(err.message || t('state.error'));
     } finally {

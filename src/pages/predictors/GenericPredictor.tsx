@@ -9,6 +9,8 @@ import { showToast } from '../../utils/toast';
 import PredictionResult from '../../components/medical/PredictionResult';
 import type { PredictionData } from '../../components/medical/PredictionResult';
 import { useTheme } from '../../context/ThemeContext';
+import { useAuth } from '../../context/AuthContext';
+import { sendPredictionReportEmail } from '../../lib/emailService';
 import { 
   BrainCircuit, 
   RefreshCw, 
@@ -26,7 +28,10 @@ import {
   Moon,
   Sun,
   Bone,
-  Sparkles
+  Sparkles,
+  Mail,
+  Loader2,
+  CheckCircle2
 } from 'lucide-react';
 
 const genericConfigs: Record<string, { icon: React.ComponentType<any>; rgb: string; textClass: string; bgClass: string }> = {
@@ -64,6 +69,10 @@ const GenericPredictor: React.FC = () => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const { logPrediction } = useHealthDispatch();
+  const { user } = useAuth();
+
+  const [emailSending, setEmailSending] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
 
   const [config, setConfig] = useState(() => 
     predictorId ? genericPredictorConfig[predictorId] : null
@@ -376,7 +385,61 @@ const GenericPredictor: React.FC = () => {
           )}
 
           {result ? (
-            <PredictionResult predictorId={config.id} data={result} />
+            <>
+              <PredictionResult predictorId={config.id} data={result} />
+
+              {/* Email Report Button */}
+              <button
+                onClick={async () => {
+                  if (!user?.email || emailSending || emailSent) return;
+                  setEmailSending(true);
+                  try {
+                    await sendPredictionReportEmail(
+                      user.email,
+                      user.user_metadata?.full_name || '',
+                      {
+                        predictorName: config.name,
+                        risk: result.risk,
+                        confidence: result.confidence,
+                        reasoning: result.reasoning,
+                        recommendations: result.recommendations,
+                        urgency: result.urgency,
+                        disclaimer: result.disclaimer,
+                      }
+                    );
+                    setEmailSent(true);
+                    setTimeout(() => setEmailSent(false), 4000);
+                  } catch {
+                    // silently fail — email is non-critical
+                  } finally {
+                    setEmailSending(false);
+                  }
+                }}
+                disabled={emailSending || emailSent || !user?.email}
+                className={`w-full mt-3 font-semibold py-3 px-6 rounded-xl flex items-center justify-center gap-2 border transition-all text-sm touch-target ${
+                  emailSent
+                    ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400'
+                    : 'bg-card border-border hover:bg-muted text-foreground hover:border-foreground'
+                }`}
+              >
+                {emailSent ? (
+                  <>
+                    <CheckCircle2 className="w-4 h-4" />
+                    <span>Report Sent to {user?.email}</span>
+                  </>
+                ) : emailSending ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Sending Report...</span>
+                  </>
+                ) : (
+                  <>
+                    <Mail className="w-4 h-4" />
+                    <span>📧 Email My Report</span>
+                  </>
+                )}
+              </button>
+            </>
           ) : (
             <div 
               className="scan-active-panel border-dashed rounded-2xl p-8 text-center text-slate-400 text-xs font-semibold py-20 relative overflow-hidden min-h-[400px] flex flex-col items-center justify-center gap-4 shadow-xl"

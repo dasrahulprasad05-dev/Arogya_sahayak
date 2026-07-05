@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
 import { supabase } from '../../integrations/supabase/client';
+import { sendPasswordResetEmail } from '../../lib/emailService';
 import { Activity, Mail, ShieldAlert, ArrowLeft } from 'lucide-react';
 
 const ForgotPassword: React.FC = () => {
@@ -23,6 +24,10 @@ const ForgotPassword: React.FC = () => {
       });
       if (error) throw error;
       setSuccessMsg('Reset password link has been sent to your email!');
+
+      // Fire branded reset notification via Resend (non-blocking)
+      const resetLink = `${window.location.origin}/reset-password`;
+      sendPasswordResetEmail(email, '', resetLink).catch(() => {});
     } catch (err: any) {
       setErrorMsg(err.message || t('state.error'));
     } finally {
