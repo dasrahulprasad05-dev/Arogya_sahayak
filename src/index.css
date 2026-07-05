@@ -119,56 +119,67 @@
   min-width: 48px;
 }
 
-/* One unified glass card with animated gradient border */
+/* ============================================ */
+/* FeatureCard — reusable premium card system   */
+/* ============================================ */
 .feature-card {
-  --card-accent-rgb: 139, 92, 246;
-  position: relative;
-  overflow: hidden;
-  background: linear-gradient(135deg, rgba(255,255,255,.9), rgba(255,255,255,.72));
+  background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(var(--card-accent-rgb), .22);
-  box-shadow: 0 4px 24px rgba(var(--card-accent-rgb), .08);
-  transition: border-color .3s ease, box-shadow .3s ease;
-}
-.feature-card:hover {
-  border-color: rgba(var(--card-accent-rgb), .5);
-  box-shadow: 0 14px 40px rgba(var(--card-accent-rgb), .22);
+  border: 1px solid rgba(var(--card-rgb), 0.18);
+  box-shadow: 0 4px 20px rgba(var(--card-rgb), 0.08), 0 1px 3px rgba(0,0,0,0.04);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transform-style: preserve-3d;
+  will-change: transform;
 }
 .dark .feature-card {
-  background: linear-gradient(135deg, rgba(var(--card-accent-rgb), .08), rgba(var(--card-accent-rgb), .02));
-  border-color: rgba(var(--card-accent-rgb), .15);
-  box-shadow: 0 8px 24px rgba(0,0,0,.3);
+  background: linear-gradient(135deg, rgba(var(--card-rgb), 0.07), rgba(var(--card-rgb), 0.02));
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 0 0 1px rgba(var(--card-rgb), 0.12), 0 8px 28px rgba(0,0,0,0.35);
+}
+.feature-card:hover {
+  border-color: rgba(var(--card-rgb), 0.5);
+  box-shadow: 0 16px 40px rgba(var(--card-rgb), 0.25), 0 4px 10px rgba(0,0,0,0.08);
 }
 .dark .feature-card:hover {
-  box-shadow: 0 0 24px rgba(var(--card-accent-rgb), .3), 0 12px 32px rgba(0,0,0,.4);
+  border-color: rgba(var(--card-rgb), 0.4);
+  box-shadow: 0 0 24px 2px rgba(var(--card-rgb), 0.3), 0 16px 40px rgba(0,0,0,0.45);
 }
-/* cursor spotlight */
-.feature-card::before {
-  content: '';
-  position: absolute; inset: 0;
-  background: radial-gradient(500px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-    rgba(var(--card-accent-rgb), .1), transparent 40%);
+/* Animated rotating gradient border ring (::before) */
+.feature-card-border {
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(from 0deg, rgba(var(--card-rgb),0) 0%, rgba(var(--card-rgb),0.5) 50%, rgba(var(--card-rgb),0) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
   opacity: 0;
-  transition: opacity .3s;
+  transition: opacity 0.4s ease;
+  animation: feature-border-spin 4s linear infinite;
   pointer-events: none;
+  z-index: 0;
 }
-.feature-card:hover::before { opacity: 1; }
-/* animated gradient sweep on top edge */
-.feature-card::after {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0; height: 1.5px;
-  background: linear-gradient(90deg, transparent,
-    rgba(var(--card-accent-rgb), .8), transparent);
-  background-size: 200% 100%;
-  animation: border-sweep 3s linear infinite;
+.feature-card:hover .feature-card-border {
+  opacity: 1;
+}
+@keyframes feature-border-spin {
+  to { transform: rotate(360deg); }
+}
+/* Mouse-follow spotlight */
+.feature-card-spotlight {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(500px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(var(--card-rgb), 0.12), transparent 60%);
   opacity: 0;
-  transition: opacity .3s;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 1;
 }
-.feature-card:hover::after { opacity: 1; }
-@keyframes border-sweep {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+.feature-card:hover .feature-card-spotlight {
+  opacity: 1;
 }
 
 
@@ -441,4 +452,42 @@
 
 .marching-ants {
   animation: march 0.4s linear infinite;
+}
+
+/* ============================================ */
+/* Animated gradient shift for hero text        */
+/* ============================================ */
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* ============================================ */
+/* Scan Page — active panel enhancements        */
+/* ============================================ */
+.scan-active-panel {
+  background: linear-gradient(135deg, rgba(255,255,255,0.85), rgba(255,255,255,0.6));
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(var(--scan-rgb), 0.2);
+}
+.dark .scan-active-panel {
+  background: linear-gradient(135deg, rgba(var(--scan-rgb), 0.06), rgba(var(--scan-rgb), 0.02));
+  border: 1px solid rgba(255,255,255,0.06);
+}
+@keyframes result-reveal {
+  0%   { opacity: 0; transform: translateY(16px) scale(0.98); }
+  100% { opacity: 1; transform: translateY(0)    scale(1);    }
+}
+.animate-result-reveal {
+  animation: result-reveal 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+/* Pulsing ring around loading icon */
+@keyframes loader-ring-pulse {
+  0%   { box-shadow: 0 0 0  0px rgba(var(--scan-rgb), 0.4); }
+  70%  { box-shadow: 0 0 0 14px rgba(var(--scan-rgb), 0);   }
+  100% { box-shadow: 0 0 0  0px rgba(var(--scan-rgb), 0);   }
+}
+.loader-ring-pulse {
+  animation: loader-ring-pulse 1.8s infinite;
 }
