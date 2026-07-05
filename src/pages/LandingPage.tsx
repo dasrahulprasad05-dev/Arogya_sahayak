@@ -21,6 +21,7 @@ import {
   FloatingDashboard, MarqueeStrip, StatCounter, BentoFeatureCard,
   TimelineStep, TestimonialCard, FAQItem, MagneticButton,
 } from '../components/landing/LandingComponents';
+import MobileBottomNav from '../components/MobileBottomNav';
 
 /* ---------- Animation variants ---------- */
 const easeOutExpo = [0.16, 1, 0.3, 1] as const;
@@ -122,7 +123,7 @@ const LandingPage: React.FC = () => {
   const titleWords = mainTitleText.split(' ');
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#030310] text-slate-800 dark:text-slate-100 transition-colors duration-300 relative overflow-hidden flex flex-col font-body">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#030310] text-slate-800 dark:text-slate-100 transition-colors duration-300 relative overflow-hidden flex flex-col font-body pb-24 lg:pb-0">
       <div className="noise-overlay" />
 
       {/* ===== Scroll Progress Bar ===== */}
@@ -514,6 +515,9 @@ const LandingPage: React.FC = () => {
           <span>&copy; {new Date().getFullYear()} Aarogya Sahayak. All Rights Reserved.</span>
         </div>
       </footer>
+
+      {/* ===== Mobile Bottom Nav ===== */}
+      <MobileBottomNav />
     </div>
   );
 };
