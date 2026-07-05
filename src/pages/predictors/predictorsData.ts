@@ -1,6 +1,6 @@
 import { 
   Droplets, HeartPulse, Activity, Microscope, Filter, FlaskConical, Syringe, 
-  Zap, Gauge, Brain, Wind, Bug, Circle, SmilePlus, AlertCircle, Moon, Sun, Bone, Sparkles
+  Zap, Gauge, Brain, Wind, Bug, Circle, SmilePlus, AlertCircle, Moon, Sun, Bone
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 

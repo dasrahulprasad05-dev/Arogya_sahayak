@@ -112,7 +112,7 @@ const Dashboard: React.FC = () => {
 
   const handleQuickWater = (glasses: number) => { logWater(glasses); setSuccessWater(true); setTimeout(() => setSuccessWater(false), 1500); };
   const handleQuickMood = (mood: string) => { logMood(mood); setSuccessMood(true); setTimeout(() => setSuccessMood(false), 1500); };
-  const handleQuickVitals = (feeling: any) => { logVitals({ systolic: 120, diastolic: 80, heartRate: 72, spO2: 98 }); setSuccessVitals(true); setTimeout(() => setSuccessVitals(false), 1500); };
+  const handleQuickVitals = () => { logVitals({ systolic: 120, diastolic: 80, heartRate: 72, spO2: 98 }); setSuccessVitals(true); setTimeout(() => setSuccessVitals(false), 1500); };
   const handleQuickSleep = (e: React.FormEvent) => {
     e.preventDefault();
     const hrsNum = parseFloat(sleepHrs);
