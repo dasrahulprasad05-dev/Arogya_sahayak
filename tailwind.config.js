@@ -64,6 +64,9 @@ export default {
         'bounce-wave': 'bounce-wave 2s infinite ease-in-out',
         'glow-pulse': 'glow-pulse 2s infinite ease-in-out',
         'mesh-move': 'mesh-move 20s infinite linear',
+        'marquee': 'marquee 30s linear infinite',
+        'shimmer': 'shimmer 2s linear infinite',
+        'gradient-border': 'gradient-border-spin 4s linear infinite',
       },
       keyframes: {
         'breath-478': {
@@ -108,7 +111,19 @@ export default {
           '33%': { transform: 'translate(30px, -50px) rotate(120deg)' },
           '66%': { transform: 'translate(-20px, 20px) rotate(240deg)' },
           '100%': { transform: 'translate(0px, 0px) rotate(360deg)' },
-        }
+        },
+        'marquee': {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-50%)' },
+        },
+        'shimmer': {
+          '0%': { backgroundPosition: '-200% 0' },
+          '100%': { backgroundPosition: '200% 0' },
+        },
+        'gradient-border-spin': {
+          '0%': { '--border-angle': '0deg' },
+          '100%': { '--border-angle': '360deg' },
+        },
       }
     },
   },

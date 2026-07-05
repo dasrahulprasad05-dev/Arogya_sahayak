@@ -398,6 +398,145 @@
 }
 
 /* ============================================ */
+/* Landing Page Redesign — Premium Utilities     */
+/* ============================================ */
+
+/* Dot grid particle background */
+.dot-grid {
+  background-image: radial-gradient(circle, rgba(139, 92, 246, 0.15) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+.dark .dot-grid {
+  background-image: radial-gradient(circle, rgba(139, 92, 246, 0.25) 1px, transparent 1px);
+}
+
+/* Glassmorphic card */
+.glass-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+}
+.dark .glass-card {
+  background: rgba(15, 15, 35, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* Bento feature card with animated gradient border */
+.bento-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.25rem;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+}
+.dark .bento-card {
+  background: rgba(15, 15, 35, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+.bento-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 60px rgba(139, 92, 246, 0.15);
+}
+.dark .bento-card:hover {
+  box-shadow: 0 20px 60px rgba(139, 92, 246, 0.25);
+}
+
+/* Bento card hover spotlight */
+.bento-spotlight {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+.bento-card:hover .bento-spotlight {
+  opacity: 1;
+}
+
+/* Animated gradient border overlay */
+.bento-border-glow {
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(from var(--border-angle, 0deg), rgba(var(--bento-rgb, 139,92,246), 0) 0%, rgba(var(--bento-rgb, 139,92,246), 0.5) 25%, rgba(var(--bento-rgb, 139,92,246), 0) 50%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  animation: gradient-border-spin 4s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+.bento-card:hover .bento-border-glow {
+  opacity: 1;
+}
+@keyframes gradient-border-spin {
+  to { --border-angle: 360deg; }
+}
+@property --border-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+/* Marquee track */
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 30s linear infinite;
+}
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* FAQ Accordion */
+.faq-content {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.faq-content.open {
+  grid-template-rows: 1fr;
+}
+.faq-content > div {
+  overflow: hidden;
+}
+
+/* Floating dashboard mock */
+.floating-dashboard {
+  perspective: 1200px;
+}
+.floating-dashboard-inner {
+  transform: rotateY(-8deg) rotateX(4deg);
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.floating-dashboard:hover .floating-dashboard-inner {
+  transform: rotateY(-2deg) rotateX(1deg);
+}
+
+/* Testimonial auto-scroll */
+@keyframes testimonial-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.testimonial-track {
+  display: flex;
+  width: max-content;
+  animation: testimonial-scroll 40s linear infinite;
+}
+.testimonial-track:hover {
+  animation-play-state: paused;
+}
+
+/* ============================================ */
 /* 🔒 ACCESSIBILITY: Reduced Motion Support     */
 /* ============================================ */
 @media (prefers-reduced-motion: reduce) {
