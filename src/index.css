@@ -657,3 +657,38 @@
   0% { left: -75%; }
   100% { left: 130%; }
 }
+
+/* ============================================ */
+/* Neon Train Border Effect (Marquee)           */
+/* ============================================ */
+.neon-beam-top {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #8b5cf6, #06b6d4, transparent);
+  animation: beam-translate-right 4s linear infinite;
+  box-shadow: 0 0 12px 2px rgba(6, 182, 212, 0.4);
+}
+
+.neon-beam-bottom {
+  position: absolute;
+  bottom: 0;
+  right: -100%;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(270deg, transparent, #06b6d4, #8b5cf6, transparent);
+  animation: beam-translate-left 4s linear infinite;
+  box-shadow: 0 0 12px 2px rgba(139, 92, 246, 0.4);
+}
+
+@keyframes beam-translate-right {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(200%); }
+}
+
+@keyframes beam-translate-left {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-200%); }
+}
