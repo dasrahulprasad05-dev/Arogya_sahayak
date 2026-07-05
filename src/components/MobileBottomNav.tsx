@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Home, Activity, ScanLine, HeartPulse, User } from 'lucide-react';
 
-const easeOutExpo = [0.16, 1, 0.3, 1] as const;
+
 
 interface NavItem {
   id: string;
