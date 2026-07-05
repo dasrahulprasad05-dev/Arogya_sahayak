@@ -122,7 +122,7 @@ const LiverHealth: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         
         {/* Form Panel (7 cols) */}
-        <form onSubmit={handleSubmit} className="lg:col-span-7 bg-white/40 dark:bg-card/40 border border-emerald-500/15 rounded-2xl p-6 shadow-xl backdrop-blur-md relative space-y-5 animate-slide-up">
+        <form onSubmit={handleSubmit} className="lg:col-span-7 scan-active-panel rounded-2xl p-6 shadow-xl relative space-y-5 animate-slide-up" style={{ '--scan-rgb': '16, 185, 129' } as React.CSSProperties}>
           
           <h3 
             className="relative pl-5 py-3 pr-3 bg-slate-900/5 dark:bg-slate-900/40 backdrop-blur border border-slate-200 dark:border-slate-850 rounded-xl flex items-center gap-3 font-heading font-bold text-sm text-slate-800 dark:text-white"
@@ -329,7 +329,7 @@ const LiverHealth: React.FC = () => {
           {result ? (
             <PredictionResult predictorId="liver" data={result} />
           ) : (
-            <div className="bg-card/45 border border-emerald-500/15 rounded-2xl p-8 text-center text-slate-400 text-xs font-semibold py-20 backdrop-blur-md relative overflow-hidden min-h-[400px] flex flex-col items-center justify-center gap-4 shadow-xl">
+            <div className="scan-active-panel border-dashed rounded-2xl p-8 text-center text-slate-400 text-xs font-semibold py-20 relative overflow-hidden min-h-[400px] flex flex-col items-center justify-center gap-4 shadow-xl" style={{ '--scan-rgb': '16, 185, 129' } as React.CSSProperties}>
               {/* Decorative animated rings */}
               <div 
                 className="absolute w-24 h-24 rounded-full border-2 border-dashed animate-spin-slow opacity-15"

@@ -244,8 +244,8 @@ const GenericPredictor: React.FC = () => {
         {/* Dynamic Form Panel (7 cols) */}
         <form 
           onSubmit={handleSubmit} 
-          className="lg:col-span-7 bg-white/40 dark:bg-card/40 border rounded-2xl p-6 shadow-xl backdrop-blur-md relative space-y-5 animate-slide-up"
-          style={{ borderColor: `rgba(${cfg.rgb}, 0.15)` }}
+          className="lg:col-span-7 scan-active-panel rounded-2xl p-6 shadow-xl relative space-y-5 animate-slide-up"
+          style={{ '--scan-rgb': cfg.rgb } as React.CSSProperties}
         >
           <h3 
             className="relative pl-5 py-3 pr-3 bg-slate-900/5 dark:bg-slate-900/40 backdrop-blur border border-slate-200 dark:border-slate-850 rounded-xl flex items-center gap-3 font-heading font-bold text-sm text-slate-800 dark:text-white"
@@ -351,7 +351,9 @@ const GenericPredictor: React.FC = () => {
             >
               {loading ? (
                 <>
-                  <RefreshCw className="w-5 h-5 animate-spin" />
+                  <div className={`w-5 h-5 rounded-full loader-ring-pulse flex items-center justify-center`} style={{ '--scan-rgb': '255,255,255' } as React.CSSProperties}>
+                    <RefreshCw className="w-5 h-5 animate-spin" />
+                  </div>
                   <span>Analyzing screener responses...</span>
                 </>
               ) : (
@@ -377,8 +379,8 @@ const GenericPredictor: React.FC = () => {
             <PredictionResult predictorId={config.id} data={result} />
           ) : (
             <div 
-              className="bg-card/45 border rounded-2xl p-8 text-center text-slate-400 text-xs font-semibold py-20 backdrop-blur-md relative overflow-hidden min-h-[400px] flex flex-col items-center justify-center gap-4 shadow-xl"
-              style={{ borderColor: `rgba(${cfg.rgb}, 0.15)` }}
+              className="scan-active-panel border-dashed rounded-2xl p-8 text-center text-slate-400 text-xs font-semibold py-20 relative overflow-hidden min-h-[400px] flex flex-col items-center justify-center gap-4 shadow-xl"
+              style={{ '--scan-rgb': cfg.rgb } as React.CSSProperties}
             >
               {/* Decorative animated rings */}
               <div 
