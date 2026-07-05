@@ -176,10 +176,6 @@ export const MarqueeStrip: React.FC<{ items: string[] }> = ({ items }) => {
   const doubled = [...items, ...items];
   return (
     <div className="relative overflow-hidden py-6 border-y border-slate-200 dark:border-slate-800/60 bg-white/40 dark:bg-slate-950/30 backdrop-blur-sm group">
-      {/* Neon border train effects */}
-      <div className="neon-beam-top opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-      <div className="neon-beam-bottom opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-      
       <div className="marquee-track gap-6">
         {doubled.map((item, i) => (
           <motion.div
