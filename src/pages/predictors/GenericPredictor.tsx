@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { genericPredictorConfig } from '../../lib/predictorConfig';
 import { genericSchemas } from '../../lib/validators/genericSchemas';
 import { supabase } from '../../integrations/supabase/client';
@@ -13,7 +14,7 @@ import { useAuth } from '../../context/AuthContext';
 import { sendPredictionReportEmail } from '../../lib/emailService';
 import { 
   BrainCircuit, 
-  RefreshCw, 
+  Loader2, 
   Send, 
   ArrowLeft, 
   ShieldAlert,
@@ -30,9 +31,21 @@ import {
   Bone,
   Sparkles,
   Mail,
-  Loader2,
   CheckCircle2
 } from 'lucide-react';
+
+/* ── Framer motion choreography ── */
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.06, delayChildren: 0.1 },
+  },
+};
+const fieldVariant = {
+  hidden: { opacity: 0, y: 14 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.35, ease: 'easeOut' as const } },
+};
 
 const genericConfigs: Record<string, { icon: React.ComponentType<any>; rgb: string; textClass: string; bgClass: string }> = {
   hypertension: { icon: Gauge, rgb: '168, 85, 247', textClass: 'text-purple-600 dark:text-purple-400', bgClass: 'bg-purple-500/15' },
@@ -193,7 +206,10 @@ const GenericPredictor: React.FC = () => {
   const booleanFields = config.fields.filter(f => f.type === 'boolean');
 
   return (
-    <div className="space-y-8 max-w-5xl mx-auto relative overflow-hidden pb-12">
+    <div
+      className="space-y-8 max-w-5xl mx-auto relative overflow-hidden pb-12"
+      style={{ '--accent-rgb': cfg.rgb } as React.CSSProperties}
+    >
       <style>{`
         .focus-accent-${config.id}:focus {
           border-color: rgb(${cfg.rgb}) !important;
@@ -224,7 +240,12 @@ const GenericPredictor: React.FC = () => {
       ></div>
 
       {/* Page Header */}
-      <div className="flex items-center gap-4 relative z-10 animate-fade-in">
+      <motion.div
+        className="flex items-center gap-4 relative z-10"
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+      >
         <button 
           onClick={() => navigate('/predictors')}
           className="p-2.5 bg-transparent hover:bg-slate-200/50 dark:hover:bg-slate-800/40 text-slate-500 dark:text-slate-300 hover:text-slate-800 dark:hover:text-white rounded-xl transition-all border border-slate-300 dark:border-slate-800/60 touch-target flex items-center justify-center shadow-sm"
@@ -233,12 +254,14 @@ const GenericPredictor: React.FC = () => {
           <ArrowLeft className="w-5 h-5" />
         </button>
         <div className="flex items-center gap-3">
-          <div 
-            className="w-12 h-12 rounded-xl flex items-center justify-center animate-pulse shrink-0"
+          <motion.div 
+            className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
             style={{ backgroundColor: `rgba(${cfg.rgb}, 0.15)` }}
+            animate={{ scale: [1, 1.08, 1] }}
+            transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
           >
             <IconComp className={`w-6 h-6 ${cfg.textClass}`} />
-          </div>
+          </motion.div>
           <div>
             <h1 className={`text-3xl font-extrabold font-heading text-transparent bg-clip-text bg-gradient-to-r ${getGradientClass(config.id)}`}>
               {config.name}
@@ -246,38 +269,55 @@ const GenericPredictor: React.FC = () => {
             <p className="text-slate-500 dark:text-slate-400 text-sm">{config.description}</p>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         
         {/* Dynamic Form Panel (7 cols) */}
-        <form 
+        <motion.form 
           onSubmit={handleSubmit} 
-          className="lg:col-span-7 scan-active-panel rounded-2xl p-6 shadow-xl relative space-y-5 animate-slide-up"
+          className="lg:col-span-7 scan-active-panel rounded-2xl p-6 shadow-xl relative space-y-5"
           style={{ '--scan-rgb': cfg.rgb } as React.CSSProperties}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45, delay: 0.1 }}
         >
-          <h3 
+          <motion.h3 
             className="relative pl-5 py-3 pr-3 bg-slate-900/5 dark:bg-slate-900/40 backdrop-blur border border-slate-200 dark:border-slate-850 rounded-xl flex items-center gap-3 font-heading font-bold text-sm text-slate-800 dark:text-white"
             style={{ borderLeft: `3px solid rgb(${cfg.rgb})` }}
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.35, delay: 0.2 }}
           >
-            <BrainCircuit className={`w-5 h-5 ${cfg.textClass} shrink-0`} />
+            <motion.span
+              animate={{ rotate: [0, 8, -8, 0] }}
+              transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              <BrainCircuit className={`w-5 h-5 ${cfg.textClass} shrink-0`} />
+            </motion.span>
             <span>Enter Assessment Indicators</span>
-          </h3>
+          </motion.h3>
 
-          <div className="space-y-4 max-h-[520px] overflow-y-auto pr-2">
+          <motion.div
+            className="space-y-4 max-h-[520px] overflow-y-auto pr-2"
+            variants={containerVariants}
+            initial="hidden"
+            animate="show"
+          >
             
             {nonBooleanFields.length > 0 && (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {nonBooleanFields.map((f, idx) => (
-                  <div key={f.name} className="space-y-1 animate-slide-up" style={{ animationDelay: `${idx * 50}ms` }}>
-                    <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400" htmlFor={f.name}>
+                {nonBooleanFields.map((f) => (
+                  <motion.div key={f.name} className="space-y-1.5" variants={fieldVariant}>
+                    <label className="block text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400" htmlFor={f.name}>
                       {f.label}
                     </label>
                     {f.type === 'select' ? (
                       <div className="relative">
                         <select
                           id={f.name}
-                          className={`w-full h-12 bg-slate-900/5 dark:bg-white/5 border border-slate-250 dark:border-slate-800 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white font-medium outline-none transition-all appearance-none pr-10 focus-accent-${config.id}`}
+                          className="predictor-input w-full h-12 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white font-medium outline-none appearance-none pr-10 cursor-pointer"
+                          style={{ '--accent-rgb': cfg.rgb } as React.CSSProperties}
                           onChange={e => handleFieldChange(f.name, e.target.value)}
                           value={formData[f.name] || ''}
                         >
@@ -296,177 +336,251 @@ const GenericPredictor: React.FC = () => {
                         inputMode="numeric"
                         step="any"
                         placeholder={f.placeholder}
-                        className={`w-full h-12 bg-slate-900/5 dark:bg-white/5 border border-slate-250 dark:border-slate-800 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white font-medium outline-none transition-all focus-accent-${config.id}`}
+                        className="predictor-input w-full h-12 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white font-medium outline-none"
+                        style={{ '--accent-rgb': cfg.rgb } as React.CSSProperties}
                         value={formData[f.name] ?? ''}
                         onChange={e => handleFieldChange(f.name, e.target.value)}
                       />
                     )}
                     {formErrors[f.name] && <p className="text-[10px] text-rose-500 font-bold">{formErrors[f.name]}</p>}
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             )}
 
             {booleanFields.length > 0 && (
-              <div className={`pt-4 space-y-3 ${nonBooleanFields.length > 0 ? 'border-t border-slate-200 dark:border-slate-800' : ''}`}>
-                <span className="text-[10px] font-bold text-slate-400 block uppercase tracking-wider">Select Symptomatic Indicators:</span>
+              <motion.div className={`pt-4 space-y-3 ${nonBooleanFields.length > 0 ? 'border-t border-slate-200 dark:border-slate-800' : ''}`} variants={fieldVariant}>
+                <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 block uppercase tracking-wider flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5" style={{ color: `rgba(${cfg.rgb}, 0.6)` }} />
+                  Select Symptomatic Indicators
+                </span>
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {booleanFields.map((f, idx) => (
-                    <button
-                      type="button"
-                      key={f.name}
-                      onClick={() => handleFieldChange(f.name, !formData[f.name])}
-                      className="flex items-center justify-between p-3.5 border border-slate-250 dark:border-slate-800 rounded-xl hover:border-slate-400/30 transition-all text-left duration-250 cursor-pointer h-12 animate-slide-up"
-                      style={{ 
-                        animationDelay: `${(nonBooleanFields.length * 50) + idx * 50}ms`,
-                        borderColor: formData[f.name] ? `rgba(${cfg.rgb}, 0.5)` : '',
-                        backgroundColor: formData[f.name] ? `rgba(${cfg.rgb}, 0.08)` : ''
-                      }}
-                    >
-                      <span className="text-xs font-semibold text-slate-700 dark:text-slate-200 leading-tight">
-                        {f.label}
-                      </span>
-                      <div 
-                        className="w-5 h-5 rounded flex items-center justify-center border transition-all"
-                        style={{ 
-                          borderColor: formData[f.name] ? `rgb(${cfg.rgb})` : 'rgba(128,128,128,0.4)',
-                          backgroundColor: formData[f.name] ? `rgb(${cfg.rgb})` : 'transparent'
-                        }}
+                  {booleanFields.map((f) => {
+                    const isActive = !!formData[f.name];
+                    return (
+                      <motion.button
+                        type="button"
+                        key={f.name}
+                        onClick={() => handleFieldChange(f.name, !formData[f.name])}
+                        variants={fieldVariant}
+                        whileTap={{ scale: 0.97 }}
+                        whileHover={{ y: -1 }}
+                        className={`flex items-center justify-between p-3.5 border rounded-xl text-left cursor-pointer h-12 transition-all duration-300 ${
+                          isActive
+                            ? 'predictor-checkbox-active'
+                            : 'border-slate-250 dark:border-slate-800'
+                        }`}
+                        style={{
+                          '--accent-rgb': cfg.rgb,
+                          borderColor: isActive ? `rgba(${cfg.rgb}, 0.4)` : '',
+                          backgroundColor: isActive ? `rgba(${cfg.rgb}, 0.08)` : ''
+                        } as React.CSSProperties}
                       >
-                        {formData[f.name] && (
-                          <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="4">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                          </svg>
-                        )}
-                      </div>
-                    </button>
-                  ))}
+                        <span className={`text-xs font-semibold leading-tight transition-colors duration-200 ${
+                          isActive ? 'text-slate-800 dark:text-slate-200' : 'text-slate-700 dark:text-slate-200'
+                        }`}>
+                          {f.label}
+                        </span>
+                        <div 
+                          className="w-5 h-5 rounded flex items-center justify-center border-2 transition-all duration-200 shrink-0"
+                          style={{ 
+                            borderColor: isActive ? `rgb(${cfg.rgb})` : 'rgba(128,128,128,0.35)',
+                            backgroundColor: isActive ? `rgb(${cfg.rgb})` : 'transparent'
+                          }}
+                        >
+                          <AnimatePresence>
+                            {isActive && (
+                              <motion.svg
+                                className="w-3 h-3 text-white"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                strokeWidth="4"
+                                initial={{ scale: 0, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                exit={{ scale: 0, opacity: 0 }}
+                                transition={{ type: 'spring', stiffness: 500, damping: 25 }}
+                              >
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" className="animate-checkmark-draw" />
+                              </motion.svg>
+                            )}
+                          </AnimatePresence>
+                        </div>
+                      </motion.button>
+                    );
+                  })}
                 </div>
-              </div>
+              </motion.div>
             )}
 
-          </div>
+          </motion.div>
 
           <div className="pt-4">
-            <button
+            <motion.button
               type="submit"
               disabled={loading}
-              className="w-full text-white font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg hover:brightness-110 transform hover:scale-[1.01] animate-pulse-slow disabled:opacity-60 disabled:pointer-events-none touch-target"
+              whileHover={loading ? {} : { scale: 1.015, boxShadow: `0 8px 30px rgba(${cfg.rgb}, 0.3)` }}
+              whileTap={loading ? {} : { scale: 0.98 }}
+              className="group relative w-full text-white font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg disabled:opacity-60 disabled:pointer-events-none touch-target overflow-hidden"
               style={{ 
-                backgroundImage: `linear-gradient(to right, rgb(${cfg.rgb}), rgba(${cfg.rgb}, 0.7))`,
-                boxShadow: `0 4px 20px rgba(${cfg.rgb}, 0.15)`
+                backgroundImage: `linear-gradient(135deg, rgb(${cfg.rgb}), rgba(${cfg.rgb}, 0.7))`,
               }}
             >
+              <span className="btn-shine" />
               {loading ? (
                 <>
-                  <div className={`w-5 h-5 rounded-full loader-ring-pulse flex items-center justify-center`} style={{ '--scan-rgb': '255,255,255' } as React.CSSProperties}>
-                    <RefreshCw className="w-5 h-5 animate-spin" />
-                  </div>
-                  <span>Analyzing screener responses...</span>
+                  <Loader2 className="w-5 h-5 animate-spin relative z-10" />
+                  <span className="relative z-10">Analyzing screener responses...</span>
                 </>
               ) : (
                 <>
-                  <Send className="w-4 h-4" />
-                  <span>Run AI Health Assessment</span>
+                  <Send className="w-4 h-4 relative z-10" />
+                  <span className="relative z-10">Run AI Health Assessment</span>
                 </>
               )}
-            </button>
+            </motion.button>
           </div>
-        </form>
+        </motion.form>
 
         {/* Prediction Output Card (5 cols) */}
-        <div className="lg:col-span-5 animate-slide-up" style={{ animationDelay: '100ms' }}>
+        <motion.div
+          className="lg:col-span-5"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45, delay: 0.2 }}
+        >
           {errorMsg && (
-            <div className="p-3 bg-destructive/10 border border-destructive/20 text-rose-500 text-xs rounded-lg mb-4 flex items-start gap-2">
+            <motion.div
+              className="p-3 bg-destructive/10 border border-destructive/20 text-rose-500 text-xs rounded-lg mb-4 flex items-start gap-2"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+            >
               <ShieldAlert className="w-4.5 h-4.5 shrink-0 mt-0.5" />
               <span>{errorMsg}</span>
-            </div>
+            </motion.div>
           )}
 
-          {result ? (
-            <>
-              <PredictionResult predictorId={config.id} data={result} />
+          <AnimatePresence mode="wait">
+            {result ? (
+              <motion.div
+                key="result"
+                initial={{ opacity: 0, scale: 0.96 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.96 }}
+                transition={{ duration: 0.35 }}
+              >
+                <PredictionResult predictorId={config.id} data={result} />
 
-              {/* Email Report Button */}
-              <button
-                onClick={async () => {
-                  if (!user?.email || emailSending || emailSent) return;
-                  setEmailSending(true);
-                  try {
-                    await sendPredictionReportEmail(
-                      user.email,
-                      user.user_metadata?.full_name || '',
-                      {
-                        predictorName: config.name,
-                        risk: result.risk,
-                        confidence: result.confidence,
-                        reasoning: result.reasoning,
-                        recommendations: result.recommendations,
-                        urgency: result.urgency,
-                        disclaimer: result.disclaimer,
-                      }
-                    );
-                    setEmailSent(true);
-                    setTimeout(() => setEmailSent(false), 4000);
-                  } catch {
-                    // silently fail — email is non-critical
-                  } finally {
-                    setEmailSending(false);
-                  }
-                }}
-                disabled={emailSending || emailSent || !user?.email}
-                className={`w-full mt-3 font-semibold py-3 px-6 rounded-xl flex items-center justify-center gap-2 border transition-all text-sm touch-target ${
-                  emailSent
-                    ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400'
-                    : 'bg-card border-border hover:bg-muted text-foreground hover:border-foreground'
-                }`}
+                {/* Email Report Button */}
+                <motion.button
+                  onClick={async () => {
+                    if (!user?.email || emailSending || emailSent) return;
+                    setEmailSending(true);
+                    try {
+                      await sendPredictionReportEmail(
+                        user.email,
+                        user.user_metadata?.full_name || '',
+                        {
+                          predictorName: config.name,
+                          risk: result.risk,
+                          confidence: result.confidence,
+                          reasoning: result.reasoning,
+                          recommendations: result.recommendations,
+                          urgency: result.urgency,
+                          disclaimer: result.disclaimer,
+                        }
+                      );
+                      setEmailSent(true);
+                      setTimeout(() => setEmailSent(false), 4000);
+                    } catch {
+                      // silently fail — email is non-critical
+                    } finally {
+                      setEmailSending(false);
+                    }
+                  }}
+                  disabled={emailSending || emailSent || !user?.email}
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.98 }}
+                  className={`w-full mt-3 font-semibold py-3 px-6 rounded-xl flex items-center justify-center gap-2 border transition-all text-sm touch-target ${
+                    emailSent
+                      ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400'
+                      : 'bg-card border-border hover:bg-muted text-foreground hover:border-foreground'
+                  }`}
+                >
+                  {emailSent ? (
+                    <>
+                      <CheckCircle2 className="w-4 h-4" />
+                      <span>Report Sent to {user?.email}</span>
+                    </>
+                  ) : emailSending ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>Sending Report...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Mail className="w-4 h-4" />
+                      <span>📧 Email My Report</span>
+                    </>
+                  )}
+                </motion.button>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="placeholder"
+                className="scan-active-panel rounded-2xl p-8 text-center text-xs font-semibold relative overflow-hidden min-h-[400px] flex flex-col items-center justify-center gap-5 shadow-xl"
+                style={{ '--scan-rgb': cfg.rgb } as React.CSSProperties}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.4, delay: 0.3 }}
               >
-                {emailSent ? (
-                  <>
-                    <CheckCircle2 className="w-4 h-4" />
-                    <span>Report Sent to {user?.email}</span>
-                  </>
-                ) : emailSending ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Sending Report...</span>
-                  </>
-                ) : (
-                  <>
-                    <Mail className="w-4 h-4" />
-                    <span>📧 Email My Report</span>
-                  </>
-                )}
-              </button>
-            </>
-          ) : (
-            <div 
-              className="scan-active-panel border-dashed rounded-2xl p-8 text-center text-slate-400 text-xs font-semibold py-20 relative overflow-hidden min-h-[400px] flex flex-col items-center justify-center gap-4 shadow-xl"
-              style={{ '--scan-rgb': cfg.rgb } as React.CSSProperties}
-            >
-              {/* Decorative animated rings */}
-              <div 
-                className="absolute w-24 h-24 rounded-full border-2 border-dashed animate-spin-slow opacity-15"
-                style={{ borderColor: `rgb(${cfg.rgb})`, animationDuration: '15s' }}
-              ></div>
-              <div 
-                className="absolute w-28 h-28 rounded-full border border-dashed animate-spin opacity-10"
-                style={{ borderColor: `rgb(${cfg.rgb})`, animationDuration: '30s', animationDirection: 'reverse' }}
-              ></div>
-              
-              <div 
-                className="w-14 h-14 rounded-full flex items-center justify-center animate-pulse relative z-10"
-                style={{ backgroundColor: `rgba(${cfg.rgb}, 0.15)` }}
-              >
-                <BrainCircuit className={`w-7 h-7 ${cfg.textClass}`} />
-              </div>
-              <span className="max-w-[240px] leading-relaxed text-slate-500 dark:text-slate-400 relative z-10">
-                Complete the form to see your AI risk evaluation
-              </span>
-            </div>
-          )}
-        </div>
+                {/* Layered gradient orbs */}
+                <div 
+                  className="absolute w-32 h-32 rounded-full animate-orb-pulse"
+                  style={{ background: `radial-gradient(circle, rgba(${cfg.rgb}, 0.15), transparent 70%)` }}
+                />
+                <div 
+                  className="absolute w-48 h-48 rounded-full animate-orb-pulse"
+                  style={{ background: `radial-gradient(circle, rgba(${cfg.rgb}, 0.08), transparent 70%)`, animationDelay: '1s' }}
+                />
+
+                {/* Floating particles */}
+                {[...Array(5)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="absolute w-1.5 h-1.5 rounded-full animate-float-particle"
+                    style={{
+                      backgroundColor: `rgba(${cfg.rgb}, 0.3)`,
+                      left: `${20 + i * 15}%`,
+                      top: `${25 + (i % 3) * 20}%`,
+                      animationDelay: `${i * 0.7}s`,
+                      animationDuration: `${3 + i * 0.5}s`,
+                    }}
+                  />
+                ))}
+                
+                <motion.div 
+                  className="w-16 h-16 rounded-2xl flex items-center justify-center relative z-10"
+                  style={{ backgroundColor: `rgba(${cfg.rgb}, 0.12)` }}
+                  animate={{ y: [0, -6, 0] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                >
+                  <BrainCircuit className={`w-8 h-8 ${cfg.textClass}`} />
+                </motion.div>
+
+                <div className="relative z-10 space-y-2">
+                  <p className="text-sm font-bold text-slate-600 dark:text-slate-300">
+                    Awaiting Your Inputs
+                  </p>
+                  <p className="max-w-[240px] leading-relaxed text-slate-400 dark:text-slate-500 text-xs">
+                    Complete the form to see your AI risk evaluation and personalized recommendations.
+                  </p>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
 
       </div>
 
@@ -475,4 +589,3 @@ const GenericPredictor: React.FC = () => {
 };
 
 export default GenericPredictor;
-
