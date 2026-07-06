@@ -30,7 +30,7 @@ const containerVariants = {
 };
 const fieldVariant = {
   hidden: { opacity: 0, y: 14 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.35, ease: 'easeOut' } },
+  show: { opacity: 1, y: 0, transition: { duration: 0.35, ease: 'easeOut' as const } },
 };
 
 const ACCENT_RGB = '244, 63, 94'; // rose-500
@@ -237,7 +237,7 @@ const AnemiaChecker: React.FC = () => {
               </span>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {symptoms.map((item, idx) => {
+                {symptoms.map((item) => {
                   const isActive = !!formData[item.key as keyof AnemiaInputs];
                   return (
                     <motion.button
