@@ -166,7 +166,7 @@ Keep it concise, calm, and actionable. Do NOT diagnose.`;
       const userMessage = `Emergency situation: ${searchEmergency}. Please provide immediate first aid steps.`;
 
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
