@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
 import { useHealthDispatch } from '../../context/HealthDispatchContext';
-import { PhoneCall, ShieldAlert, Sparkles, CheckCircle, Save } from 'lucide-react';
+import { PhoneCall, ShieldAlert, Sparkles, CheckCircle, Save, Download } from 'lucide-react';
 
 export interface PredictionData {
   risk: 'Low' | 'Moderate' | 'High' | 'Critical' | 'Insufficient Data';
@@ -108,7 +108,7 @@ const PredictionResult: React.FC<PredictionResultProps> = ({ predictorId, data }
 
   return (
     <motion.div
-      className={`bg-card border rounded-2xl shadow-lg p-6 glass space-y-6 ${isHighRisk ? `border-l-4 ${colors.border} border-border` : 'border-border'}`}
+      className={`bg-card border rounded-2xl shadow-lg p-6 glass space-y-6 ${isHighRisk ? `border-l-4 ${colors.border} border-border` : 'border-border'} pdf-report`}
       initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: isHighRisk ? 0.5 : 0.3, ease: 'easeOut' }}
@@ -182,7 +182,7 @@ const PredictionResult: React.FC<PredictionResultProps> = ({ predictorId, data }
       </div>
 
       {/* Action buttons footer */}
-      <div className="flex flex-col sm:flex-row gap-3 pt-2">
+      <div className="flex flex-col sm:flex-row gap-3 pt-2 hide-on-print">
         {showSos && (
           <a
             href="tel:108"
@@ -214,6 +214,14 @@ const PredictionResult: React.FC<PredictionResultProps> = ({ predictorId, data }
               <span>Save to History</span>
             </>
           )}
+        </button>
+
+        <button
+          onClick={() => window.print()}
+          className="flex-1 font-semibold py-3 px-6 rounded-xl flex items-center justify-center gap-2 border border-primary text-primary hover:bg-primary hover:text-white transition-all text-sm touch-target shadow-[0_0_15px_rgba(139,92,246,0.15)] hover:shadow-[0_0_25px_rgba(139,92,246,0.35)]"
+        >
+          <Download className="w-4 h-4" />
+          <span>Download PDF</span>
         </button>
       </div>
 

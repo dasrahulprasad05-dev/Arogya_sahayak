@@ -5,6 +5,8 @@ import { useLanguage } from '../context/LanguageContext';
 import type { Language } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
 import { supabase } from '../integrations/supabase/client';
+import { useHealthRead } from '../context/HealthReadContext';
+import PredictionResult from '../components/medical/PredictionResult';
 import {
   User,
   Sun,
@@ -16,6 +18,10 @@ import {
   Loader2,
   Sparkles,
   X,
+  History,
+  Download,
+  Eye,
+  Calendar
 } from 'lucide-react';
 
 /* ---------------------------------------------------
@@ -164,6 +170,10 @@ const ProfilePage: React.FC = () => {
 
   const [fullName, setFullName] = useState(() => user?.user_metadata?.full_name || '');
   const [loading, setLoading] = useState(false);
+
+  const { logs } = useHealthRead();
+  const predictionLogs = logs.filter((log) => log.type === 'prediction').slice(0, 10);
+  const [selectedPrediction, setSelectedPrediction] = useState<any>(null);
 
   const displayName = user?.user_metadata?.full_name || 'Health Companion User';
   const initials = displayName
@@ -378,6 +388,69 @@ const ProfilePage: React.FC = () => {
           </div>
         </motion.div>
 
+        {/* Predictor History Section */}
+        {predictionLogs.length > 0 && (
+          <motion.div
+            variants={itemVariants}
+            className="bg-card border border-border rounded-2xl p-6 shadow-sm glass space-y-6"
+          >
+            <div className="flex items-center gap-2 pb-2 border-b border-border">
+              <History className="w-5 h-5 text-primary" />
+              <h3 className="font-heading font-bold text-lg text-foreground">
+                Recent Predictor Checks
+              </h3>
+            </div>
+            
+            <div className="space-y-3">
+              {predictionLogs.map((log) => {
+                const val = log.value;
+                const riskColor = val.result?.risk === 'High' || val.result?.risk === 'Critical' 
+                  ? 'text-red-500 bg-red-500/10' 
+                  : val.result?.risk === 'Moderate'
+                    ? 'text-amber-500 bg-amber-500/10'
+                    : 'text-emerald-500 bg-emerald-500/10';
+
+                return (
+                  <div key={log.id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl border border-border bg-background/50 hover:bg-muted/30 transition-colors">
+                    <div className="space-y-1 min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <span className="font-semibold text-sm capitalize">{val.predictorId.replace('-', ' ')}</span>
+                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${riskColor}`}>
+                          {val.result?.risk}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground font-medium">
+                        <Calendar className="w-3.5 h-3.5" />
+                        {new Date((log as any).logged_at || log.created_at).toLocaleString()}
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-2 shrink-0">
+                      <button
+                        onClick={() => setSelectedPrediction(log)}
+                        className="px-3 py-1.5 rounded-lg border border-border hover:border-primary text-xs font-semibold text-foreground hover:text-primary transition-all flex items-center gap-1.5 touch-target"
+                      >
+                        <Eye className="w-3.5 h-3.5" />
+                        View PDF
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSelectedPrediction(log);
+                          setTimeout(() => window.print(), 500);
+                        }}
+                        className="px-3 py-1.5 rounded-lg border border-primary text-primary hover:bg-primary hover:text-white transition-all flex items-center gap-1.5 touch-target shadow-sm"
+                      >
+                        <Download className="w-3.5 h-3.5" />
+                        Download
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </motion.div>
+        )}
+
         {/* Action Sign Out Button */}
         <motion.button
           variants={itemVariants}
@@ -391,7 +464,43 @@ const ProfilePage: React.FC = () => {
         </motion.button>
       </div>
       
+      
       <ToastContainer toasts={toasts} onDismiss={dismissToast} />
+
+      {/* Prediction Modal for PDF Viewing/Downloading */}
+      <AnimatePresence>
+        {selectedPrediction && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-background/80 backdrop-blur-sm hide-on-print">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+              className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl bg-background border border-border shadow-2xl"
+            >
+              <div className="sticky top-0 z-10 flex items-center justify-between p-4 bg-background/90 backdrop-blur border-b border-border hide-on-print">
+                <h3 className="font-heading font-bold text-lg flex items-center gap-2">
+                  <History className="w-5 h-5 text-primary" />
+                  Predictor Report
+                </h3>
+                <button
+                  onClick={() => setSelectedPrediction(null)}
+                  className="p-2 rounded-full hover:bg-muted transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              
+              <div className="p-4 sm:p-6 pb-20">
+                <PredictionResult 
+                  predictorId={selectedPrediction.value.predictorId}
+                  data={selectedPrediction.value.result}
+                />
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 };
