@@ -340,13 +340,38 @@ const DietSuggestion: React.FC = () => {
     setAiDiet('');
     
     try {
-      const { data, error } = await supabase.functions.invoke('diet-suggestion', {
-        body: { state: searchState, lang: 'en' }
-      });
-      if (error) throw error;
+      const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+      if (!apiKey) {
+        throw new Error("Missing VITE_GEMINI_API_KEY in .env");
+      }
+
+      const systemPrompt = `ROLE: Nutrition and Diet Assistant; Context: Traditional Indian Regional Diets; Language: en
+You provide healthy, balanced traditional diet suggestions for a specific Indian state or region.
+Structure your response as follows:
+(1) Regional Overview
+(2) Breakfast options
+(3) Lunch options
+(4) Dinner options
+Keep it concise and highlight healthy, traditional choices.`;
+      
+      const userMessage = `Please provide a healthy traditional diet plan for the state of: ${searchState}.`;
+
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: `${systemPrompt}\n\nUser Request:\n${userMessage}` }] }]
+          })
+        }
+      );
+
+      if (!response.ok) throw new Error("Gemini API call failed");
+      const data = await response.json();
+      const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text || 'No suggestion received.';
       
       let index = 0;
-      const responseText = data?.suggestion || 'No suggestion received.';
       const interval = setInterval(() => {
         setAiDiet(prev => prev + responseText.charAt(index));
         index++;
@@ -356,9 +381,13 @@ const DietSuggestion: React.FC = () => {
         }
       }, 10);
       
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      setAiDiet('⚠️ AI Service Unavailable.\n\nPlease refer to the general regional diets below.');
+      if (err.message?.includes("VITE_GEMINI_API_KEY")) {
+         setAiDiet('⚠️ Missing API Key.\n\nPlease add VITE_GEMINI_API_KEY=your_key_here to your .env file to enable AI suggestions.');
+      } else {
+         setAiDiet('⚠️ AI Service Unavailable.\n\nPlease refer to the general regional diets below.');
+      }
       setIsAiLoading(false);
     }
   };

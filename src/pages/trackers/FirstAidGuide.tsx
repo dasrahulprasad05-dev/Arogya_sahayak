@@ -149,13 +149,38 @@ const FirstAidGuide: React.FC = () => {
     setAiFirstAid('');
     
     try {
-      const { data, error } = await supabase.functions.invoke('firstaid-suggestion', {
-        body: { emergency: searchEmergency, lang: 'en' }
-      });
-      if (error) throw error;
+      const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+      if (!apiKey) {
+        throw new Error("Missing VITE_GEMINI_API_KEY in .env");
+      }
+
+      const systemPrompt = `ROLE: First Aid & Emergency Assistant; Context: Initial Emergency Stabilization; Language: en
+You provide IMMEDIATE, step-by-step first aid instructions for emergencies before professional help arrives.
+CRITICAL INSTRUCTION: ALWAYS begin your response by advising the user to call an ambulance (108/112 in India) if the situation is life-threatening.
+Structure your response as follows:
+(1) Immediate Action (Call ambulance if needed)
+(2) Step-by-step stabilization instructions (Max 4-5 steps)
+(3) What NOT to do
+Keep it concise, calm, and actionable. Do NOT diagnose.`;
+      
+      const userMessage = `Emergency situation: ${searchEmergency}. Please provide immediate first aid steps.`;
+
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: `${systemPrompt}\n\nUser Request:\n${userMessage}` }] }]
+          })
+        }
+      );
+
+      if (!response.ok) throw new Error("Gemini API call failed");
+      const data = await response.json();
+      const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text || 'No suggestion received.';
       
       let index = 0;
-      const responseText = data?.suggestion || 'No suggestion received.';
       const interval = setInterval(() => {
         setAiFirstAid(prev => prev + responseText.charAt(index));
         index++;
@@ -165,9 +190,13 @@ const FirstAidGuide: React.FC = () => {
         }
       }, 10);
       
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      setAiFirstAid('⚠️ AI Service Unavailable.\n\nPlease refer to the general emergency protocols below.');
+      if (err.message?.includes("VITE_GEMINI_API_KEY")) {
+         setAiFirstAid('⚠️ Missing API Key.\n\nPlease add VITE_GEMINI_API_KEY=your_key_here to your .env file to enable AI suggestions.');
+      } else {
+         setAiFirstAid('⚠️ AI Service Unavailable.\n\nPlease refer to the general emergency protocols below.');
+      }
       setIsAiLoading(false);
     }
   };
