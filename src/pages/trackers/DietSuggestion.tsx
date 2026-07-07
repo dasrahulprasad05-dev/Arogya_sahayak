@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence, useMotionValue, animate } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
 import { useHealthDispatch } from '../../context/HealthDispatchContext';
+import { supabase } from '../../integrations/supabase/client';
 import {
   Info, Calculator, Utensils, Sparkles, CheckCircle, TrendingUp,
-  Scale, Ruler, ChevronRight, Leaf, Sun, Waves, Mountain
+  Scale, Ruler, ChevronRight, Leaf, Sun, Waves, Mountain, Send, Bot, RefreshCw
 } from 'lucide-react';
 import { showToast } from '../../utils/toast';
 
@@ -327,6 +328,40 @@ const DietSuggestion: React.FC = () => {
   const [height, setHeight] = useState(170);
   const [bmi, setBmi] = useState<number | null>(null);
   const [saved, setSaved] = useState(false);
+  const [searchState, setSearchState] = useState('');
+  const [aiDiet, setAiDiet] = useState('');
+  const [isAiLoading, setIsAiLoading] = useState(false);
+
+  const handleGetAiDiet = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!searchState.trim()) return;
+
+    setIsAiLoading(true);
+    setAiDiet('');
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('diet-suggestion', {
+        body: { state: searchState, lang: 'en' }
+      });
+      if (error) throw error;
+      
+      let index = 0;
+      const responseText = data?.suggestion || 'No suggestion received.';
+      const interval = setInterval(() => {
+        setAiDiet(prev => prev + responseText.charAt(index));
+        index++;
+        if (index >= responseText.length) {
+          clearInterval(interval);
+          setIsAiLoading(false);
+        }
+      }, 10);
+      
+    } catch (err) {
+      console.error(err);
+      setAiDiet('⚠️ AI Service Unavailable.\n\nPlease refer to the general regional diets below.');
+      setIsAiLoading(false);
+    }
+  };
 
   const calculateBmi = () => {
     const heightM = height / 100;
@@ -464,6 +499,49 @@ const DietSuggestion: React.FC = () => {
 
         {/* Diet Guidelines (7 cols) */}
         <div className="lg:col-span-7 space-y-6">
+
+          {/* AI Custom Diet Request */}
+          <div className="bg-card border border-border rounded-2xl p-6 shadow-sm glass space-y-4">
+            <h3 className="font-heading font-bold text-lg text-foreground flex items-center gap-2 border-b border-border/40 pb-3">
+              <Bot className="w-5 h-5 text-indigo-500" />
+              <span>Ask AI for State-Specific Diet</span>
+            </h3>
+
+            <form onSubmit={handleGetAiDiet} className="flex gap-2">
+              <input
+                type="text"
+                placeholder="Enter a state (e.g., Punjab, Kerala)..."
+                className="flex-1 p-2.5 rounded-xl border border-border bg-background/50 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all text-sm input-accent-glow"
+                value={searchState}
+                onChange={(e) => setSearchState(e.target.value)}
+              />
+              <button
+                type="submit"
+                disabled={isAiLoading || !searchState.trim()}
+                className="bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-bold px-4 rounded-xl text-sm flex items-center gap-2 transition-all shadow-sm"
+              >
+                {isAiLoading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                <span className="hidden sm:inline">Get Diet</span>
+              </button>
+            </form>
+
+            <AnimatePresence>
+              {(isAiLoading || aiDiet) && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="mt-4 p-4 border border-border/60 bg-muted/20 rounded-xl overflow-hidden"
+                >
+                  <p className="text-sm font-medium leading-relaxed whitespace-pre-wrap text-foreground font-sans">
+                    {aiDiet}
+                    {isAiLoading && !aiDiet && <span className="animate-pulse text-muted-foreground">Generating custom diet plan...</span>}
+                    {isAiLoading && aiDiet && <span className="inline-block w-1.5 h-4 bg-indigo-500 animate-pulse ml-0.5 align-middle" />}
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
 
           {/* Regional Diet Schedules — CARD UNCHANGED, CONTENT REDESIGNED */}
           <div className="bg-card border border-border rounded-2xl p-6 shadow-sm glass space-y-6">
