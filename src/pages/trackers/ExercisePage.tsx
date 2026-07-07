@@ -5,7 +5,6 @@ import {
   useMotionValue,
   useSpring,
   useTransform,
-  useInView,
   LayoutGroup,
 } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
@@ -16,7 +15,7 @@ import {
   Search, Sparkles, Check, CheckCircle, Activity, ArrowLeft, ArrowRight,
 } from 'lucide-react';
 import { showToast } from '../../utils/toast';
-import { exercisesDatabase, Exercise } from './exercisesData';
+import { exercisesDatabase, type Exercise } from './exercisesData';
 
 /* ---------- Motion Variants ---------- */
 const containerVariants = {
@@ -33,7 +32,7 @@ const itemVariants = {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { type: 'spring', stiffness: 260, damping: 24 },
+    transition: { type: 'spring' as const, stiffness: 260, damping: 24 },
   },
   exit: { opacity: 0, scale: 0.9, transition: { duration: 0.2 } },
 };
@@ -46,7 +45,7 @@ const modalBackdrop = {
 
 const modalPanel = {
   hidden: { opacity: 0, scale: 0.9, y: 40 },
-  show: { opacity: 1, scale: 1, y: 0, transition: { type: 'spring', stiffness: 300, damping: 30 } },
+  show: { opacity: 1, scale: 1, y: 0, transition: { type: 'spring' as const, stiffness: 300, damping: 30 } },
   exit: { opacity: 0, scale: 0.92, y: 30, transition: { duration: 0.2 } },
 };
 

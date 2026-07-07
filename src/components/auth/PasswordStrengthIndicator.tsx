@@ -1,6 +1,5 @@
 import React from 'react';
 import { Check, X } from 'lucide-react';
-import { useLanguage } from '../../context/LanguageContext';
 
 interface PasswordStrengthIndicatorProps {
   password?: string;
@@ -11,8 +10,6 @@ export const PasswordStrengthIndicator: React.FC<PasswordStrengthIndicatorProps>
   password = '',
   onValidationChange
 }) => {
-  const { t } = useLanguage();
-
   const requirements = [
     { id: 'length', text: 'At least 8 characters', met: password.length >= 8 },
     { id: 'upper', text: 'One uppercase letter', met: /[A-Z]/.test(password) },
@@ -23,7 +20,6 @@ export const PasswordStrengthIndicator: React.FC<PasswordStrengthIndicatorProps>
   const metCount = requirements.filter(req => req.met).length;
   
   // Calculate strength percentage and color
-  const strengthPercentage = (metCount / requirements.length) * 100;
   
   let color = 'bg-slate-200 dark:bg-slate-700'; // empty
   let text = 'Too weak';
