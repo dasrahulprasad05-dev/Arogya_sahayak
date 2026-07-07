@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
-import { Info, ShieldAlert, PhoneCall, Search, ChevronDown, X, AlertTriangle } from 'lucide-react';
+import { supabase } from '../../integrations/supabase/client';
+import { Info, ShieldAlert, PhoneCall, Search, ChevronDown, X, AlertTriangle, Send, Bot, RefreshCw } from 'lucide-react';
 
 interface Protocol {
   title: Record<string, string>;
@@ -136,6 +137,40 @@ const FirstAidGuide: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedIdx, setExpandedIdx] = useState<number | null>(null);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [searchEmergency, setSearchEmergency] = useState('');
+  const [aiFirstAid, setAiFirstAid] = useState('');
+  const [isAiLoading, setIsAiLoading] = useState(false);
+
+  const handleGetAiFirstAid = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!searchEmergency.trim()) return;
+
+    setIsAiLoading(true);
+    setAiFirstAid('');
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('firstaid-suggestion', {
+        body: { emergency: searchEmergency, lang: 'en' }
+      });
+      if (error) throw error;
+      
+      let index = 0;
+      const responseText = data?.suggestion || 'No suggestion received.';
+      const interval = setInterval(() => {
+        setAiFirstAid(prev => prev + responseText.charAt(index));
+        index++;
+        if (index >= responseText.length) {
+          clearInterval(interval);
+          setIsAiLoading(false);
+        }
+      }, 10);
+      
+    } catch (err) {
+      console.error(err);
+      setAiFirstAid('⚠️ AI Service Unavailable.\n\nPlease refer to the general emergency protocols below.');
+      setIsAiLoading(false);
+    }
+  };
 
   const filteredProtocols = emergencyProtocols.filter(proto => {
     const title = proto.title[language] || proto.title['en'];
@@ -201,6 +236,49 @@ const FirstAidGuide: React.FC = () => {
           <span className="relative">Call Ambulance (108)</span>
         </motion.a>
       </motion.div>
+
+      {/* AI Emergency Search */}
+      <div className="bg-card border border-border rounded-2xl p-6 shadow-sm glass space-y-4">
+        <h3 className="font-heading font-bold text-lg text-foreground flex items-center gap-2 border-b border-border/40 pb-3">
+          <Bot className="w-5 h-5 text-rose-500" />
+          <span>Ask AI for Custom Emergency First Aid</span>
+        </h3>
+
+        <form onSubmit={handleGetAiFirstAid} className="flex gap-2">
+          <input
+            type="text"
+            placeholder="Describe the emergency (e.g., swallowed a coin, severe burn)..."
+            className="flex-1 p-2.5 rounded-xl border border-border bg-background/50 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20 outline-none transition-all text-sm input-accent-glow"
+            value={searchEmergency}
+            onChange={(e) => setSearchEmergency(e.target.value)}
+          />
+          <button
+            type="submit"
+            disabled={isAiLoading || !searchEmergency.trim()}
+            className="bg-rose-600 hover:bg-rose-700 disabled:opacity-50 text-white font-bold px-4 rounded-xl text-sm flex items-center gap-2 transition-all shadow-sm"
+          >
+            {isAiLoading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+            <span className="hidden sm:inline">Get Help</span>
+          </button>
+        </form>
+
+        <AnimatePresence>
+          {(isAiLoading || aiFirstAid) && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="mt-4 p-4 border border-border/60 bg-muted/20 rounded-xl overflow-hidden"
+            >
+              <p className="text-sm font-medium leading-relaxed whitespace-pre-wrap text-foreground font-sans">
+                {aiFirstAid}
+                {isAiLoading && !aiFirstAid && <span className="animate-pulse text-muted-foreground">Generating custom first aid plan...</span>}
+                {isAiLoading && aiFirstAid && <span className="inline-block w-1.5 h-4 bg-rose-500 animate-pulse ml-0.5 align-middle" />}
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
 
       {/* Search bar */}
       <motion.div
