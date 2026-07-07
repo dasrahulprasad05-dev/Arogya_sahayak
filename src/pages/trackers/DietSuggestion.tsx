@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence, useMotionValue, animate } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
 import { useHealthDispatch } from '../../context/HealthDispatchContext';
-import { supabase } from '../../integrations/supabase/client';
+
 import {
   Info, Calculator, Utensils, Sparkles, CheckCircle, TrendingUp,
   Scale, Ruler, ChevronRight, Leaf, Sun, Waves, Mountain, Send, Bot, RefreshCw

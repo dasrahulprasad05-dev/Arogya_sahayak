@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
-import { supabase } from '../../integrations/supabase/client';
+
 import { Info, ShieldAlert, PhoneCall, Search, ChevronDown, X, AlertTriangle, Send, Bot, RefreshCw } from 'lucide-react';
 
 interface Protocol {
