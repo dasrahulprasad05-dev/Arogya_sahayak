@@ -65,6 +65,7 @@ ${vector ? `Feature Vector Length: ${vector.length}. Local Classification: ${loc
             },
             body: JSON.stringify({
               model: "llama-3.1-8b-instant",
+              response_format: { type: "json_object" },
               messages: [
                 { role: "system", content: systemPrompt },
                 { role: "user", content: `Patient Data:\n${userMessage}` }
@@ -84,7 +85,12 @@ ${vector ? `Feature Vector Length: ${vector.length}. Local Classification: ${loc
           const validation = medicalResponseSchema.safeParse(parsed);
           if (validation.success) {
             resultJson = validation.data;
+          } else {
+            console.error("Zod Validation Failed:", validation.error);
           }
+        } else {
+          const errText = await response.text();
+          console.error("Groq API returned error status:", response.status, errText);
         }
       } catch (err) {
         console.error("Groq call error, falling back to local predictor engine:", err);
