@@ -43,28 +43,31 @@ Keep it concise, calm, and actionable. Do NOT diagnose.`;
     if (GEMINI_API_KEY) {
       try {
         const response = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
+          `https://api.groq.com/openai/v1/chat/completions`,
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
+              "Authorization": `Bearer ${GEMINI_API_KEY}`
             },
             body: JSON.stringify({
-              contents: [{
-                parts: [{ text: `${systemPrompt}\n\nUser Request:\n${userMessage}` }]
-              }]
+              model: "llama3-8b-8192",
+              messages: [
+                { role: "system", content: systemPrompt },
+                { role: "user", content: `User Request:\n${userMessage}` }
+              ]
             })
           }
         );
 
         if (!response.ok) {
-          throw new Error("Gemini API call failed");
+          throw new Error("Groq API call failed");
         }
 
         const data = await response.json();
-        suggestion = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+        suggestion = data.choices?.[0]?.message?.content || "";
       } catch (err) {
-        console.error("Gemini request error:", err);
+        console.error("Groq request error:", err);
       }
     }
 

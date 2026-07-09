@@ -56,23 +56,26 @@ ${vector ? `Feature Vector Length: ${vector.length}. Local Classification: ${loc
     if (GEMINI_API_KEY) {
       try {
         const response = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
+          `https://api.groq.com/openai/v1/chat/completions`,
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
+              "Authorization": `Bearer ${GEMINI_API_KEY}`
             },
             body: JSON.stringify({
-              contents: [{
-                parts: [{ text: `${systemPrompt}\n\nPatient Data:\n${userMessage}` }]
-              }]
+              model: "llama3-8b-8192",
+              messages: [
+                { role: "system", content: systemPrompt },
+                { role: "user", content: `Patient Data:\n${userMessage}` }
+              ]
             })
           }
         );
 
         if (response.ok) {
           const data = await response.json();
-          let rawText = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+          let rawText = data.choices?.[0]?.message?.content || "";
           
           // Clean up potential markdown wrappers
           rawText = rawText.replace(/```json/g, "").replace(/```/g, "").trim();
@@ -84,11 +87,11 @@ ${vector ? `Feature Vector Length: ${vector.length}. Local Classification: ${loc
           }
         }
       } catch (err) {
-        console.error("Gemini call error, falling back to local predictor engine:", err);
+        console.error("Groq call error, falling back to local predictor engine:", err);
       }
     }
 
-    // Local Rule-Based Risk Engine Fallback if Gemini fails or is unconfigured
+    // Local Rule-Based Risk Engine Fallback if Groq fails or is unconfigured
     if (!resultJson) {
       console.log("Generating local rule-based risk profiles...");
       

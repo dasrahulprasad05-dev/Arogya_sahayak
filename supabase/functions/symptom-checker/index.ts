@@ -38,32 +38,35 @@ Structure: (1) Possible causes (2) Warning signs (3) Recommended action (4) When
 
     let advisory = "";
 
-    // 1. Fetch Gemini API if key is present
+    // 1. Fetch Groq API if key is present
     if (GEMINI_API_KEY) {
       try {
         const response = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
+          `https://api.groq.com/openai/v1/chat/completions`,
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
+              "Authorization": `Bearer ${GEMINI_API_KEY}`
             },
             body: JSON.stringify({
-              contents: [{
-                parts: [{ text: `${systemPrompt}\n\nPatient Vitals/Symptoms:\n${userMessage}` }]
-              }]
+              model: "llama3-8b-8192",
+              messages: [
+                { role: "system", content: systemPrompt },
+                { role: "user", content: `Patient Vitals/Symptoms:\n${userMessage}` }
+              ]
             })
           }
         );
 
         if (!response.ok) {
-          throw new Error("Gemini API call failed");
+          throw new Error("Groq API call failed");
         }
 
         const data = await response.json();
-        advisory = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+        advisory = data.choices?.[0]?.message?.content || "";
       } catch (err) {
-        console.error("Gemini request error:", err);
+        console.error("Groq request error:", err);
       }
     }
 
