@@ -29,6 +29,7 @@ serve(async (req) => {
 
     const systemPrompt = `ROLE: Nutrition and Diet Assistant; Context: Traditional Indian Regional Diets; Language: ${lang || 'en'}
 You provide healthy, balanced traditional diet suggestions for a specific Indian state or region.
+CRITICAL INSTRUCTION: Write in a natural, human-friendly tone. Do NOT use ANY Markdown formatting (no asterisks, no bold text, no headers). Use simple plain text.
 Structure your response as follows:
 (1) Regional Overview
 (2) Breakfast options

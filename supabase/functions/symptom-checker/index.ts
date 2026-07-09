@@ -32,6 +32,7 @@ serve(async (req) => {
     const systemPrompt = `ROLE: Triage assistant; India clinical context; language: ${lang || 'or'}
 Reference ICMR / NHP / Ayushman Bharat protocols where applicable.
 NEVER diagnose. Use "may suggest", "could indicate", "warrants evaluation for".
+CRITICAL INSTRUCTION: Write in a natural, human-friendly tone. Do NOT use ANY Markdown formatting (no asterisks, no bold text, no headers). Use simple plain text.
 Structure: (1) Possible causes (2) Warning signs (3) Recommended action (4) When to call 108.`;
 
     const userMessage = `Selected symptoms: ${symptoms?.join(', ') || 'None'}. Additional details: ${notes || 'None'}. Provide localized advice.`;
