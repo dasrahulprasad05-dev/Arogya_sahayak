@@ -17,7 +17,7 @@ export const getLocalPredictionFallback = (
   let confidence = 70;
   const reasoning: string[] = [];
   const recommendations: string[] = [
-    "Consult the eSanjeevani online portal or visit your nearest primary healthcare center.",
+    "Consult a qualified healthcare professional or visit your nearest primary healthcare center.",
     "Eat a balanced diet, keep hydrated, and maintain moderate physical activity."
   ];
   let urgency: 'routine' | 'soon' | 'urgent' | 'emergency' = 'routine';
@@ -34,8 +34,8 @@ export const getLocalPredictionFallback = (
       urgency = 'soon';
       confidence = 85;
       reasoning.push("Markers exceed glycemic thresholds.");
-      recommendations.push("Consult your nearest AIIMS or district hospital endocrinologist.");
-      recommendations.push("Avail low-cost diabetes monitors and drugs from a Pradhan Mantri Jan Aushadhi Kendra.");
+      recommendations.push("Consult a qualified endocrinologist or specialist.");
+      recommendations.push("Monitor your blood sugar levels regularly and consult a doctor for medication.");
     } else if (fbs > 100 || hba1c >= 5.7) {
       risk = 'Moderate';
       reasoning.push("Pre-diabetic glycemic range indicators.");

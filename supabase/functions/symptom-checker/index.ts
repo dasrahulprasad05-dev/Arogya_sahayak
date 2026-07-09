@@ -33,7 +33,8 @@ serve(async (req) => {
 Reference ICMR / NHP / Ayushman Bharat protocols where applicable.
 NEVER diagnose. Use "may suggest", "could indicate", "warrants evaluation for".
 CRITICAL INSTRUCTION: Write in a natural, human-friendly tone. Do NOT use ANY Markdown formatting (no asterisks, no bold text, no headers). Use simple plain text.
-Structure: (1) Possible causes (2) Warning signs (3) Recommended action (4) When to call 108.`;
+CRITICAL INSTRUCTION 2: Do NOT promote specific websites or portals (like eSanjeevani or AIIMS). Suggest actionable health steps and advise consulting a doctor.
+Structure: (1) Possible causes (2) Warning signs (3) Recommended action (4) When to call 108. Include a disclaimer to consult a doctor.`;
 
     const userMessage = `Selected symptoms: ${symptoms?.join(', ') || 'None'}. Additional details: ${notes || 'None'}. Provide localized advice.`;
 
@@ -78,19 +79,19 @@ Structure: (1) Possible causes (2) Warning signs (3) Recommended action (4) When
         advisory = `⚠️ ସ୍ୱାସ୍ଥ୍ୟ ପରାମର୍ଶ (Clinical Guidelines):
 (୧) ସମ୍ଭାବ୍ୟ କାରଣ: ଆପଣଙ୍କର ଲକ୍ଷଣ ସାଧାରଣ ଥଣ୍ଡା, ଋତୁଗତ ଜ୍ୱର କିମ୍ବା ମାଂସପେଶୀର ଯନ୍ତ୍ରଣା ହୋଇପାରେ।
 (୨) ବିପଦ ସଙ୍କେତ (Warning Signs): ଯଦି ଶ୍ୱାସକ୍ରିୟାରେ କଷ୍ଟ, ଅତ୍ୟଧିକ ଜ୍ୱର କିମ୍ବା ଛାତିରେ ଯନ୍ତ୍ରଣା ହୁଏ।
-(୩) ସୁପାରିଶ କାର୍ଯ୍ୟାନୁଷ୍ଠାନ: ପ୍ରଚୁର ପାଣି ପିଅନ୍ତୁ, ବିଶ୍ରାମ କରନ୍ତୁ, ଏବଂ eSanjeevani (ଇ-ସଞ୍ଜୀବନୀ) ପୋର୍ଟାଲ ବ୍ୟବହାର କରି ପରାମର୍ଶ କରନ୍ତୁ।
+(୩) ସୁପାରିଶ କାର୍ଯ୍ୟାନୁଷ୍ଠାନ: ପ୍ରଚୁର ପାଣି ପିଅନ୍ତୁ, ବିଶ୍ରାମ କରନ୍ତୁ, ଏବଂ ଜଣେ ଯୋଗ୍ୟ ଡାକ୍ତରଙ୍କ ସହିତ ପରାମର୍ଶ କରନ୍ତୁ।
 (୪) ତୁରନ୍ତ ୧୦୮ କୁ କଲ୍ କରନ୍ତୁ ଯଦି ଜରୁରୀ ପରିସ୍ଥିତି ଉପୁଜେ।`;
       } else if (lang === 'hi') {
         advisory = `⚠️ स्वास्थ्य सलाह (Clinical Guidelines):
 (1) संभावित कारण: मौसमी वायरल बुखार, सर्दी-जुकाम या सामान्य थकान हो सकती है।
 (2) चेतावनी के लक्षण: सांस लेने में तकलीफ, छाती में जकड़न या निरंतर तेज बुखार।
-(3) अनुशंसित कार्रवाई: भरपूर पानी पिएं, आराम करें, और जन औषधि केंद्र या ई-संजीवनी का उपयोग कर चिकित्सक से संपर्क करें।
+(3) अनुशंसित कार्रवाई: भरपूर पानी पिएं, आराम करें, और एक योग्य चिकित्सक से परामर्श करें।
 (4) आपातकाल में तुरंत 108 डायल करें।`;
       } else {
         advisory = `⚠️ Clinical Guidelines Advice:
 (1) Possible causes: Mild viral infection, common cold, or fatigue may suggest these symptoms.
 (2) Warning signs: Dyspnea (shortness of breath), persistent high fever (>38.5°C), or chest pressure.
-(3) Recommended action: Rest, maintain high hydration, monitor vitals, and consult eSanjeevani or local AIIMS OPD services.
+(3) Recommended action: Rest, maintain high hydration, monitor vitals, and consult a qualified healthcare professional.
 (4) Call 108 / 112 immediately in case of severe distress or red flags.`;
       }
     }

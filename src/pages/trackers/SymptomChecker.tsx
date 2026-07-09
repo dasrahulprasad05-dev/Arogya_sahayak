@@ -129,7 +129,7 @@ const SymptomChecker: React.FC = () => {
           advisory += `📌 GENERAL CARE GUIDANCE:\n`;
           advisory += `- Keep hydrated, rest, and log temperature/vitals twice daily.\n`;
           advisory += `- Watch for warning signs like worsening fever or breathing trouble.\n`;
-          advisory += `- Action: Consult a clinician when you are online or visit an eSanjeevani portal.\n\n`;
+          advisory += `- Action: Consult a qualified clinician or healthcare professional for a proper diagnosis.\n\n`;
         }
         
         advisory += `DISCLAIMER: Aarogya Sahayak provides screening guides. Consult a doctor for any diagnosis.`;

@@ -35,7 +35,7 @@ You must return ONLY a valid JSON object matching this schema:
   "risk": "Low" | "Moderate" | "High" | "Critical" | "Insufficient Data",
   "confidence": number, // NEVER exceed 85 for non-lab assessments. Range: 0 to 100.
   "reasoning": string[], // 3-5 items, citing actual patient input values (e.g. "HbA1c: 7.2%")
-  "recommendations": string[], // 3-5 items, India-specific, actionable (e.g., eSanjeevani, AIIMS OPD, Jan Aushadhi, 108)
+  "recommendations": string[], // 3-5 items, actionable health steps (e.g., consult a doctor, maintain hydration)
   "urgency": "routine" | "soon" | "urgent" | "emergency",
   "missing_fields": string[],
   "sos_guidance": string | null,
@@ -43,7 +43,7 @@ You must return ONLY a valid JSON object matching this schema:
 }
 IMPORTANT RULES:
 - Never recommend specific drug names or dosages.
-- Always include at least 1 Indian public healthcare resource.
+- Do NOT promote specific websites or portals (like eSanjeevani or AIIMS). Suggest actionable health steps and advise consulting a doctor.
 - Cite actual patient inputs in the reasoning.
 - Output ONLY valid raw JSON. No markdown wrappers, no preambles.`;
 
@@ -99,7 +99,7 @@ ${vector ? `Feature Vector Length: ${vector.length}. Local Classification: ${loc
       let confidence = 70;
       const reasoning: string[] = [];
       const recommendations: string[] = [
-        "Consult eSanjeevani online portal or visit your nearest primary healthcare center.",
+        "Consult a qualified healthcare professional or visit your nearest primary healthcare center.",
         "Eat a balanced diet, keep hydrated, and maintain moderate physical activity."
       ];
       let urgency: 'routine' | 'soon' | 'urgent' | 'emergency' = 'routine';
@@ -116,8 +116,8 @@ ${vector ? `Feature Vector Length: ${vector.length}. Local Classification: ${loc
           urgency = 'soon';
           confidence = 85; // Lab values
           reasoning.push("Markers exceed glycemic thresholds.");
-          recommendations.push("Consult your nearest AIIMS or district hospital endocrinologist.");
-          recommendations.push("Avail low-cost diabetes monitors from Pradhan Mantri Jan Aushadhi Kendra.");
+          recommendations.push("Consult a qualified endocrinologist or specialist.");
+          recommendations.push("Monitor your blood sugar levels regularly and consult a doctor for medication.");
         } else if (fbs > 100 || hba1c >= 5.7) {
           risk = 'Moderate';
           reasoning.push("Pre-diabetic glycemic range indicators.");
@@ -142,7 +142,7 @@ ${vector ? `Feature Vector Length: ${vector.length}. Local Classification: ${loc
         reasoning.push("Vector feature map analyzed on-device.");
         risk = 'Moderate';
         confidence = 65;
-        recommendations.push("For definitive screening, consult eSanjeevani or a district physician.");
+        recommendations.push("For definitive screening, consult a qualified physician.");
       } else {
         // Generic default indicators
         reasoning.push("Self-logged clinical indicators compiled.");
