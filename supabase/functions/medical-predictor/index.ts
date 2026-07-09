@@ -64,7 +64,7 @@ ${vector ? `Feature Vector Length: ${vector.length}. Local Classification: ${loc
               "Authorization": `Bearer ${GEMINI_API_KEY}`
             },
             body: JSON.stringify({
-              model: "llama3-8b-8192",
+              model: "llama-3.1-8b-instant",
               messages: [
                 { role: "system", content: systemPrompt },
                 { role: "user", content: `Patient Data:\n${userMessage}` }

@@ -50,7 +50,7 @@ Structure: (1) Possible causes (2) Warning signs (3) Recommended action (4) When
               "Authorization": `Bearer ${GEMINI_API_KEY}`
             },
             body: JSON.stringify({
-              model: "llama3-8b-8192",
+              model: "llama-3.1-8b-instant",
               messages: [
                 { role: "system", content: systemPrompt },
                 { role: "user", content: `Patient Vitals/Symptoms:\n${userMessage}` }
