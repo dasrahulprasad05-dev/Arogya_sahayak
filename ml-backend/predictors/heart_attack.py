@@ -1,7 +1,7 @@
 from models import PredictionFacts
 import random
 
-def predict_heart_attack(inputs: dict) -> PredictionFacts:
+def predict(inputs: dict) -> PredictionFacts:
     age = inputs.get('age', 0)
     rbp = inputs.get('restingBloodPressure', 120)
     chol = inputs.get('cholesterol', 200)
