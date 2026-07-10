@@ -7,7 +7,7 @@ import { supabase } from '../../integrations/supabase/client';
 import { useHealthDispatch } from '../../context/HealthDispatchContext';
 import ImageScanner from '../../components/scan/ImageScanner';
 import PredictionResult from '../../components/medical/PredictionResult';
-import type { PredictionData } from '../../components/medical/PredictionResult';
+import type { PredictionData } from '../../lib/types/prediction';
 import FeatureCard from '../../components/ui/FeatureCard';
 import { scanConfigs } from './scanData';
 import {
@@ -78,6 +78,7 @@ const ScanPage: React.FC = () => {
         ],
         urgency: 'routine',
         disclaimer: t('disclaimer.text'),
+        computedBy: 'offline_rules'
       };
       setResult(fallbackResult);
       logScan(selectedTool.id, cnnResult.label, cnnResult.score, fallbackResult);

@@ -8,7 +8,8 @@ import { useHealthDispatch } from '../../context/HealthDispatchContext';
 import { getLocalPredictionFallback } from '../../utils/localPredictorsFallback';
 import { showToast } from '../../utils/toast';
 import PredictionResult from '../../components/medical/PredictionResult';
-import type { PredictionData } from '../../components/medical/PredictionResult';
+import type { PredictionData } from '../../lib/types/prediction';
+import { templateRenderer } from '../../utils/templateRenderer';
 import { BrainCircuit, Loader2, Send, ArrowLeft, ShieldAlert, Droplets, ChevronDown, Sparkles } from 'lucide-react';
 
 const containerVariants = {
@@ -59,10 +60,18 @@ const DiabetesPredictor: React.FC = () => {
     try {
       const { data, error } = await supabase.functions.invoke('medical-predictor', { body: { predictorId: 'diabetes', inputs: validationResult.data } });
       if (error) throw error;
-      setResult(data);
-      logPrediction('diabetes', validationResult.data, data);
+      
+      let finalResult = data;
+      if (data.llm_failed && data.facts) {
+        finalResult = templateRenderer(data.facts);
+        showToast("AI Narrative generation failed. Displaying Basic Assessment.", "warning");
+      }
+      
+      setResult(finalResult);
+      logPrediction('diabetes', validationResult.data, finalResult);
     } catch {
-      const fallbackResult = getLocalPredictionFallback('diabetes', validationResult.data);
+      const offlineFacts = getLocalPredictionFallback('diabetes', validationResult.data);
+      const fallbackResult = templateRenderer(offlineFacts);
       setResult(fallbackResult);
       logPrediction('diabetes', validationResult.data, fallbackResult);
       showToast("Edge function unavailable. Using offline local risk assessment.", "warning");

@@ -7,8 +7,9 @@ import { supabase } from '../../integrations/supabase/client';
 import { useHealthDispatch } from '../../context/HealthDispatchContext';
 import { getLocalPredictionFallback } from '../../utils/localPredictorsFallback';
 import { showToast } from '../../utils/toast';
+import type { PredictionData } from '../../lib/types/prediction';
+import { templateRenderer } from '../../utils/templateRenderer';
 import PredictionResult from '../../components/medical/PredictionResult';
-import type { PredictionData } from '../../components/medical/PredictionResult';
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
 import { sendPredictionReportEmail } from '../../lib/emailService';
@@ -189,11 +190,18 @@ const GenericPredictor: React.FC = () => {
 
       if (error) throw error;
       
-      setResult(data);
-      logPrediction(config.id, parsedData, data);
+      let finalResult = data;
+      if (data.llm_failed && data.facts) {
+        finalResult = templateRenderer(data.facts);
+        showToast("AI Narrative generation failed. Displaying Basic Assessment.", "warning");
+      }
+      
+      setResult(finalResult);
+      logPrediction(config.id, parsedData, finalResult);
     } catch (err: any) {
       console.error(err);
-      const fallbackResult = getLocalPredictionFallback(config.id, parsedData);
+      const offlineFacts = getLocalPredictionFallback(config.id, parsedData);
+      const fallbackResult = templateRenderer(offlineFacts);
       setResult(fallbackResult);
       logPrediction(config.id, parsedData, fallbackResult);
       showToast("Edge function unavailable. Using offline local risk assessment.", "warning");

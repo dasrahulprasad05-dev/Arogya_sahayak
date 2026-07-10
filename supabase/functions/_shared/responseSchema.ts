@@ -12,3 +12,15 @@ export const medicalResponseSchema = z.object({
 });
 
 export type MedicalResponse = z.infer<typeof medicalResponseSchema>;
+
+export const predictionFactsSchema = z.object({
+  version: z.string(),
+  riskLevel: z.enum(['Low', 'Moderate', 'High', 'Critical', 'Insufficient Data']),
+  riskScore: z.number().min(0).max(100),
+  flaggedConditions: z.array(z.string()),
+  recommendedAction: z.enum(['monitor', 'consult_doctor', 'urgent_care']),
+  computedBy: z.enum(['offline_rules', 'server_rules', 'server_rules_ml']),
+  timestamp: z.string()
+});
+
+export type PredictionFactsValidated = z.infer<typeof predictionFactsSchema>;

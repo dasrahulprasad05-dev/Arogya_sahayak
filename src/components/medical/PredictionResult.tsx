@@ -4,16 +4,7 @@ import { useLanguage } from '../../context/LanguageContext';
 import { useHealthDispatch } from '../../context/HealthDispatchContext';
 import { PhoneCall, ShieldAlert, Sparkles, CheckCircle, Save, Download } from 'lucide-react';
 
-export interface PredictionData {
-  risk: 'Low' | 'Moderate' | 'High' | 'Critical' | 'Insufficient Data';
-  confidence: number;
-  reasoning: string[];
-  recommendations: string[];
-  urgency: 'routine' | 'soon' | 'urgent' | 'emergency';
-  missing_fields?: string[];
-  sos_guidance?: string | null;
-  disclaimer: string;
-}
+import type { PredictionData } from '../../lib/types/prediction';
 
 interface PredictionResultProps {
   predictorId: string;
@@ -118,7 +109,12 @@ const PredictionResult: React.FC<PredictionResultProps> = ({ predictorId, data }
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-4">
         <div>
           <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">Screening Result Indicator</span>
-          <h3 className="font-heading font-extrabold text-lg text-foreground mt-0.5">AI Preventive Risk Report</h3>
+          <h3 className="font-heading font-extrabold text-lg text-foreground mt-0.5">
+            {data.computedBy === 'offline_rules' ? 'Offline Mode' : 
+             data.computedBy === 'server_rules' ? 'Basic Assessment' :
+             data.computedBy === 'server_rules_ml' ? 'Advanced ML Assessment' :
+             'AI Preventive Risk Report'}
+          </h3>
         </div>
         
         <motion.span

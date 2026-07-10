@@ -8,7 +8,8 @@ import { useHealthDispatch } from '../../context/HealthDispatchContext';
 import { getLocalPredictionFallback } from '../../utils/localPredictorsFallback';
 import { showToast } from '../../utils/toast';
 import PredictionResult from '../../components/medical/PredictionResult';
-import type { PredictionData } from '../../components/medical/PredictionResult';
+import type { PredictionData } from '../../lib/types/prediction';
+import { templateRenderer } from '../../utils/templateRenderer';
 import { 
   BrainCircuit, 
   Loader2, 
@@ -94,11 +95,17 @@ const AnemiaChecker: React.FC = () => {
       });
 
       if (error) throw error;
-      setResult(data);
-      logPrediction('anemia', validationResult.data, data);
+      let finalResult = data;
+      if (data.llm_failed && data.facts) {
+        finalResult = templateRenderer(data.facts);
+        showToast("AI Narrative generation failed. Displaying Basic Assessment.", "warning");
+      }
+      setResult(finalResult);
+      logPrediction('anemia', validationResult.data, finalResult);
     } catch (err: any) {
       console.error(err);
-      const fallbackResult = getLocalPredictionFallback('anemia', validationResult.data);
+      const offlineFacts = getLocalPredictionFallback('anemia', validationResult.data);
+      const fallbackResult = templateRenderer(offlineFacts);
       setResult(fallbackResult);
       logPrediction('anemia', validationResult.data, fallbackResult);
       showToast("Edge function unavailable. Using offline local risk assessment.", "warning");
