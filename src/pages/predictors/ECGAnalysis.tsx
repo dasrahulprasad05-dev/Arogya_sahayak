@@ -59,8 +59,13 @@ const ECGAnalysis: React.FC = () => {
     try {
       const { data, error } = await supabase.functions.invoke('medical-predictor', { body: { predictorId: 'ecg', inputs: validationResult.data } });
       if (error) throw error;
-      setResult(data);
-      logPrediction('ecg', validationResult.data, data);
+      let finalResult = data;
+      if (data.llm_failed && data.facts) {
+        finalResult = templateRenderer(data.facts);
+        showToast("AI Narrative generation failed. Displaying Basic Assessment.", "warning");
+      }
+      setResult(finalResult);
+      logPrediction('ecg', validationResult.data, finalResult);
     } catch {
       const offlineFacts = getLocalPredictionFallback('ecg', validationResult.data);
       const fallbackResult = templateRenderer(offlineFacts);
