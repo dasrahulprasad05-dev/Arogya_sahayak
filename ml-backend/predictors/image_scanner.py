@@ -16,7 +16,7 @@ def predict(inputs: dict, localLabel: str = None) -> PredictionFacts:
     
     if score > 80:
         riskLevel = 'High'
-        action = 'urgent'
+        action = 'urgent_care'
 
     return PredictionFacts(
         version="2.0.0-ML-Vision",

@@ -29,10 +29,10 @@ def predict(inputs: dict) -> PredictionFacts:
     final_score = min(100, max(0, score + noise))
 
     riskLevel = 'Low'
-    action = 'routine'
+    action = 'monitor'
     if final_score > 75:
         riskLevel = 'High'
-        action = 'urgent'
+        action = 'urgent_care'
     elif final_score > 45:
         riskLevel = 'Moderate'
         action = 'consult_doctor'

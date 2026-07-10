@@ -6,5 +6,5 @@ class PredictionFacts(BaseModel):
     riskLevel: Literal['Low', 'Moderate', 'High', 'Critical']
     riskScore: int
     flaggedConditions: List[str]
-    recommendedAction: Literal['routine', 'preventive', 'urgent']
+    recommendedAction: Literal['monitor', 'consult_doctor', 'urgent_care']
     computedBy: Optional[str] = None

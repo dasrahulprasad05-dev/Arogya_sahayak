@@ -25,16 +25,16 @@ def predict_heart_attack(inputs: dict) -> PredictionFacts:
     final_score = min(100, max(0, score + noise))
 
     riskLevel = 'Low'
-    action = 'routine'
+    action = 'monitor'
     if final_score > 75:
         riskLevel = 'Critical'
-        action = 'urgent'
+        action = 'urgent_care'
     elif final_score > 50:
         riskLevel = 'High'
-        action = 'urgent'
+        action = 'urgent_care'
     elif final_score > 30:
         riskLevel = 'Moderate'
-        action = 'preventive'
+        action = 'consult_doctor'
 
     if not flagged:
         flagged.append("All vitals within normal parameters")
