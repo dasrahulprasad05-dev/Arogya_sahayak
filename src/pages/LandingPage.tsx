@@ -12,7 +12,7 @@ import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
 import {
-  Activity, ArrowRight, Sun, Moon, Globe, Check, Lock, HeartPulse,
+  Activity, ArrowRight, Sun, Moon, Globe, Check, Lock, HeartPulse, Linkedin, Github, Phone, Mail, Instagram
 } from 'lucide-react';
 import {
   marqueeItems, stats, features, steps, scanTypes, testimonials, faqItems,
@@ -500,13 +500,33 @@ const LandingPage: React.FC = () => {
             <p className="text-[11px] text-slate-400 font-bold uppercase tracking-wider">{t('app.tagline')}</p>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-8 text-xs font-bold text-slate-600 dark:text-slate-400">
-            {[['Privacy Policy', '/privacy'], ['Terms of Service', '/terms'], ['Contact Support', '/contact']].map(([label, to]) => (
-              <Link key={to} to={to} className="relative hover:text-primary transition-colors group">
-                {label}
-                <span className="absolute -bottom-1 left-0 h-[2px] w-0 bg-primary group-hover:w-full transition-all duration-300" />
-              </Link>
-            ))}
+          <div className="flex flex-col items-center md:items-end gap-6">
+            <div className="flex items-center gap-4 text-slate-500 dark:text-slate-400">
+              <a href="https://www.linkedin.com/in/rahul-prasad-das-7b1974370?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" rel="noopener noreferrer" className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full hover:text-primary transition-all duration-300" title="LinkedIn">
+                <Linkedin className="w-5 h-5" />
+              </a>
+              <a href="https://github.com/dasrahulprasad05-dev" target="_blank" rel="noopener noreferrer" className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full hover:text-primary transition-all duration-300" title="GitHub">
+                <Github className="w-5 h-5" />
+              </a>
+              <a href="mailto:rahulprasadcoding01@gmail.com" className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full hover:text-primary transition-all duration-300" title="Email">
+                <Mail className="w-5 h-5" />
+              </a>
+              <a href="tel:+919040786464" className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full hover:text-primary transition-all duration-300" title="Phone">
+                <Phone className="w-5 h-5" />
+              </a>
+              <a href="https://www.instagram.com/the___cyber__rahul?igsh=MXZhamluOHIwOGZsMQ==" target="_blank" rel="noopener noreferrer" className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full hover:text-primary transition-all duration-300" title="Instagram">
+                <Instagram className="w-5 h-5" />
+              </a>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-center gap-8 text-xs font-bold text-slate-600 dark:text-slate-400">
+              {[['Privacy Policy', '/privacy'], ['Terms of Service', '/terms'], ['Contact Support', '/contact']].map(([label, to]) => (
+                <Link key={to} to={to} className="relative hover:text-primary transition-colors group">
+                  {label}
+                  <span className="absolute -bottom-1 left-0 h-[2px] w-0 bg-primary group-hover:w-full transition-all duration-300" />
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
 
