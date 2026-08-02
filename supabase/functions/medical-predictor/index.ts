@@ -65,6 +65,132 @@ function computeServerRules(predictorId: string, inputs: Record<string, any>, lo
     riskLevel = 'Moderate';
     riskScore = 65;
     recommendedAction = 'consult_doctor';
+
+  // ── 10 NEW INDIA-SPECIFIC PREDICTORS ──
+  } else if (predictorId === 'malaria') {
+    const symptoms = [inputs.highFever, inputs.headache, inputs.nausea, inputs.jaundice, inputs.livesInEndemicArea, inputs.mosquitoExposure].filter(Boolean).length;
+    flaggedConditions.push(`Fever pattern: ${inputs.feverPattern || 'Unknown'}`);
+    flaggedConditions.push(`Endemic area resident: ${inputs.livesInEndemicArea ? 'Yes' : 'No'}`);
+    flaggedConditions.push(`Symptom count: ${symptoms}/6`);
+    if (symptoms >= 4 || (inputs.highFever && inputs.jaundice)) {
+      riskLevel = 'High'; riskScore = 85; recommendedAction = 'urgent_care';
+      flaggedConditions.push("High fever with jaundice or multiple malaria indicators — urgent blood smear test needed.");
+    } else if (symptoms >= 2) {
+      riskLevel = 'Moderate'; riskScore = 65; recommendedAction = 'consult_doctor';
+      flaggedConditions.push("Moderate malaria risk — RDT/blood test recommended.");
+    }
+
+  } else if (predictorId === 'chikungunya') {
+    const symptoms = [inputs.suddenFever, inputs.jointPain, inputs.jointSwelling, inputs.rash, inputs.headache, inputs.monsoonSeason, inputs.waterStagnation].filter(Boolean).length;
+    flaggedConditions.push(`Joint pain: ${inputs.jointPain ? 'Yes' : 'No'}`);
+    flaggedConditions.push(`Symptom count: ${symptoms}/7`);
+    if (symptoms >= 4 || (inputs.suddenFever && inputs.jointPain && inputs.jointSwelling)) {
+      riskLevel = 'High'; riskScore = 80; recommendedAction = 'consult_doctor';
+      flaggedConditions.push("Classic chikungunya triad — fever, joint pain, swelling. Serology test recommended.");
+    } else if (symptoms >= 2) {
+      riskLevel = 'Moderate'; riskScore = 60; recommendedAction = 'monitor';
+      flaggedConditions.push("Some chikungunya-like symptoms present. Monitor and consult if worsening.");
+    }
+
+  } else if (predictorId === 'typhoid') {
+    const symptoms = [inputs.prolongedFever, inputs.abdominalPain, inputs.diarrhea, inputs.headache, inputs.lossOfAppetite, inputs.untreatedWater, inputs.streetFood].filter(Boolean).length;
+    flaggedConditions.push(`Prolonged fever: ${inputs.prolongedFever ? 'Yes' : 'No'}`);
+    flaggedConditions.push(`Consumed untreated water: ${inputs.untreatedWater ? 'Yes' : 'No'}`);
+    if (symptoms >= 5 || (inputs.prolongedFever && inputs.untreatedWater && inputs.abdominalPain)) {
+      riskLevel = 'High'; riskScore = 82; recommendedAction = 'urgent_care';
+      flaggedConditions.push("Strong typhoid indicators — Widal test or blood culture recommended immediately.");
+    } else if (symptoms >= 3) {
+      riskLevel = 'Moderate'; riskScore = 65; recommendedAction = 'consult_doctor';
+      flaggedConditions.push("Moderate enteric fever risk — clinical evaluation recommended.");
+    }
+
+  } else if (predictorId === 'jaundice') {
+    const symptoms = [inputs.yellowSkin, inputs.darkUrine, inputs.paleStools, inputs.fatigue, inputs.abdominalPain, inputs.nausea, inputs.contamWater].filter(Boolean).length;
+    flaggedConditions.push(`Yellow skin/eyes: ${inputs.yellowSkin ? 'Yes' : 'No'}`);
+    flaggedConditions.push(`Dark urine: ${inputs.darkUrine ? 'Yes' : 'No'}`);
+    if (symptoms >= 4 || (inputs.yellowSkin && inputs.darkUrine && inputs.paleStools)) {
+      riskLevel = 'High'; riskScore = 85; recommendedAction = 'urgent_care';
+      flaggedConditions.push("Classic jaundice triad present. LFT and hepatitis panel urgently needed.");
+    } else if (symptoms >= 2) {
+      riskLevel = 'Moderate'; riskScore = 60; recommendedAction = 'consult_doctor';
+      flaggedConditions.push("Some hepatic indicators — liver function tests recommended.");
+    }
+
+  } else if (predictorId === 'asthma_copd') {
+    const symptoms = [inputs.chronicCough, inputs.breathlessness, inputs.wheezing, inputs.chestTightness, inputs.smoking, inputs.airPollution, inputs.familyHistory].filter(Boolean).length;
+    flaggedConditions.push(`Chronic cough: ${inputs.chronicCough ? 'Yes' : 'No'}`);
+    flaggedConditions.push(`Smoker/bidi user: ${inputs.smoking ? 'Yes' : 'No'}`);
+    if (symptoms >= 5 || (inputs.breathlessness && inputs.wheezing && inputs.smoking)) {
+      riskLevel = 'High'; riskScore = 83; recommendedAction = 'urgent_care';
+      flaggedConditions.push("Strong COPD/Asthma indicators — spirometry and chest X-ray needed.");
+    } else if (symptoms >= 3) {
+      riskLevel = 'Moderate'; riskScore = 65; recommendedAction = 'consult_doctor';
+      flaggedConditions.push("Moderate respiratory risk — pulmonary function assessment recommended.");
+    }
+
+  } else if (predictorId === 'pregnancy_risk') {
+    const symptoms = [inputs.highBP, inputs.bleeding, inputs.severeHeadache, inputs.swelling, inputs.anemia, inputs.previousComplications, inputs.noAntenatalCare].filter(Boolean).length;
+    const weeks = Number(inputs.weeksPregnant) || 0;
+    flaggedConditions.push(`Weeks pregnant: ${weeks}`);
+    flaggedConditions.push(`Bleeding: ${inputs.bleeding ? 'Yes' : 'No'}`);
+    if (inputs.bleeding || inputs.severeHeadache || symptoms >= 4) {
+      riskLevel = 'Critical'; riskScore = 90; recommendedAction = 'urgent_care';
+      flaggedConditions.push("HIGH-RISK PREGNANCY — immediate medical attention required. Possible pre-eclampsia or hemorrhage.");
+    } else if (symptoms >= 2) {
+      riskLevel = 'Moderate'; riskScore = 65; recommendedAction = 'consult_doctor';
+      flaggedConditions.push("Moderate pregnancy risk factors — regular antenatal checkup urgently needed.");
+    }
+
+  } else if (predictorId === 'malnutrition') {
+    const symptoms = [inputs.poorFeeding, inputs.frequentIllness, inputs.diarrhea, inputs.noBreastfeeding, inputs.lowIncome].filter(Boolean).length;
+    const childAge = Number(inputs.childAge) || 12;
+    const weight = Number(inputs.weight) || 0;
+    flaggedConditions.push(`Child age: ${childAge} months, Weight: ${weight} kg`);
+    if (symptoms >= 4 || (weight > 0 && childAge > 6 && weight < childAge * 0.35)) {
+      riskLevel = 'High'; riskScore = 85; recommendedAction = 'urgent_care';
+      flaggedConditions.push("Severe malnutrition risk — immediate Anganwadi/nutrition center referral needed.");
+    } else if (symptoms >= 2) {
+      riskLevel = 'Moderate'; riskScore = 65; recommendedAction = 'consult_doctor';
+      flaggedConditions.push("Moderate malnutrition risk — dietary counseling and growth monitoring needed.");
+    }
+
+  } else if (predictorId === 'diabetic_retinopathy') {
+    const symptoms = [inputs.blurredVision, inputs.floaters, inputs.difficultyNightVision, inputs.uncontrolledSugar, inputs.highBP, inputs.noEyeCheckup].filter(Boolean).length;
+    const years = Number(inputs.diabetesYears) || 0;
+    flaggedConditions.push(`Years with diabetes: ${years}`);
+    flaggedConditions.push(`Uncontrolled sugar: ${inputs.uncontrolledSugar ? 'Yes' : 'No'}`);
+    if (symptoms >= 4 || (years > 10 && inputs.blurredVision && inputs.uncontrolledSugar)) {
+      riskLevel = 'High'; riskScore = 85; recommendedAction = 'urgent_care';
+      flaggedConditions.push("High retinopathy risk — fundoscopy exam urgently needed to prevent vision loss.");
+    } else if (symptoms >= 2 || years > 5) {
+      riskLevel = 'Moderate'; riskScore = 65; recommendedAction = 'consult_doctor';
+      flaggedConditions.push("Moderate retinopathy risk — annual dilated eye exam recommended.");
+    }
+
+  } else if (predictorId === 'dental_health') {
+    const symptoms = [inputs.toothPain, inputs.bleedingGums, inputs.looseTeeth, inputs.mouthSores, inputs.tobaccoUse, inputs.badBreath, inputs.noDentalVisit].filter(Boolean).length;
+    flaggedConditions.push(`Tobacco/gutka use: ${inputs.tobaccoUse ? 'Yes' : 'No'}`);
+    flaggedConditions.push(`Mouth sores: ${inputs.mouthSores ? 'Yes' : 'No'}`);
+    if (symptoms >= 5 || (inputs.mouthSores && inputs.tobaccoUse)) {
+      riskLevel = 'High'; riskScore = 80; recommendedAction = 'urgent_care';
+      flaggedConditions.push("HIGH RISK — oral cancer screening recommended. Mouth sores with tobacco use is a red flag.");
+    } else if (symptoms >= 3) {
+      riskLevel = 'Moderate'; riskScore = 60; recommendedAction = 'consult_doctor';
+      flaggedConditions.push("Periodontal disease risk — dental checkup recommended.");
+    }
+
+  } else if (predictorId === 'skin_fungal') {
+    const symptoms = [inputs.itchyPatches, inputs.scaling, inputs.groinAffected, inputs.humid, inputs.tightClothing, inputs.recurringInfection, inputs.sharedItems].filter(Boolean).length;
+    flaggedConditions.push(`Ring-shaped itchy patches: ${inputs.itchyPatches ? 'Yes' : 'No'}`);
+    flaggedConditions.push(`Recurring infection: ${inputs.recurringInfection ? 'Yes' : 'No'}`);
+    if (symptoms >= 5 || (inputs.recurringInfection && inputs.itchyPatches && inputs.scaling)) {
+      riskLevel = 'High'; riskScore = 78; recommendedAction = 'consult_doctor';
+      flaggedConditions.push("Chronic dermatophytosis — dermatologist consultation needed. Antifungal resistance possible.");
+    } else if (symptoms >= 3) {
+      riskLevel = 'Moderate'; riskScore = 60; recommendedAction = 'monitor';
+      flaggedConditions.push("Fungal infection likely — basic antifungal treatment and hygiene measures needed.");
+    }
+
   } else {
     flaggedConditions.push("Clinical markers compiled for evaluation.");
     flaggedConditions.push(`Inputs checked: ${Object.keys(inputs || {}).join(', ') || 'none'}`);
