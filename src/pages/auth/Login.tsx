@@ -27,15 +27,42 @@ const Login: React.FC = () => {
     setLoading(true);
     setErrorMsg(null);
 
-    try {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) throw error;
-      navigate('/dashboard');
-    } catch (err: any) {
-      setErrorMsg(err.message || t('state.error'));
-    } finally {
-      setLoading(false);
+    const maxRetries = 3;
+    const baseDelay = 1000;
+
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+      try {
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) {
+          // If it's a network/fetch error and we have retries left, retry
+          const isNetworkError = error.message?.toLowerCase().includes('fetch') ||
+                                 error.message?.toLowerCase().includes('network') ||
+                                 error.status === 0 || error.status === 503;
+          if (isNetworkError && attempt < maxRetries) {
+            const delay = baseDelay * Math.pow(2, attempt);
+            console.warn(`[Login] Attempt ${attempt + 1} failed (${error.message}), retrying in ${delay}ms...`);
+            await new Promise(resolve => setTimeout(resolve, delay));
+            continue;
+          }
+          throw error;
+        }
+        navigate('/dashboard');
+        return;
+      } catch (err: any) {
+        if (attempt === maxRetries || !(
+          err.message?.toLowerCase().includes('fetch') ||
+          err.message?.toLowerCase().includes('network')
+        )) {
+          setErrorMsg(err.message || t('state.error'));
+          break;
+        }
+        const delay = baseDelay * Math.pow(2, attempt);
+        console.warn(`[Login] Attempt ${attempt + 1} threw, retrying in ${delay}ms...`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
     }
+
+    setLoading(false);
   };
 
   const handleGoogleLogin = async () => {

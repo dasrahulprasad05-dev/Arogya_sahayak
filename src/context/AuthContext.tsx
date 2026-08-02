@@ -40,6 +40,48 @@ const mockSession: Session | null = import.meta.env.DEV && mockUser ? {
   user: mockUser
 } : null;
 
+/**
+ * Retry wrapper for supabase.auth.getSession().
+ * When Supabase free-tier wakes from sleep, the first call can fail or
+ * return an error. This retries with exponential backoff so the user
+ * doesn't see "user not fetched" while the database is starting up.
+ */
+const getSessionWithRetry = async (
+  maxRetries = 3,
+  baseDelayMs = 1000
+): Promise<{ session: Session | null }> => {
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      const { data, error } = await supabase.auth.getSession();
+      if (error) {
+        console.warn(`[Auth] getSession attempt ${attempt + 1} failed:`, error.message);
+        if (attempt < maxRetries) {
+          const delay = baseDelayMs * Math.pow(2, attempt);
+          console.log(`[Auth] Retrying in ${delay}ms...`);
+          await new Promise(resolve => setTimeout(resolve, delay));
+          continue;
+        }
+        // Final attempt failed — return null session instead of crashing
+        console.error('[Auth] All getSession retries exhausted. Supabase may be sleeping.');
+        return { session: null };
+      }
+      if (attempt > 0) {
+        console.log(`[Auth] getSession succeeded on attempt ${attempt + 1}`);
+      }
+      return { session: data.session };
+    } catch (err) {
+      console.warn(`[Auth] getSession attempt ${attempt + 1} threw:`, err);
+      if (attempt < maxRetries) {
+        const delay = baseDelayMs * Math.pow(2, attempt);
+        await new Promise(resolve => setTimeout(resolve, delay));
+        continue;
+      }
+      return { session: null };
+    }
+  }
+  return { session: null };
+};
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
@@ -63,9 +105,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       } else {
         setUser(null);
         setSession(null);
-        supabase.auth.getSession().then(({ data }) => {
-          setSession(data.session);
-          setUser(data.session?.user ?? null);
+        getSessionWithRetry().then(({ session }) => {
+          setSession(session);
+          setUser(session?.user ?? null);
         });
       }
       return next;
@@ -80,8 +122,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return;
     }
 
-    // Initialize session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    // Initialize session with retry logic for Supabase free-tier wake-up
+    getSessionWithRetry().then(({ session }) => {
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);

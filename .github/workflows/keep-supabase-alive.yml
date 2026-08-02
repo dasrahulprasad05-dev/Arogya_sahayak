@@ -2,28 +2,50 @@ name: Keep Supabase Alive
 
 on:
   schedule:
-    # Runs every day at 8:00 AM UTC (1:30 PM IST) to prevent free-tier sleep
-    - cron: '0 8 * * *'
+    # Runs every 4 hours to prevent free-tier project from sleeping
+    - cron: '0 */4 * * *'
   workflow_dispatch: # Allow manual trigger from GitHub Actions tab
 
 jobs:
   ping:
-    name: Ping Supabase REST API
+    name: Ping Supabase to prevent sleep
     runs-on: ubuntu-latest
 
     steps:
-      - name: Ping Supabase health endpoint
+      - name: Ping Supabase REST API (health check)
         run: |
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+          echo "🔄 Pinging Supabase at $(date -u)..."
+
+          # 1. Ping the REST API root
+          REST_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
             "https://reoskksryeqgehisaaho.supabase.co/rest/v1/" \
             -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
             -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}")
-          
-          echo "Supabase response status: $STATUS"
 
-          if [ "$STATUS" -ge 200 ] && [ "$STATUS" -lt 300 ]; then
-            echo "✅ Supabase is alive and responding!"
+          echo "REST API status: $REST_STATUS"
+
+          # 2. Make a lightweight DB query to ensure the database is active
+          DB_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            "https://reoskksryeqgehisaaho.supabase.co/rest/v1/profiles?select=id&limit=1" \
+            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}")
+
+          echo "DB query status: $DB_STATUS"
+
+          # 3. Ping the Auth API to keep auth service warm
+          AUTH_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            "https://reoskksryeqgehisaaho.supabase.co/auth/v1/settings" \
+            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}")
+
+          echo "Auth API status: $AUTH_STATUS"
+
+          # Check results
+          if [ "$REST_STATUS" -ge 200 ] && [ "$REST_STATUS" -lt 400 ] && \
+             [ "$DB_STATUS" -ge 200 ] && [ "$DB_STATUS" -lt 400 ] && \
+             [ "$AUTH_STATUS" -ge 200 ] && [ "$AUTH_STATUS" -lt 400 ]; then
+            echo "✅ Supabase is alive! REST=$REST_STATUS DB=$DB_STATUS AUTH=$AUTH_STATUS"
           else
-            echo "⚠️  Unexpected status code: $STATUS"
+            echo "⚠️  Some endpoints returned unexpected status codes"
+            echo "REST=$REST_STATUS DB=$DB_STATUS AUTH=$AUTH_STATUS"
             exit 1
           fi
