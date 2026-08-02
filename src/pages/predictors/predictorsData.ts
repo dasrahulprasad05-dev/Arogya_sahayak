@@ -1,6 +1,7 @@
 import { 
   Droplets, HeartPulse, Activity, Microscope, Filter, FlaskConical, Syringe, 
-  Zap, Gauge, Brain, Wind, Bug, Circle, SmilePlus, AlertCircle, Moon, Sun, Bone
+  Zap, Gauge, Brain, Wind, Bug, Circle, SmilePlus, AlertCircle, Moon, Sun, Bone,
+  Thermometer, Hand, Utensils, Eye as EyeIcon, Smile, Baby, Scan, Stethoscope
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
@@ -37,4 +38,15 @@ export const genericConfigs: Record<string, { icon: LucideIcon; rgb: string; tex
   stopbang: { icon: Moon, rgb: '100, 116, 139', textClass: 'text-slate-500 dark:text-slate-400', bgClass: 'bg-slate-500/15' },
   vitaminD: { icon: Sun, rgb: '245, 158, 11', textClass: 'text-amber-500 dark:text-amber-400', bgClass: 'bg-amber-500/15' },
   osteoporosis: { icon: Bone, rgb: '120, 113, 108', textClass: 'text-stone-500 dark:text-stone-400', bgClass: 'bg-stone-500/15' },
+  // 10 NEW India-specific predictors
+  malaria: { icon: Thermometer, rgb: '220, 38, 38', textClass: 'text-red-600 dark:text-red-400', bgClass: 'bg-red-600/15' },
+  chikungunya: { icon: Hand, rgb: '217, 70, 239', textClass: 'text-fuchsia-500 dark:text-fuchsia-400', bgClass: 'bg-fuchsia-500/15' },
+  typhoid: { icon: Utensils, rgb: '245, 158, 11', textClass: 'text-amber-500 dark:text-amber-400', bgClass: 'bg-amber-500/15' },
+  jaundice: { icon: FlaskConical, rgb: '234, 179, 8', textClass: 'text-yellow-500 dark:text-yellow-400', bgClass: 'bg-yellow-500/15' },
+  asthma_copd: { icon: Wind, rgb: '59, 130, 246', textClass: 'text-blue-500 dark:text-blue-400', bgClass: 'bg-blue-500/15' },
+  pregnancy_risk: { icon: Baby, rgb: '236, 72, 153', textClass: 'text-pink-500 dark:text-pink-400', bgClass: 'bg-pink-500/15' },
+  malnutrition: { icon: Stethoscope, rgb: '251, 146, 60', textClass: 'text-orange-400 dark:text-orange-300', bgClass: 'bg-orange-400/15' },
+  diabetic_retinopathy: { icon: EyeIcon, rgb: '14, 165, 233', textClass: 'text-sky-500 dark:text-sky-400', bgClass: 'bg-sky-500/15' },
+  dental_health: { icon: Smile, rgb: '20, 184, 166', textClass: 'text-teal-500 dark:text-teal-400', bgClass: 'bg-teal-500/15' },
+  skin_fungal: { icon: Scan, rgb: '168, 85, 247', textClass: 'text-purple-500 dark:text-purple-400', bgClass: 'bg-purple-500/15' },
 };

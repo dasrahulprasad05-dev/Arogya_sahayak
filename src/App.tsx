@@ -57,6 +57,20 @@ const GenericPredictor = lazy(() => import('./pages/predictors/GenericPredictor'
 // CNN Scan Route
 const ScanPage = lazy(() => import('./pages/scan/ScanPage'));
 
+// Doctor System
+const DoctorRegister = lazy(() => import('./pages/auth/DoctorRegister'));
+const DoctorLogin = lazy(() => import('./pages/auth/DoctorLogin'));
+const AdminLogin = lazy(() => import('./pages/admin/AdminLogin'));
+const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
+const DoctorDirectory = lazy(() => import('./pages/doctors/DoctorDirectory'));
+const DoctorProfile = lazy(() => import('./pages/doctors/DoctorProfile'));
+const BookAppointment = lazy(() => import('./pages/doctors/BookAppointment'));
+const TicketStatus = lazy(() => import('./pages/doctors/TicketStatus'));
+const BookingHistory = lazy(() => import('./pages/doctors/BookingHistory'));
+const ReviewForm = lazy(() => import('./pages/doctors/ReviewForm'));
+const DoctorDashboard = lazy(() => import('./pages/doctor-dashboard/DoctorDashboard'));
+const QRScanner = lazy(() => import('./pages/doctor-dashboard/QRScanner'));
+
 // Setup react-query client
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -120,6 +134,18 @@ const App: React.FC = () => {
                       <Route path="/register" element={<Register />} />
                       <Route path="/forgot-password" element={<ForgotPassword />} />
                       <Route path="/reset-password" element={<ResetPassword />} />
+
+                      {/* Doctor & Admin public routes */}
+                      <Route path="/doctor-register" element={<Suspense fallback={<PageSkeleton />}><DoctorRegister /></Suspense>} />
+                      <Route path="/doctor-login" element={<Suspense fallback={<PageSkeleton />}><DoctorLogin /></Suspense>} />
+                      <Route path="/admin-login" element={<Suspense fallback={<PageSkeleton />}><AdminLogin /></Suspense>} />
+
+                      {/* Admin dashboard (standalone, no sidebar) */}
+                      <Route path="/admin" element={<Suspense fallback={<PageSkeleton />}><AdminDashboard /></Suspense>} />
+
+                      {/* Doctor dashboard (standalone, no sidebar) */}
+                      <Route path="/doctor-dashboard" element={<Suspense fallback={<PageSkeleton />}><DoctorDashboard /></Suspense>} />
+                      <Route path="/doctor-scanner" element={<Suspense fallback={<PageSkeleton />}><QRScanner /></Suspense>} />
 
                       {/* Protected routes */}
                       <Route path="/dashboard" element={
@@ -251,6 +277,38 @@ const App: React.FC = () => {
                       <Route path="/predictors/generic/:predictorId" element={
                         <ProtectedRoute>
                           <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><GenericPredictor /></Suspense></RouteErrorBoundary>
+                        </ProtectedRoute>
+                      } />
+
+                      {/* Doctor Directory & Booking (inside DashboardLayout) */}
+                      <Route path="/doctors" element={
+                        <ProtectedRoute>
+                          <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><DoctorDirectory /></Suspense></RouteErrorBoundary>
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/doctors/:doctorId" element={
+                        <ProtectedRoute>
+                          <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><DoctorProfile /></Suspense></RouteErrorBoundary>
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/doctors/:doctorId/book" element={
+                        <ProtectedRoute>
+                          <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><BookAppointment /></Suspense></RouteErrorBoundary>
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/doctors/:doctorId/review/:appointmentId" element={
+                        <ProtectedRoute>
+                          <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><ReviewForm /></Suspense></RouteErrorBoundary>
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/ticket/:ticketId" element={
+                        <ProtectedRoute>
+                          <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><TicketStatus /></Suspense></RouteErrorBoundary>
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/booking-history" element={
+                        <ProtectedRoute>
+                          <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><BookingHistory /></Suspense></RouteErrorBoundary>
                         </ProtectedRoute>
                       } />
 

@@ -148,5 +148,169 @@ export const genericPredictorConfig: Record<string, PredictorConfig> = {
       { name: 'sedentaryLifestyle', type: 'boolean', label: 'Sedentary Lifestyle (lack of weight-bearing exercise)' },
       { name: 'smoking', type: 'boolean', label: 'Regular Smoker / Tobacco Consumer' }
     ]
+  },
+
+  // ── 10 NEW INDIA-SPECIFIC PREDICTORS ──
+
+  malaria: {
+    id: 'malaria',
+    name: 'Malaria Risk Screener',
+    description: 'Screen for malaria symptoms and mosquito exposure risk in endemic Indian regions.',
+    fields: [
+      { name: 'age', type: 'number', label: 'Age', placeholder: 'e.g. 30' },
+      { name: 'highFever', type: 'boolean', label: 'High fever (>102°F) with chills and sweating' },
+      { name: 'feverPattern', type: 'select', label: 'Fever Pattern', options: ['Continuous', 'Every 48 Hours', 'Every 72 Hours', 'Irregular'] },
+      { name: 'headache', type: 'boolean', label: 'Severe headache and body ache' },
+      { name: 'nausea', type: 'boolean', label: 'Nausea / Vomiting' },
+      { name: 'livesInEndemicArea', type: 'boolean', label: 'Live in malaria-endemic area (Odisha, Chhattisgarh, Jharkhand, NE India)' },
+      { name: 'mosquitoExposure', type: 'boolean', label: 'Recent mosquito bites / no bed net usage' },
+      { name: 'jaundice', type: 'boolean', label: 'Yellowish skin or eyes' }
+    ]
+  },
+
+  chikungunya: {
+    id: 'chikungunya',
+    name: 'Chikungunya Screener',
+    description: 'Screen for Chikungunya virus symptoms transmitted by Aedes mosquitoes.',
+    fields: [
+      { name: 'age', type: 'number', label: 'Age', placeholder: 'e.g. 35' },
+      { name: 'suddenFever', type: 'boolean', label: 'Sudden high fever (>101°F)' },
+      { name: 'jointPain', type: 'boolean', label: 'Severe joint pain (hands, wrists, ankles, knees)' },
+      { name: 'jointSwelling', type: 'boolean', label: 'Joint swelling' },
+      { name: 'rash', type: 'boolean', label: 'Skin rash (maculopapular)' },
+      { name: 'headache', type: 'boolean', label: 'Headache and muscle pain' },
+      { name: 'monsoonSeason', type: 'boolean', label: 'Currently monsoon / post-monsoon season' },
+      { name: 'waterStagnation', type: 'boolean', label: 'Stagnant water sources near home' }
+    ]
+  },
+
+  typhoid: {
+    id: 'typhoid',
+    name: 'Typhoid Fever Screener',
+    description: 'Screen for enteric (typhoid) fever — common waterborne illness in India.',
+    fields: [
+      { name: 'age', type: 'number', label: 'Age', placeholder: 'e.g. 25' },
+      { name: 'prolongedFever', type: 'boolean', label: 'Fever lasting more than 5 days (step-ladder pattern)' },
+      { name: 'abdominalPain', type: 'boolean', label: 'Abdominal pain / tenderness' },
+      { name: 'diarrhea', type: 'boolean', label: 'Diarrhea or constipation' },
+      { name: 'headache', type: 'boolean', label: 'Headache and body ache' },
+      { name: 'lossOfAppetite', type: 'boolean', label: 'Loss of appetite' },
+      { name: 'untreatedWater', type: 'boolean', label: 'Consumed untreated / tap water recently' },
+      { name: 'streetFood', type: 'boolean', label: 'Ate street food / uncovered food recently' }
+    ]
+  },
+
+  jaundice: {
+    id: 'jaundice',
+    name: 'Jaundice / Hepatitis Screener',
+    description: 'Screen for jaundice and hepatitis symptoms — common during Indian monsoon.',
+    fields: [
+      { name: 'age', type: 'number', label: 'Age', placeholder: 'e.g. 30' },
+      { name: 'yellowSkin', type: 'boolean', label: 'Yellowing of skin or whites of eyes' },
+      { name: 'darkUrine', type: 'boolean', label: 'Dark-colored urine' },
+      { name: 'paleStools', type: 'boolean', label: 'Pale / clay-colored stools' },
+      { name: 'fatigue', type: 'boolean', label: 'Extreme fatigue and weakness' },
+      { name: 'abdominalPain', type: 'boolean', label: 'Pain in upper right abdomen' },
+      { name: 'nausea', type: 'boolean', label: 'Nausea / Vomiting' },
+      { name: 'contamWater', type: 'boolean', label: 'Consumed contaminated water or food recently' }
+    ]
+  },
+
+  asthma_copd: {
+    id: 'asthma_copd',
+    name: 'Asthma / COPD Screener',
+    description: 'Screen for chronic respiratory conditions exacerbated by air pollution in India.',
+    fields: [
+      { name: 'age', type: 'number', label: 'Age', placeholder: 'e.g. 45' },
+      { name: 'chronicCough', type: 'boolean', label: 'Chronic cough (lasting >3 weeks)' },
+      { name: 'breathlessness', type: 'boolean', label: 'Shortness of breath during activity or at rest' },
+      { name: 'wheezing', type: 'boolean', label: 'Wheezing / whistling sound while breathing' },
+      { name: 'chestTightness', type: 'boolean', label: 'Chest tightness or heaviness' },
+      { name: 'smoking', type: 'boolean', label: 'Current / former smoker or bidi user' },
+      { name: 'airPollution', type: 'boolean', label: 'Exposed to high air pollution / crop burning smoke' },
+      { name: 'familyHistory', type: 'boolean', label: 'Family history of asthma or COPD' }
+    ]
+  },
+
+  pregnancy_risk: {
+    id: 'pregnancy_risk',
+    name: 'Pregnancy Risk Screener',
+    description: 'Evaluate risk factors during pregnancy — critical for maternal health in rural India.',
+    fields: [
+      { name: 'age', type: 'number', label: 'Age', placeholder: 'e.g. 28' },
+      { name: 'weeksPregnant', type: 'number', label: 'Weeks of Pregnancy', placeholder: 'e.g. 20' },
+      { name: 'highBP', type: 'boolean', label: 'High blood pressure during pregnancy' },
+      { name: 'bleeding', type: 'boolean', label: 'Vaginal bleeding' },
+      { name: 'severeHeadache', type: 'boolean', label: 'Severe headache with blurred vision' },
+      { name: 'swelling', type: 'boolean', label: 'Excessive swelling in hands, face, or legs' },
+      { name: 'anemia', type: 'boolean', label: 'Diagnosed with anemia (low hemoglobin)' },
+      { name: 'previousComplications', type: 'boolean', label: 'Complications in previous pregnancy' },
+      { name: 'noAntenatalCare', type: 'boolean', label: 'Not receiving regular antenatal checkups' }
+    ]
+  },
+
+  malnutrition: {
+    id: 'malnutrition',
+    name: 'Child Malnutrition Screener',
+    description: 'Screen children (0-5 years) for stunting, wasting, and underweight indicators.',
+    fields: [
+      { name: 'childAge', type: 'number', label: 'Child Age (in months)', placeholder: 'e.g. 24' },
+      { name: 'weight', type: 'number', label: 'Current Weight (kg)', placeholder: 'e.g. 9.5' },
+      { name: 'height', type: 'number', label: 'Current Height (cm)', placeholder: 'e.g. 78' },
+      { name: 'poorFeeding', type: 'boolean', label: 'Poor appetite / refuses to eat' },
+      { name: 'frequentIllness', type: 'boolean', label: 'Frequently ill (>3 times in last 6 months)' },
+      { name: 'diarrhea', type: 'boolean', label: 'Recurrent diarrhea episodes' },
+      { name: 'noBreastfeeding', type: 'boolean', label: 'Not breastfed for first 6 months' },
+      { name: 'lowIncome', type: 'boolean', label: 'Family below poverty line / limited food access' }
+    ]
+  },
+
+  diabetic_retinopathy: {
+    id: 'diabetic_retinopathy',
+    name: 'Diabetic Retinopathy Screener',
+    description: 'Screen for eye complications linked to diabetes — a leading cause of blindness in India.',
+    fields: [
+      { name: 'age', type: 'number', label: 'Age', placeholder: 'e.g. 50' },
+      { name: 'diabetesYears', type: 'number', label: 'Years since diabetes diagnosis', placeholder: 'e.g. 10' },
+      { name: 'blurredVision', type: 'boolean', label: 'Blurred or fluctuating vision' },
+      { name: 'floaters', type: 'boolean', label: 'Dark spots or floaters in vision' },
+      { name: 'difficultyNightVision', type: 'boolean', label: 'Difficulty seeing at night' },
+      { name: 'uncontrolledSugar', type: 'boolean', label: 'HbA1c > 7% or uncontrolled blood sugar' },
+      { name: 'highBP', type: 'boolean', label: 'History of high blood pressure' },
+      { name: 'noEyeCheckup', type: 'boolean', label: 'No eye checkup in last 12 months' }
+    ]
+  },
+
+  dental_health: {
+    id: 'dental_health',
+    name: 'Dental Health Screener',
+    description: 'Screen for oral health issues related to tobacco, gutka, and pan masala use in India.',
+    fields: [
+      { name: 'age', type: 'number', label: 'Age', placeholder: 'e.g. 35' },
+      { name: 'toothPain', type: 'boolean', label: 'Persistent tooth pain or sensitivity' },
+      { name: 'bleedingGums', type: 'boolean', label: 'Bleeding gums while brushing' },
+      { name: 'looseTeeth', type: 'boolean', label: 'Loose or shifting teeth' },
+      { name: 'mouthSores', type: 'boolean', label: 'Mouth sores or white/red patches (>2 weeks)' },
+      { name: 'tobaccoUse', type: 'boolean', label: 'Uses tobacco, gutka, pan masala, or betel nut' },
+      { name: 'badBreath', type: 'boolean', label: 'Persistent bad breath' },
+      { name: 'noDentalVisit', type: 'boolean', label: 'No dental visit in last 12 months' }
+    ]
+  },
+
+  skin_fungal: {
+    id: 'skin_fungal',
+    name: 'Skin Fungal Infection Screener',
+    description: 'Screen for dermatophytosis and other fungal infections common in humid Indian climate.',
+    fields: [
+      { name: 'age', type: 'number', label: 'Age', placeholder: 'e.g. 30' },
+      { name: 'itchyPatches', type: 'boolean', label: 'Itchy, red, ring-shaped skin patches' },
+      { name: 'scaling', type: 'boolean', label: 'Skin scaling, flaking, or peeling' },
+      { name: 'groinAffected', type: 'boolean', label: 'Groin, underarms, or skin folds affected' },
+      { name: 'humid', type: 'boolean', label: 'Live in hot and humid area' },
+      { name: 'tightClothing', type: 'boolean', label: 'Wear tight / synthetic clothing regularly' },
+      { name: 'recurringInfection', type: 'boolean', label: 'Recurring infection (>3 episodes in past year)' },
+      { name: 'sharedItems', type: 'boolean', label: 'Share towels, clothing, or personal items' }
+    ]
   }
 };
+

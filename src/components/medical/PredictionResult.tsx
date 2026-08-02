@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
 import { useHealthDispatch } from '../../context/HealthDispatchContext';
-import { PhoneCall, ShieldAlert, Sparkles, CheckCircle, Save, Download } from 'lucide-react';
+import { PREDICTOR_SPECIALTY_MAP } from '../../lib/types/doctor';
+import { PhoneCall, ShieldAlert, Sparkles, CheckCircle, Save, Download, Stethoscope } from 'lucide-react';
 
 import type { PredictionData } from '../../lib/types/prediction';
 
@@ -12,6 +14,7 @@ interface PredictionResultProps {
 }
 
 const PredictionResult: React.FC<PredictionResultProps> = ({ predictorId, data }) => {
+  const navigate = useNavigate();
   const { t, formatNumber } = useLanguage();
   const { logSymptom } = useHealthDispatch();
   const [saved, setSaved] = useState(false);
@@ -219,6 +222,21 @@ const PredictionResult: React.FC<PredictionResultProps> = ({ predictorId, data }
           <Download className="w-4 h-4" />
           <span>Download PDF</span>
         </button>
+
+        {/* See Doctor button — only for High/Critical risk */}
+        {isHighRisk && (
+          <button
+            onClick={() => {
+              const specialties = PREDICTOR_SPECIALTY_MAP[predictorId];
+              const specialty = specialties?.[0] || '';
+              navigate(`/doctors${specialty ? `?specialty=${specialty}` : ''}`);
+            }}
+            className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 transition-all text-sm touch-target"
+          >
+            <Stethoscope className="w-4 h-4" />
+            <span>🩺 See Doctor</span>
+          </button>
+        )}
       </div>
 
     </motion.div>
