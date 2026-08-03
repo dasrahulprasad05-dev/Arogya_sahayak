@@ -79,7 +79,7 @@ CREATE POLICY "Doctors update own profile" ON public.doctors
 
 -- Anyone can insert (register as doctor)
 CREATE POLICY "Anyone can register as doctor" ON public.doctors
-  FOR INSERT WITH CHECK (auth.uid() = id);
+  FOR INSERT WITH CHECK (true);
 
 
 -- ──────────────────────────────────────────
@@ -111,6 +111,10 @@ CREATE POLICY "Anyone can view doctor time slots" ON public.doctor_time_slots
 -- Doctors can manage their own time slots
 CREATE POLICY "Doctors manage own time slots" ON public.doctor_time_slots
   FOR ALL USING (auth.uid() = doctor_id);
+
+-- Allow insert during registration before email is verified
+CREATE POLICY "Anyone can register doctor time slots" ON public.doctor_time_slots
+  FOR INSERT WITH CHECK (true);
 
 
 -- ──────────────────────────────────────────
