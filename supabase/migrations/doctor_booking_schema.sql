@@ -81,6 +81,14 @@ CREATE POLICY "Doctors update own profile" ON public.doctors
 CREATE POLICY "Anyone can register as doctor" ON public.doctors
   FOR INSERT WITH CHECK (true);
 
+-- Admins can read all doctors
+CREATE POLICY "Admins read all doctors" ON public.doctors
+  FOR SELECT USING (EXISTS (SELECT 1 FROM public.admin_users WHERE user_id = auth.uid()));
+
+-- Admins can update all doctors
+CREATE POLICY "Admins update all doctors" ON public.doctors
+  FOR UPDATE USING (EXISTS (SELECT 1 FROM public.admin_users WHERE user_id = auth.uid()));
+
 
 -- ──────────────────────────────────────────
 -- 3. DOCTOR TIME SLOTS TABLE
