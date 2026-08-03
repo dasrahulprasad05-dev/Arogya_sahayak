@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../../context/LanguageContext';
 import { useHealthRead } from '../../context/HealthReadContext';
 import { useHealthDispatch } from '../../context/HealthDispatchContext';
+import { useRequireAuth } from '../../hooks/useRequireAuth';
+import LoginPromptModal from '../../components/auth/LoginPromptModal';
 import { Bell, BellOff, Calendar, Info, Clock, Plus } from 'lucide-react';
 import { showToast } from '../../utils/toast';
 
@@ -9,6 +11,7 @@ const MedicineReminder: React.FC = () => {
   const { t } = useLanguage();
   const { logs } = useHealthRead();
   const { logMedicine } = useHealthDispatch();
+  const { requireAuth, showLoginModal, setShowLoginModal } = useRequireAuth();
 
   const [title, setTitle] = useState('');
   const [dosage, setDosage] = useState('1 Tablet');
@@ -57,6 +60,7 @@ const MedicineReminder: React.FC = () => {
 
   const handleAddReminder = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!requireAuth()) return;
     if (!title) return;
 
     logMedicine({ title, dosage, frequency, time });
@@ -271,6 +275,7 @@ const MedicineReminder: React.FC = () => {
           Adhering to prescribed times keeps therapeutic drug levels stable in blood plasma. Skipping or delaying dosages (especially for hypertension, coronary disease, or diabetes) can result in rebound spikes or decreased efficacy. Use browser notifications to remind you.
         </div>
       </div>
+      <LoginPromptModal open={showLoginModal} onClose={() => setShowLoginModal(false)} />
     </div>
   );
 };

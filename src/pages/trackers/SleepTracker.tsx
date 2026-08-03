@@ -2,6 +2,8 @@ import React, { useState, useMemo } from 'react';
 import { useLanguage } from '../../context/LanguageContext';
 import { useHealthRead } from '../../context/HealthReadContext';
 import { useHealthDispatch } from '../../context/HealthDispatchContext';
+import { useRequireAuth } from '../../hooks/useRequireAuth';
+import LoginPromptModal from '../../components/auth/LoginPromptModal';
 import { Moon, Star, Info, Calendar } from 'lucide-react';
 import { showToast } from '../../utils/toast';
 
@@ -9,6 +11,7 @@ const SleepTracker: React.FC = () => {
   const { formatNumber } = useLanguage();
   const { logs } = useHealthRead();
   const { logSleep } = useHealthDispatch();
+  const { requireAuth, showLoginModal, setShowLoginModal } = useRequireAuth();
 
   const [date, setDate] = useState<string>(() => new Date().toISOString().split('T')[0]);
   const [bedtime, setBedtime] = useState<string>('23:00');
@@ -61,6 +64,7 @@ const SleepTracker: React.FC = () => {
   }, [sleepLogs]);
 
   const handleLog = () => {
+    if (!requireAuth()) return;
     logSleep(duration, quality);
     showToast(
       navigator.onLine 
@@ -352,6 +356,7 @@ const SleepTracker: React.FC = () => {
         </div>
       </div>
 
+      <LoginPromptModal open={showLoginModal} onClose={() => setShowLoginModal(false)} />
     </div>
   );
 };

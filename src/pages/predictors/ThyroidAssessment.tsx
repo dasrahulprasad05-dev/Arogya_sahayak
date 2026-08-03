@@ -10,6 +10,8 @@ import { showToast } from '../../utils/toast';
 import PredictionResult from '../../components/medical/PredictionResult';
 import type { PredictionData } from '../../lib/types/prediction';
 import { templateRenderer } from '../../utils/templateRenderer';
+import { useRequireAuth } from '../../hooks/useRequireAuth';
+import LoginPromptModal from '../../components/auth/LoginPromptModal';
 import { 
   BrainCircuit, 
   Loader2, 
@@ -47,6 +49,7 @@ const numFields: { id: string; label: string; field: keyof ThyroidInputs; placeh
 const ThyroidAssessment: React.FC = () => {
   const navigate = useNavigate();
   const { logPrediction } = useHealthDispatch();
+  const { requireAuth, showLoginModal, setShowLoginModal } = useRequireAuth();
 
   const [formData, setFormData] = useState<Partial<ThyroidInputs>>({
     age: 35,
@@ -79,6 +82,7 @@ const ThyroidAssessment: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!requireAuth()) return;
     setLoading(true);
     setErrorMsg(null);
     setFormErrors({});
@@ -446,6 +450,7 @@ const ThyroidAssessment: React.FC = () => {
         </motion.div>
 
       </div>
+      <LoginPromptModal open={showLoginModal} onClose={() => setShowLoginModal(false)} />
     </div>
   );
 };

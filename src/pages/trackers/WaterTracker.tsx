@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useLanguage } from '../../context/LanguageContext';
 import { useHealthRead } from '../../context/HealthReadContext';
 import { useHealthDispatch } from '../../context/HealthDispatchContext';
+import { useRequireAuth } from '../../hooks/useRequireAuth';
+import LoginPromptModal from '../../components/auth/LoginPromptModal';
 import { Droplet, Plus, Minus, Info } from 'lucide-react';
 import { showToast } from '../../utils/toast';
 
@@ -9,6 +11,7 @@ const WaterTracker: React.FC = () => {
   const { t, formatNumber } = useLanguage();
   const { todaySnapshot } = useHealthRead();
   const { logWater } = useHealthDispatch();
+  const { requireAuth, showLoginModal, setShowLoginModal } = useRequireAuth();
   const [glasses, setGlasses] = useState(1);
 
   const totalDrunk = todaySnapshot.water;
@@ -16,6 +19,7 @@ const WaterTracker: React.FC = () => {
   const progressPercent = Math.min((totalDrunk / target) * 100, 100);
 
   const handleLog = () => {
+    if (!requireAuth()) return;
     logWater(glasses);
     setGlasses(1);
     showToast(
@@ -157,6 +161,7 @@ const WaterTracker: React.FC = () => {
           Water keeps your temperature normal, lubricates and cushions joints, protects your spinal cord, and gets rid of wastes through urination and sweat. The National Health Portal of India recommends at least 2.5-3 liters of fluids daily.
         </div>
       </div>
+      <LoginPromptModal open={showLoginModal} onClose={() => setShowLoginModal(false)} />
     </div>
   );
 };

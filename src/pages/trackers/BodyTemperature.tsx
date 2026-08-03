@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useLanguage } from '../../context/LanguageContext';
 import { useHealthRead } from '../../context/HealthReadContext';
 import { useHealthDispatch } from '../../context/HealthDispatchContext';
+import { useRequireAuth } from '../../hooks/useRequireAuth';
+import LoginPromptModal from '../../components/auth/LoginPromptModal';
 import { Thermometer, Info, ShieldAlert, CheckCircle, Plus, Minus } from 'lucide-react';
 import { showToast } from '../../utils/toast';
 
@@ -9,6 +11,7 @@ const BodyTemperature: React.FC = () => {
   const { t, formatDate, formatNumber } = useLanguage();
   const { logs } = useHealthRead();
   const { logTemperature } = useHealthDispatch();
+  const { requireAuth, showLoginModal, setShowLoginModal } = useRequireAuth();
 
   const [temp, setTemp] = useState(36.8);
   const [isDragging, setIsDragging] = useState(false);
@@ -53,6 +56,7 @@ const BodyTemperature: React.FC = () => {
   };
 
   const handleLog = () => {
+    if (!requireAuth()) return;
     logTemperature(temp);
     showToast(
       navigator.onLine 
@@ -239,6 +243,7 @@ const BodyTemperature: React.FC = () => {
           A normal body temperature is around 37.0°C (98.6°F) but varies by individual, age, activity, and time of day. Fever is a normal immune defense mechanism indicating infectious or inflammatory indices. If temperature exceeds 38.5°C or is accompanied by confusion, stiff neck, or dyspnea, seek immediate medical attention or dial 108.
         </div>
       </div>
+      <LoginPromptModal open={showLoginModal} onClose={() => setShowLoginModal(false)} />
     </div>
   );
 };

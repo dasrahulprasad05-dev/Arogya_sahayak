@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../../context/LanguageContext';
 import { useHealthDispatch } from '../../context/HealthDispatchContext';
+import { useRequireAuth } from '../../hooks/useRequireAuth';
+import LoginPromptModal from '../../components/auth/LoginPromptModal';
 import { supabase } from '../../integrations/supabase/client';
 import { 
   Activity, 
@@ -67,6 +69,7 @@ const symptomsByRegion: Record<BodyRegion, { id: string; label: string }[]> = {
 const SymptomChecker: React.FC = () => {
   const { language } = useLanguage();
   const { logSymptom } = useHealthDispatch();
+  const { requireAuth, showLoginModal, setShowLoginModal } = useRequireAuth();
 
   // Wizard state: 1 = Region, 2 = Symptoms, 3 = Notes, 4 = AI Results
   const [step, setStep] = useState<number>(1);
@@ -102,6 +105,7 @@ const SymptomChecker: React.FC = () => {
 
   const handleTriageSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!requireAuth()) return;
     if (selectedSymptoms.length === 0 && !additionalNotes) {
       setErrorMsg('Please select at least one symptom or enter notes.');
       return;
@@ -445,6 +449,7 @@ const SymptomChecker: React.FC = () => {
         </div>
       </div>
 
+      <LoginPromptModal open={showLoginModal} onClose={() => setShowLoginModal(false)} />
     </div>
   );
 };

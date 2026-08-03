@@ -10,6 +10,8 @@ import { showToast } from '../../utils/toast';
 import PredictionResult from '../../components/medical/PredictionResult';
 import type { PredictionData } from '../../lib/types/prediction';
 import { templateRenderer } from '../../utils/templateRenderer';
+import { useRequireAuth } from '../../hooks/useRequireAuth';
+import LoginPromptModal from '../../components/auth/LoginPromptModal';
 import { BrainCircuit, Loader2, Send, ArrowLeft, ShieldAlert, Activity, Sparkles } from 'lucide-react';
 
 const containerVariants = {
@@ -27,6 +29,7 @@ const ACCENT_HEX = '#8b5cf6';
 const ECGAnalysis: React.FC = () => {
   const navigate = useNavigate();
   const { logPrediction } = useHealthDispatch();
+  const { requireAuth, showLoginModal, setShowLoginModal } = useRequireAuth();
 
   const [formData, setFormData] = useState<Partial<EcgInputs>>({ heartRate: 72, prInterval: 160, qrsDuration: 90, qtInterval: 400, qtcInterval: 420, symptoms: [] });
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
@@ -46,6 +49,7 @@ const ECGAnalysis: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!requireAuth()) return;
     setLoading(true);
     setFormErrors({});
     const validationResult = ecgSchema.safeParse(formData);
@@ -189,6 +193,7 @@ const ECGAnalysis: React.FC = () => {
           </AnimatePresence>
         </motion.div>
       </div>
+      <LoginPromptModal open={showLoginModal} onClose={() => setShowLoginModal(false)} />
     </div>
   );
 };

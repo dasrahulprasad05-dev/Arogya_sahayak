@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useLanguage } from '../../context/LanguageContext';
 import { useHealthRead } from '../../context/HealthReadContext';
 import { useHealthDispatch } from '../../context/HealthDispatchContext';
+import { useRequireAuth } from '../../hooks/useRequireAuth';
+import LoginPromptModal from '../../components/auth/LoginPromptModal';
 import { Info, Shield, CheckSquare, Square, Search } from 'lucide-react';
 import { showToast } from '../../utils/toast';
 
@@ -33,6 +35,7 @@ const VaccinationTracker: React.FC = () => {
   const { t } = useLanguage();
   const { logs } = useHealthRead();
   const { logVaccine } = useHealthDispatch();
+  const { requireAuth, showLoginModal, setShowLoginModal } = useRequireAuth();
 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedAge, setSelectedAge] = useState<string>('All');
@@ -53,6 +56,7 @@ const VaccinationTracker: React.FC = () => {
   const progressPercent = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
 
   const handleToggle = (vaccineId: string) => {
+    if (!requireAuth()) return;
     const isCurrentlyChecked = !!checkedVaccines[vaccineId];
     logVaccine(vaccineId, !isCurrentlyChecked);
     
@@ -223,6 +227,7 @@ const VaccinationTracker: React.FC = () => {
           Vaccination is the most cost-effective preventive health intervention. The Government of India provides free vaccinations under the Universal Immunization Programme (UIP) to protect infants and child populations against 12 life-threatening vaccine-preventable diseases. Ensure booster doses are logged on time.
         </div>
       </div>
+      <LoginPromptModal open={showLoginModal} onClose={() => setShowLoginModal(false)} />
     </div>
   );
 };

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence, useMotionValue, animate } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
 import { useHealthDispatch } from '../../context/HealthDispatchContext';
+import { useRequireAuth } from '../../hooks/useRequireAuth';
+import LoginPromptModal from '../../components/auth/LoginPromptModal';
 
 import {
   Info, Calculator, Utensils, Sparkles, CheckCircle, TrendingUp,
@@ -323,6 +325,7 @@ const BmiGauge: React.FC<{ bmi: number; color: string }> = ({ bmi, color }) => {
 const DietSuggestion: React.FC = () => {
   const { t } = useLanguage();
   const { logDiet } = useHealthDispatch();
+  const { requireAuth, showLoginModal, setShowLoginModal } = useRequireAuth();
 
   const [weight, setWeight] = useState(70);
   const [height, setHeight] = useState(170);
@@ -334,6 +337,7 @@ const DietSuggestion: React.FC = () => {
 
   const handleGetAiDiet = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!requireAuth()) return;
     if (!searchState.trim()) return;
 
     setIsAiLoading(true);
@@ -700,6 +704,7 @@ Keep it concise and highlight healthy, traditional choices.`;
           A healthy diet provides critical macronutrients and micronutrients that defend against metabolic cardiovascular disease (like type-2 diabetes, hypertension, and hyperlipidemia). Regional diets focus on whole grains, high-fiber lentils, and fresh local vegetables while reducing refined flour (maida), saturated fats, and high sodium index inputs.
         </div>
       </div>
+      <LoginPromptModal open={showLoginModal} onClose={() => setShowLoginModal(false)} />
     </div>
   );
 };

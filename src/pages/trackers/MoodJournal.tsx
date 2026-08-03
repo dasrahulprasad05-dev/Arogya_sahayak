@@ -2,6 +2,8 @@ import React, { useState, useMemo } from 'react';
 import { useLanguage } from '../../context/LanguageContext';
 import { useHealthRead } from '../../context/HealthReadContext';
 import { useHealthDispatch } from '../../context/HealthDispatchContext';
+import { useRequireAuth } from '../../hooks/useRequireAuth';
+import LoginPromptModal from '../../components/auth/LoginPromptModal';
 import { 
   Smile, 
   Info, 
@@ -119,6 +121,7 @@ const MoodJournal: React.FC = () => {
   const { t, formatDate, formatNumber } = useLanguage();
   const { logs } = useHealthRead();
   const { logMood } = useHealthDispatch();
+  const { requireAuth, showLoginModal, setShowLoginModal } = useRequireAuth();
 
   const [selectedMood, setSelectedMood] = useState('Okay');
   const [notes, setNotes] = useState('');
@@ -271,6 +274,7 @@ const MoodJournal: React.FC = () => {
   }, [logs]);
 
   const handleLog = () => {
+    if (!requireAuth()) return;
     logMood(selectedMood, notes);
     setNotes('');
     showToast(
@@ -601,6 +605,7 @@ const MoodJournal: React.FC = () => {
           Emotional stress immediately releases cortisol and epinephrine which elevates blood pressure and glycemic markers. Journaling and naming emotions helps downstream cerebral regulation, lowering sympathetic hyper-arousal.
         </div>
       </div>
+      <LoginPromptModal open={showLoginModal} onClose={() => setShowLoginModal(false)} />
     </div>
   );
 };

@@ -10,6 +10,8 @@ import {
 import { useLanguage } from '../../context/LanguageContext';
 import { useHealthRead } from '../../context/HealthReadContext';
 import { useHealthDispatch } from '../../context/HealthDispatchContext';
+import { useRequireAuth } from '../../hooks/useRequireAuth';
+import LoginPromptModal from '../../components/auth/LoginPromptModal';
 import {
   Info, Flame, Clock, Trophy, Play, Pause, RotateCcw, X,
   Search, Sparkles, Check, CheckCircle, Activity, ArrowLeft, ArrowRight,
@@ -99,6 +101,7 @@ const ExercisePage: React.FC = () => {
   const { t, formatNumber } = useLanguage();
   const { logs } = useHealthRead();
   const { logExercise } = useHealthDispatch();
+  const { requireAuth, showLoginModal, setShowLoginModal } = useRequireAuth();
 
   const [activeTab, setActiveTab] = useState<'All' | 'Yoga' | 'Cardio' | 'Strength' | 'Breathing' | 'Stretching'>('All');
   const [searchQuery, setSearchQuery] = useState('');
@@ -156,6 +159,7 @@ const ExercisePage: React.FC = () => {
   const handleCloseWorkout = () => { setActiveExercise(null); setIsTimerRunning(false); };
 
   const handleLogWorkout = () => {
+    if (!requireAuth()) return;
     if (!activeExercise) return;
     logExercise({ routine: activeExercise.name, duration: activeExercise.duration });
     showToast(navigator.onLine
@@ -564,6 +568,7 @@ const ExercisePage: React.FC = () => {
           </motion.div>
         )}
       </AnimatePresence>
+      <LoginPromptModal open={showLoginModal} onClose={() => setShowLoginModal(false)} />
     </motion.div>
   );
 };

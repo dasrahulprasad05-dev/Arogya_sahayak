@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useLanguage } from '../../context/LanguageContext';
 import { useHealthRead } from '../../context/HealthReadContext';
 import { useHealthDispatch } from '../../context/HealthDispatchContext';
+import { useRequireAuth } from '../../hooks/useRequireAuth';
+import LoginPromptModal from '../../components/auth/LoginPromptModal';
 import { Activity, CheckCircle, Info } from 'lucide-react';
 import { showToast } from '../../utils/toast';
 
@@ -9,6 +11,7 @@ const MorningCheckIn: React.FC = () => {
   const { t, formatDate, formatNumber } = useLanguage();
   const { logs } = useHealthRead();
   const { logVitals } = useHealthDispatch();
+  const { requireAuth, showLoginModal, setShowLoginModal } = useRequireAuth();
 
   const [systolic, setSystolic] = useState(120);
   const [diastolic, setDiastolic] = useState(80);
@@ -45,6 +48,7 @@ const MorningCheckIn: React.FC = () => {
 
   const handleLog = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!requireAuth()) return;
     logVitals({ systolic, diastolic, heartRate, spO2, weight });
     showToast(
       navigator.onLine 
@@ -239,6 +243,7 @@ const MorningCheckIn: React.FC = () => {
           - **Oxygen Saturation (SpO2)**: A healthy SpO2 reading should range between 95% and 100%. Readings under 92% indicate severe respiratory distress.
         </div>
       </div>
+      <LoginPromptModal open={showLoginModal} onClose={() => setShowLoginModal(false)} />
     </div>
   );
 };

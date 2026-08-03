@@ -81,7 +81,7 @@ const queryClient = new QueryClient({
   }
 });
 
-// Protected Route wrapper component
+// Protected Route wrapper component — redirects to /login if not authenticated
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
 
@@ -98,6 +98,25 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
+  }
+
+  return <DashboardLayout>{children}</DashboardLayout>;
+};
+
+// Browsable Route wrapper — renders DashboardLayout for ALL users (guests included)
+// Auth is enforced at the action level (form submit, etc.) not at the route level.
+const BrowsableRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background text-primary font-heading font-bold text-lg">
+        <div className="flex flex-col items-center gap-2">
+          <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+          <span>Loading Health Companion...</span>
+        </div>
+      </div>
+    );
   }
 
   return <DashboardLayout>{children}</DashboardLayout>;
@@ -147,149 +166,149 @@ const App: React.FC = () => {
                       <Route path="/doctor-dashboard" element={<Suspense fallback={<PageSkeleton />}><DoctorDashboard /></Suspense>} />
                       <Route path="/doctor-scanner" element={<Suspense fallback={<PageSkeleton />}><QRScanner /></Suspense>} />
 
-                      {/* Protected routes */}
+                      {/* Browsable routes — guests can view these pages */}
                       <Route path="/dashboard" element={
-                        <ProtectedRoute>
+                        <BrowsableRoute>
                           <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><Dashboard /></Suspense></RouteErrorBoundary>
-                        </ProtectedRoute>
+                        </BrowsableRoute>
                       } />
 
                       {/* Trackers Hub & Individual pages */}
                       <Route path="/trackers" element={
-                        <ProtectedRoute>
+                        <BrowsableRoute>
                           <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><TrackersHub /></Suspense></RouteErrorBoundary>
-                        </ProtectedRoute>
+                        </BrowsableRoute>
                       } />
                       <Route path="/trackers/symptom" element={
-                        <ProtectedRoute>
+                        <BrowsableRoute>
                           <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><SymptomChecker /></Suspense></RouteErrorBoundary>
-                        </ProtectedRoute>
+                        </BrowsableRoute>
                       } />
                       <Route path="/trackers/stress" element={
-                        <ProtectedRoute>
+                        <BrowsableRoute>
                           <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><StressChecker /></Suspense></RouteErrorBoundary>
-                        </ProtectedRoute>
+                        </BrowsableRoute>
                       } />
                       <Route path="/trackers/sleep" element={
-                        <ProtectedRoute>
+                        <BrowsableRoute>
                           <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><SleepTracker /></Suspense></RouteErrorBoundary>
-                        </ProtectedRoute>
+                        </BrowsableRoute>
                       } />
                       <Route path="/trackers/mood" element={
-                        <ProtectedRoute>
+                        <BrowsableRoute>
                           <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><MoodJournal /></Suspense></RouteErrorBoundary>
-                        </ProtectedRoute>
+                        </BrowsableRoute>
                       } />
                       <Route path="/trackers/water" element={
-                        <ProtectedRoute>
+                        <BrowsableRoute>
                           <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><WaterTracker /></Suspense></RouteErrorBoundary>
-                        </ProtectedRoute>
+                        </BrowsableRoute>
                       } />
                       <Route path="/trackers/medicine" element={
-                        <ProtectedRoute>
+                        <BrowsableRoute>
                           <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><MedicineReminder /></Suspense></RouteErrorBoundary>
-                        </ProtectedRoute>
+                        </BrowsableRoute>
                       } />
                       <Route path="/trackers/temperature" element={
-                        <ProtectedRoute>
+                        <BrowsableRoute>
                           <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><BodyTemperature /></Suspense></RouteErrorBoundary>
-                        </ProtectedRoute>
+                        </BrowsableRoute>
                       } />
                       <Route path="/trackers/vitals" element={
-                        <ProtectedRoute>
+                        <BrowsableRoute>
                           <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><MorningCheckIn /></Suspense></RouteErrorBoundary>
-                        </ProtectedRoute>
+                        </BrowsableRoute>
                       } />
                       <Route path="/trackers/breathing" element={
-                        <ProtectedRoute>
+                        <BrowsableRoute>
                           <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><BreathingExercise /></Suspense></RouteErrorBoundary>
-                        </ProtectedRoute>
+                        </BrowsableRoute>
                       } />
                       <Route path="/trackers/diet" element={
-                        <ProtectedRoute>
+                        <BrowsableRoute>
                           <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><DietSuggestion /></Suspense></RouteErrorBoundary>
-                        </ProtectedRoute>
+                        </BrowsableRoute>
                       } />
                       <Route path="/trackers/exercise" element={
-                        <ProtectedRoute>
+                        <BrowsableRoute>
                           <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><ExercisePage /></Suspense></RouteErrorBoundary>
-                        </ProtectedRoute>
+                        </BrowsableRoute>
                       } />
                       <Route path="/trackers/firstaid" element={
-                        <ProtectedRoute>
+                        <BrowsableRoute>
                           <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><FirstAidGuide /></Suspense></RouteErrorBoundary>
-                        </ProtectedRoute>
+                        </BrowsableRoute>
                       } />
                       <Route path="/trackers/vaccine" element={
-                        <ProtectedRoute>
+                        <BrowsableRoute>
                           <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><VaccinationTracker /></Suspense></RouteErrorBoundary>
-                        </ProtectedRoute>
+                        </BrowsableRoute>
                       } />
 
                       {/* Predictors Hub & Pages */}
                       <Route path="/predictors" element={
-                        <ProtectedRoute>
+                        <BrowsableRoute>
                           <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><PredictorsHub /></Suspense></RouteErrorBoundary>
-                        </ProtectedRoute>
+                        </BrowsableRoute>
                       } />
                       <Route path="/predictors/diabetes" element={
-                        <ProtectedRoute>
+                        <BrowsableRoute>
                           <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><DiabetesPredictor /></Suspense></RouteErrorBoundary>
-                        </ProtectedRoute>
+                        </BrowsableRoute>
                       } />
                       <Route path="/predictors/heart-attack" element={
-                        <ProtectedRoute>
+                        <BrowsableRoute>
                           <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><HeartAttackPredictor /></Suspense></RouteErrorBoundary>
-                        </ProtectedRoute>
+                        </BrowsableRoute>
                       } />
                       <Route path="/predictors/ecg" element={
-                        <ProtectedRoute>
+                        <BrowsableRoute>
                           <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><ECGAnalysis /></Suspense></RouteErrorBoundary>
-                        </ProtectedRoute>
+                        </BrowsableRoute>
                       } />
                       <Route path="/predictors/cancer" element={
-                        <ProtectedRoute>
+                        <BrowsableRoute>
                           <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><CancerScreener /></Suspense></RouteErrorBoundary>
-                        </ProtectedRoute>
+                        </BrowsableRoute>
                       } />
                       <Route path="/predictors/kidney" element={
-                        <ProtectedRoute>
+                        <BrowsableRoute>
                           <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><KidneyHealth /></Suspense></RouteErrorBoundary>
-                        </ProtectedRoute>
+                        </BrowsableRoute>
                       } />
                       <Route path="/predictors/liver" element={
-                        <ProtectedRoute>
+                        <BrowsableRoute>
                           <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><LiverHealth /></Suspense></RouteErrorBoundary>
-                        </ProtectedRoute>
+                        </BrowsableRoute>
                       } />
                       <Route path="/predictors/anemia" element={
-                        <ProtectedRoute>
+                        <BrowsableRoute>
                           <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><AnemiaChecker /></Suspense></RouteErrorBoundary>
-                        </ProtectedRoute>
+                        </BrowsableRoute>
                       } />
                       <Route path="/predictors/thyroid" element={
-                        <ProtectedRoute>
+                        <BrowsableRoute>
                           <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><ThyroidAssessment /></Suspense></RouteErrorBoundary>
-                        </ProtectedRoute>
+                        </BrowsableRoute>
                       } />
                       
                       {/* 10 Generic Predictors routed dynamically */}
                       <Route path="/predictors/generic/:predictorId" element={
-                        <ProtectedRoute>
+                        <BrowsableRoute>
                           <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><GenericPredictor /></Suspense></RouteErrorBoundary>
-                        </ProtectedRoute>
+                        </BrowsableRoute>
                       } />
 
-                      {/* Doctor Directory & Booking (inside DashboardLayout) */}
+                      {/* Doctor Directory & Profile — browsable by guests */}
                       <Route path="/doctors" element={
-                        <ProtectedRoute>
+                        <BrowsableRoute>
                           <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><DoctorDirectory /></Suspense></RouteErrorBoundary>
-                        </ProtectedRoute>
+                        </BrowsableRoute>
                       } />
                       <Route path="/doctors/:doctorId" element={
-                        <ProtectedRoute>
+                        <BrowsableRoute>
                           <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><DoctorProfile /></Suspense></RouteErrorBoundary>
-                        </ProtectedRoute>
+                        </BrowsableRoute>
                       } />
                       <Route path="/doctors/:doctorId/book" element={
                         <ProtectedRoute>
@@ -312,11 +331,11 @@ const App: React.FC = () => {
                         </ProtectedRoute>
                       } />
 
-                      {/* On-device ML Scans */}
+                      {/* On-device ML Scans — browsable */}
                       <Route path="/scan" element={
-                        <ProtectedRoute>
+                        <BrowsableRoute>
                           <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><ScanPage /></Suspense></RouteErrorBoundary>
-                        </ProtectedRoute>
+                        </BrowsableRoute>
                       } />
 
                       {/* Shell views */}

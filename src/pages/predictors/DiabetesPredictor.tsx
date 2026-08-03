@@ -10,6 +10,8 @@ import { showToast } from '../../utils/toast';
 import PredictionResult from '../../components/medical/PredictionResult';
 import type { PredictionData } from '../../lib/types/prediction';
 import { templateRenderer } from '../../utils/templateRenderer';
+import { useRequireAuth } from '../../hooks/useRequireAuth';
+import LoginPromptModal from '../../components/auth/LoginPromptModal';
 import { BrainCircuit, Loader2, Send, ArrowLeft, ShieldAlert, Droplets, ChevronDown, Sparkles } from 'lucide-react';
 
 const containerVariants = {
@@ -27,6 +29,7 @@ const ACCENT_HEX = '#06b6d4';
 const DiabetesPredictor: React.FC = () => {
   const navigate = useNavigate();
   const { logPrediction } = useHealthDispatch();
+  const { requireAuth, showLoginModal, setShowLoginModal } = useRequireAuth();
 
   const [formData, setFormData] = useState<Partial<DiabetesInputs>>({
     age: 45, gender: 'Male', polyuria: false, polydipsia: false, suddenWeightLoss: false,
@@ -47,6 +50,7 @@ const DiabetesPredictor: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!requireAuth()) return;
     setLoading(true);
     setFormErrors({});
     const validationResult = diabetesSchema.safeParse(formData);
@@ -216,6 +220,7 @@ const DiabetesPredictor: React.FC = () => {
           </AnimatePresence>
         </motion.div>
       </div>
+      <LoginPromptModal open={showLoginModal} onClose={() => setShowLoginModal(false)} />
     </div>
   );
 };

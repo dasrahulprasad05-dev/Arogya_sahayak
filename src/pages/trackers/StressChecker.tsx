@@ -2,6 +2,8 @@ import React, { useState, useMemo } from 'react';
 import { useLanguage } from '../../context/LanguageContext';
 import { useHealthRead } from '../../context/HealthReadContext';
 import { useHealthDispatch } from '../../context/HealthDispatchContext';
+import { useRequireAuth } from '../../hooks/useRequireAuth';
+import LoginPromptModal from '../../components/auth/LoginPromptModal';
 import { Brain, Info, CheckCircle, ShieldAlert, ArrowLeft, ArrowRight } from 'lucide-react';
 import { showToast } from '../../utils/toast';
 
@@ -68,6 +70,7 @@ const StressChecker: React.FC = () => {
   const { formatDate, formatNumber } = useLanguage();
   const { logs } = useHealthRead();
   const { logStress } = useHealthDispatch();
+  const { requireAuth, showLoginModal, setShowLoginModal } = useRequireAuth();
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
   const [answers, setAnswers] = useState<number[]>(Array(5).fill(-1));
@@ -93,6 +96,7 @@ const StressChecker: React.FC = () => {
   };
 
   const handleEvaluate = () => {
+    if (!requireAuth()) return;
     if (answers.includes(-1)) return;
 
     const sum = answers.reduce((acc, curr) => acc + curr, 0);
@@ -391,6 +395,7 @@ const StressChecker: React.FC = () => {
         </div>
       </div>
 
+      <LoginPromptModal open={showLoginModal} onClose={() => setShowLoginModal(false)} />
     </div>
   );
 };

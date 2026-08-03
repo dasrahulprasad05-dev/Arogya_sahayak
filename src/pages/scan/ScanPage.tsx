@@ -5,6 +5,8 @@ import { scanToolsConfig } from '../../lib/cnn/scanConfig';
 import type { ScanTool } from '../../lib/cnn/scanConfig';
 import { supabase } from '../../integrations/supabase/client';
 import { useHealthDispatch } from '../../context/HealthDispatchContext';
+import { useRequireAuth } from '../../hooks/useRequireAuth';
+import LoginPromptModal from '../../components/auth/LoginPromptModal';
 import ImageScanner from '../../components/scan/ImageScanner';
 import PredictionResult from '../../components/medical/PredictionResult';
 import type { PredictionData } from '../../lib/types/prediction';
@@ -29,6 +31,7 @@ const DEFAULT_SCAN_CFG = {
 const ScanPage: React.FC = () => {
   const { t } = useLanguage();
   const { logScan } = useHealthDispatch();
+  const { requireAuth, showLoginModal, setShowLoginModal } = useRequireAuth();
 
   const [selectedTool, setSelectedTool] = useState<ScanTool | null>(null);
   const [loading, setLoading] = useState(false);
@@ -36,6 +39,7 @@ const ScanPage: React.FC = () => {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const handleScanComplete = async (cnnResult: { vector: number[]; score: number; label: string }) => {
+    if (!requireAuth()) return;
     if (!selectedTool) return;
 
     setLoading(true);
@@ -336,6 +340,7 @@ const ScanPage: React.FC = () => {
           </motion.div>
         )}
       </AnimatePresence>
+      <LoginPromptModal open={showLoginModal} onClose={() => setShowLoginModal(false)} />
     </div>
   );
 };

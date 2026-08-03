@@ -9,6 +9,8 @@ import { getLocalPredictionFallback } from '../../utils/localPredictorsFallback'
 import { showToast } from '../../utils/toast';
 import type { PredictionData } from '../../lib/types/prediction';
 import { templateRenderer } from '../../utils/templateRenderer';
+import { useRequireAuth } from '../../hooks/useRequireAuth';
+import LoginPromptModal from '../../components/auth/LoginPromptModal';
 import PredictionResult from '../../components/medical/PredictionResult';
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
@@ -83,6 +85,7 @@ const GenericPredictor: React.FC = () => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const { logPrediction } = useHealthDispatch();
+  const { requireAuth, showLoginModal, setShowLoginModal } = useRequireAuth();
   const { user } = useAuth();
 
   const [emailSending, setEmailSending] = useState(false);
@@ -140,6 +143,7 @@ const GenericPredictor: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!requireAuth()) return;
     setLoading(true);
     setErrorMsg(null);
     setFormErrors({});
@@ -592,6 +596,7 @@ const GenericPredictor: React.FC = () => {
 
       </div>
 
+      <LoginPromptModal open={showLoginModal} onClose={() => setShowLoginModal(false)} />
     </div>
   );
 };

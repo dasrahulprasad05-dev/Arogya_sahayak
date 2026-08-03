@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
@@ -8,16 +8,18 @@ import { useTheme } from '../../context/ThemeContext';
 import { useHealthRead } from '../../context/HealthReadContext';
 import { triggerSync } from '../../utils/syncQueue';
 import { 
-  Home, Activity, BrainCircuit, Camera, User, Sun, Moon, Wifi, WifiOff, RefreshCw, LogOut, ChevronLeft, ChevronRight, Menu, Stethoscope
+  Home, Activity, BrainCircuit, Camera, User, Sun, Moon, Wifi, WifiOff, RefreshCw, LogOut, LogIn, ChevronLeft, ChevronRight, Menu, Stethoscope
 } from 'lucide-react';
 
 const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { user, signOut } = useAuth();
+  const { user, signOut, isAuthenticated } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const { language, setLanguage, t } = useLanguage();
   const { syncQueueLength } = useHealthRead();
   const location = useLocation();
+  const navigate = useNavigate();
   const prefersReducedMotion = useReducedMotion();
+
 
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [syncing, setSyncing] = useState(false);
@@ -138,23 +140,38 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
 
         {/* Sidebar Footer */}
         <div className="p-4 border-t border-border flex flex-col gap-2 overflow-hidden">
-          <AnimatePresence>
-            {!sidebarCollapsed && (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-xs text-muted-foreground truncate mb-2 whitespace-nowrap">
-                {user?.email}
-              </motion.div>
-            )}
-          </AnimatePresence>
-          <button onClick={signOut} className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-destructive hover:bg-destructive/10 transition-all touch-target">
-            <LogOut className="w-5 h-5 shrink-0" />
-            <AnimatePresence>
-              {!sidebarCollapsed && (
-                <motion.span initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -8 }} transition={{ duration: 0.15 }} className="whitespace-nowrap">
-                  {t('profile.logout')}
-                </motion.span>
-              )}
-            </AnimatePresence>
-          </button>
+          {isAuthenticated ? (
+            <>
+              <AnimatePresence>
+                {!sidebarCollapsed && (
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-xs text-muted-foreground truncate mb-2 whitespace-nowrap">
+                    {user?.email}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+              <button onClick={signOut} className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-destructive hover:bg-destructive/10 transition-all touch-target">
+                <LogOut className="w-5 h-5 shrink-0" />
+                <AnimatePresence>
+                  {!sidebarCollapsed && (
+                    <motion.span initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -8 }} transition={{ duration: 0.15 }} className="whitespace-nowrap">
+                      {t('profile.logout')}
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </button>
+            </>
+          ) : (
+            <button onClick={() => navigate('/login')} className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-bold text-primary hover:bg-primary/10 transition-all touch-target">
+              <LogIn className="w-5 h-5 shrink-0" />
+              <AnimatePresence>
+                {!sidebarCollapsed && (
+                  <motion.span initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -8 }} transition={{ duration: 0.15 }} className="whitespace-nowrap">
+                    {t('btn.login')}
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </button>
+          )}
         </div>
       </motion.aside>
 
@@ -251,8 +268,14 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
                 })}
               </nav>
               <div className="p-4 border-t border-slate-200 dark:border-border flex flex-col gap-2">
-                <div className="text-xs text-muted-foreground truncate mb-2">{user?.email}</div>
-                <button onClick={() => { setMobileMenuOpen(false); signOut(); }} className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-destructive hover:bg-destructive/10 transition-all touch-target"><LogOut className="w-5 h-5 shrink-0" /><span>{t('profile.logout')}</span></button>
+                {isAuthenticated ? (
+                  <>
+                    <div className="text-xs text-muted-foreground truncate mb-2">{user?.email}</div>
+                    <button onClick={() => { setMobileMenuOpen(false); signOut(); }} className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-destructive hover:bg-destructive/10 transition-all touch-target"><LogOut className="w-5 h-5 shrink-0" /><span>{t('profile.logout')}</span></button>
+                  </>
+                ) : (
+                  <button onClick={() => { setMobileMenuOpen(false); navigate('/login'); }} className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-bold text-primary hover:bg-primary/10 transition-all touch-target"><LogIn className="w-5 h-5 shrink-0" /><span>{t('btn.login')}</span></button>
+                )}
               </div>
             </motion.div>
           </motion.div>
