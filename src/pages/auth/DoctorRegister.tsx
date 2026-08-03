@@ -87,57 +87,33 @@ const DoctorRegister: React.FC = () => {
     setErrorMsg(null);
 
     try {
-      // 1. Create auth user
+      // 1. Create auth user with all doctor profile data in metadata
+      // The Postgres trigger 'handle_new_doctor' will automatically create the doctors
+      // and doctor_time_slots records based on this metadata.
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
         password,
         options: {
           data: {
+            role: 'doctor',
             full_name: fullName,
-            role: 'doctor'
+            specialty_id: specialtyId,
+            qualification,
+            experience_years: experienceYears,
+            registration_number: registrationNumber || null,
+            hospital_name: hospitalName,
+            consultation_fee: consultationFee,
+            bio: bio || null,
+            state,
+            district,
+            city,
+            time_slots: timeSlots
           }
         }
       });
 
       if (authError) throw authError;
       if (!authData.user) throw new Error('Registration failed. Please try again.');
-
-      const userId = authData.user.id;
-
-      // 2. Create doctor profile
-      const { error: profileError } = await supabase.from('doctors').insert({
-        id: userId,
-        full_name: fullName,
-        email,
-        specialty_id: specialtyId,
-        qualification,
-        experience_years: experienceYears,
-        registration_number: registrationNumber || null,
-        hospital_name: hospitalName,
-        consultation_fee: consultationFee,
-        bio: bio || null,
-        state,
-        district,
-        city,
-        status: 'pending'
-      });
-
-      if (profileError) throw profileError;
-
-      // 3. Create time slots
-      if (timeSlots.length > 0) {
-        const slotsToInsert = timeSlots.map(slot => ({
-          doctor_id: userId,
-          day_of_week: slot.day_of_week,
-          start_time: slot.start_time + ':00',
-          end_time: slot.end_time + ':00',
-          max_patients: slot.max_patients,
-          is_active: true
-        }));
-
-        const { error: slotsError } = await supabase.from('doctor_time_slots').insert(slotsToInsert);
-        if (slotsError) throw slotsError;
-      }
 
       setSuccessMsg('Registration successful! Your profile will be reviewed by admin. Please check your email to verify your account.');
 
