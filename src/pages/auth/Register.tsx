@@ -188,6 +188,13 @@ const Register: React.FC = () => {
             {t('btn.login')}
           </Link>
         </p>
+
+        <p className="text-center text-sm text-muted-foreground mt-2">
+          Are you a doctor?{' '}
+          <Link to="/doctor-register" className="text-primary hover:underline font-medium">
+            Register as Doctor
+          </Link>
+        </p>
       </div>
     </div>
   );

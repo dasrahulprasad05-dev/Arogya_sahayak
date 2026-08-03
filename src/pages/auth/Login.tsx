@@ -212,6 +212,13 @@ const Login: React.FC = () => {
           </Link>
         </p>
 
+        <p className="text-center text-sm text-muted-foreground mt-2">
+          Are you a doctor?{' '}
+          <Link to="/doctor-login" className="text-primary hover:underline font-medium">
+            Doctor Login
+          </Link>
+        </p>
+
         {/* Skip Login Dev Bypass Toggle */}
         {import.meta.env.DEV && (
           <div className="mt-8 pt-6 border-t border-border border-dashed flex flex-col items-center">
