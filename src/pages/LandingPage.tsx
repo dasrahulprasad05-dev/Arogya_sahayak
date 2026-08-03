@@ -281,7 +281,7 @@ const LandingPage: React.FC = () => {
             >
               <MagneticButton strength={0.4}>
                 <button
-                  onClick={() => navigate(isAuthenticated ? '/dashboard' : '/register')}
+                  onClick={() => navigate('/dashboard')}
                   className="relative overflow-hidden bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white font-bold py-3.5 px-9 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-purple-500/30 dark:shadow-[0_0_20px_rgba(168,85,247,0.3)] touch-target group text-sm"
                 >
                   <span className="btn-shine" />
