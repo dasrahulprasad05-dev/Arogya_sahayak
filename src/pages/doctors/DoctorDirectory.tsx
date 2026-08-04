@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { supabase } from '../../integrations/supabase/client';
 import type { Doctor } from '../../lib/types/doctor';
 import DoctorCard from '../../components/doctors/DoctorCard';
 import {
   Search, Stethoscope, SlidersHorizontal,
-  Users, X
+  Users, X, Ticket
 } from 'lucide-react';
 
 const SPECIALTIES = [
@@ -33,6 +33,7 @@ const SPECIALTIES = [
 type SortOption = 'rating' | 'experience' | 'fee_low' | 'fee_high' | 'name';
 
 const DoctorDirectory: React.FC = () => {
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [loading, setLoading] = useState(true);
@@ -124,12 +125,21 @@ const DoctorDirectory: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-heading font-bold flex items-center gap-2">
-          <Stethoscope className="w-6 h-6 text-primary" />
-          Find a Doctor
-        </h1>
-        <p className="text-sm text-muted-foreground mt-1">Browse verified doctors and book appointments</p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-heading font-bold flex items-center gap-2">
+            <Stethoscope className="w-6 h-6 text-primary" />
+            Find a Doctor
+          </h1>
+          <p className="text-sm text-muted-foreground mt-1">Browse verified doctors and book appointments</p>
+        </div>
+        <button
+          onClick={() => navigate('/booking-history')}
+          className="inline-flex items-center gap-2 px-4 py-2.5 bg-primary/10 hover:bg-primary/20 text-primary rounded-xl font-semibold text-sm transition-all border border-primary/20 self-start sm:self-auto shadow-sm"
+        >
+          <Ticket className="w-4 h-4" />
+          My Bookings & Tickets
+        </button>
       </div>
 
       {/* Search + Filter Bar */}

@@ -8,7 +8,7 @@ import { useTheme } from '../../context/ThemeContext';
 import { useHealthRead } from '../../context/HealthReadContext';
 import { triggerSync } from '../../utils/syncQueue';
 import { 
-  Home, Activity, BrainCircuit, Camera, User, Sun, Moon, Wifi, WifiOff, RefreshCw, LogOut, LogIn, ChevronLeft, ChevronRight, Menu, Stethoscope
+  Home, Activity, BrainCircuit, Camera, User, Sun, Moon, Wifi, WifiOff, RefreshCw, LogOut, LogIn, ChevronLeft, ChevronRight, Menu, Stethoscope, Ticket
 } from 'lucide-react';
 
 const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -67,6 +67,7 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
     { name: t('nav.trackers'), path: '/trackers', icon: Activity },
     { name: t('nav.predictors'), path: '/predictors', icon: BrainCircuit },
     { name: 'Doctors', path: '/doctors', icon: Stethoscope },
+    { name: 'My Bookings', path: '/booking-history', icon: Ticket },
     { name: t('nav.scanners'), path: '/scan', icon: Camera },
     { name: t('nav.profile'), path: '/profile', icon: User },
   ];

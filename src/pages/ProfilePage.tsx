@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -21,7 +22,8 @@ import {
   History,
   Download,
   Eye,
-  Calendar
+  Calendar,
+  Ticket
 } from 'lucide-react';
 
 /* ---------------------------------------------------
@@ -159,6 +161,7 @@ const itemVariants = {
 };
 
 const ProfilePage: React.FC = () => {
+  const navigate = useNavigate();
   const auth = useAuth() as ReturnType<typeof useAuth> & { loading?: boolean };
   const { user, isDevBypass, signOut } = auth;
   const authLoading = auth.loading ?? false;
@@ -386,6 +389,31 @@ const ProfilePage: React.FC = () => {
               </motion.button>
             </div>
           </div>
+        </motion.div>
+
+        {/* Doctor Appointments & Tickets Shortcut Card */}
+        <motion.div
+          variants={itemVariants}
+          whileHover={{ y: -2 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+          className="bg-card border border-border rounded-2xl p-6 shadow-sm glass space-y-4"
+        >
+          <div className="flex items-center justify-between">
+            <h3 className="font-heading font-bold text-lg text-foreground flex items-center gap-2">
+              <Ticket className="w-5 h-5 text-primary" />
+              Doctor Appointments & Tickets
+            </h3>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Check your live appointment status, view confirmed bookings, and download printable PDF tickets with verified QR codes.
+          </p>
+          <button
+            onClick={() => navigate('/booking-history')}
+            className="w-full py-2.5 px-4 bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-all shadow-sm"
+          >
+            <Ticket className="w-4 h-4" />
+            View My Bookings & Tickets →
+          </button>
         </motion.div>
 
         {/* Predictor History Section */}
