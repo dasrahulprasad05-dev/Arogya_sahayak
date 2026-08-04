@@ -53,7 +53,14 @@ const DiabetesPredictor: React.FC = () => {
     if (!requireAuth()) return;
     setLoading(true);
     setFormErrors({});
-    const validationResult = diabetesSchema.safeParse(formData);
+
+    const sanitizedInputs: any = { ...formData };
+    ['age', 'hba1c', 'fastingBloodSugar'].forEach(key => {
+      const v = sanitizedInputs[key];
+      sanitizedInputs[key] = (v === '' || v === undefined) ? undefined : Number(v);
+    });
+
+    const validationResult = diabetesSchema.safeParse(sanitizedInputs);
     if (!validationResult.success) {
       const errors: Record<string, string> = {};
       validationResult.error.issues.forEach(issue => { if (issue.path[0]) errors[issue.path[0] as string] = issue.message; });
@@ -133,16 +140,36 @@ const DiabetesPredictor: React.FC = () => {
           <motion.div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-[520px] overflow-y-auto pr-2" variants={containerVariants} initial="hidden" animate="show">
             <motion.div className="space-y-1.5" variants={fieldVariant}>
               <label className="block text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400" htmlFor="diabAge">Age</label>
-              <input id="diabAge" type="number" inputMode="numeric" placeholder="e.g. 45" className="predictor-input w-full h-12 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white font-medium outline-none" style={{ '--accent-rgb': ACCENT_RGB } as React.CSSProperties} value={formData.age ?? ''} onChange={e => handleFieldChange('age', Number(e.target.value))} />
+              <input
+                id="diabAge"
+                type="number"
+                inputMode="numeric"
+                placeholder="e.g. 45"
+                className="predictor-input w-full h-12 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white font-medium outline-none"
+                style={{ '--accent-rgb': ACCENT_RGB } as React.CSSProperties}
+                value={formData.age ?? ''}
+                onFocus={e => e.target.select()}
+                onChange={e => {
+                  const raw = e.target.value;
+                  const normalized = raw.length > 1 && raw.startsWith('0') && !raw.startsWith('0.') ? raw.replace(/^0+/, '') : raw;
+                  handleFieldChange('age', normalized);
+                }}
+              />
               {formErrors.age && <p className="text-[10px] text-rose-500 font-bold">{formErrors.age}</p>}
             </motion.div>
 
             <motion.div className="space-y-1.5" variants={fieldVariant}>
               <label className="block text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400" htmlFor="diabGender">Gender</label>
               <div className="relative">
-                <select id="diabGender" className="predictor-input w-full h-12 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white font-medium outline-none appearance-none pr-10 cursor-pointer" style={{ '--accent-rgb': ACCENT_RGB } as React.CSSProperties} value={formData.gender || 'Male'} onChange={e => handleFieldChange('gender', e.target.value as any)}>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
+                <select
+                  id="diabGender"
+                  className="predictor-input w-full h-12 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white font-medium outline-none appearance-none pr-10 cursor-pointer bg-transparent dark:bg-slate-900/60"
+                  style={{ '--accent-rgb': ACCENT_RGB } as React.CSSProperties}
+                  value={formData.gender || 'Male'}
+                  onChange={e => handleFieldChange('gender', e.target.value as any)}
+                >
+                  <option value="Male" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 py-2">Male</option>
+                  <option value="Female" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 py-2">Female</option>
                 </select>
                 <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"><ChevronDown className="w-4 h-4 text-cyan-600 dark:text-cyan-400" /></div>
               </div>
@@ -150,13 +177,42 @@ const DiabetesPredictor: React.FC = () => {
 
             <motion.div className="space-y-1.5" variants={fieldVariant}>
               <label className="block text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400" htmlFor="diabHba1c">HbA1c (%)</label>
-              <input id="diabHba1c" type="number" step="0.1" inputMode="decimal" placeholder="e.g. 5.7" className="predictor-input w-full h-12 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white font-medium outline-none" style={{ '--accent-rgb': ACCENT_RGB } as React.CSSProperties} value={formData.hba1c ?? ''} onChange={e => handleFieldChange('hba1c', Number(e.target.value))} />
+              <input
+                id="diabHba1c"
+                type="number"
+                step="0.1"
+                inputMode="decimal"
+                placeholder="e.g. 5.7"
+                className="predictor-input w-full h-12 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white font-medium outline-none"
+                style={{ '--accent-rgb': ACCENT_RGB } as React.CSSProperties}
+                value={formData.hba1c ?? ''}
+                onFocus={e => e.target.select()}
+                onChange={e => {
+                  const raw = e.target.value;
+                  const normalized = raw.length > 1 && raw.startsWith('0') && !raw.startsWith('0.') ? raw.replace(/^0+/, '') : raw;
+                  handleFieldChange('hba1c', normalized);
+                }}
+              />
               {formErrors.hba1c && <p className="text-[10px] text-rose-500 font-bold">{formErrors.hba1c}</p>}
             </motion.div>
 
             <motion.div className="space-y-1.5" variants={fieldVariant}>
               <label className="block text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400" htmlFor="diabFbs">Fasting Blood Sugar (mg/dL)</label>
-              <input id="diabFbs" type="number" inputMode="numeric" placeholder="e.g. 100" className="predictor-input w-full h-12 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white font-medium outline-none" style={{ '--accent-rgb': ACCENT_RGB } as React.CSSProperties} value={formData.fastingBloodSugar ?? ''} onChange={e => handleFieldChange('fastingBloodSugar', Number(e.target.value))} />
+              <input
+                id="diabFbs"
+                type="number"
+                inputMode="numeric"
+                placeholder="e.g. 100"
+                className="predictor-input w-full h-12 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white font-medium outline-none"
+                style={{ '--accent-rgb': ACCENT_RGB } as React.CSSProperties}
+                value={formData.fastingBloodSugar ?? ''}
+                onFocus={e => e.target.select()}
+                onChange={e => {
+                  const raw = e.target.value;
+                  const normalized = raw.length > 1 && raw.startsWith('0') && !raw.startsWith('0.') ? raw.replace(/^0+/, '') : raw;
+                  handleFieldChange('fastingBloodSugar', normalized);
+                }}
+              />
               {formErrors.fastingBloodSugar && <p className="text-[10px] text-rose-500 font-bold">{formErrors.fastingBloodSugar}</p>}
             </motion.div>
 

@@ -821,3 +821,35 @@
   stroke-dasharray: 24;
   animation: checkmark-draw 0.3s ease-out forwards;
 }
+
+/* ============================================ */
+/* Native Select & Option Dark Theme Styling     */
+/* ============================================ */
+
+select {
+  color-scheme: light;
+}
+
+.dark,
+.dark select,
+.dark input,
+.dark textarea {
+  color-scheme: dark;
+}
+
+select option {
+  background-color: #ffffff;
+  color: #0f172a;
+  padding: 8px 12px;
+}
+
+.dark select option,
+.dark .predictor-input option {
+  background-color: #0f172a !important;
+  color: #f8fafc !important;
+}
+
+.dark select option:checked {
+  background-color: #1e293b !important;
+  color: #38bdf8 !important;
+}

@@ -52,7 +52,14 @@ const HeartAttackPredictor: React.FC = () => {
     if (!requireAuth()) return;
     setLoading(true);
     setFormErrors({});
-    const validationResult = heartSchema.safeParse(formData);
+
+    const sanitizedInputs: any = { ...formData };
+    ['age', 'restingBloodPressure', 'cholesterol', 'maxHeartRate', 'stDepression', 'vessels'].forEach(key => {
+      const v = sanitizedInputs[key];
+      sanitizedInputs[key] = (v === '' || v === undefined) ? undefined : Number(v);
+    });
+
+    const validationResult = heartSchema.safeParse(sanitizedInputs);
     if (!validationResult.success) {
       const errors: Record<string, string> = {};
       validationResult.error.issues.forEach(issue => { if (issue.path[0]) errors[issue.path[0] as string] = issue.message; });
@@ -127,7 +134,28 @@ const HeartAttackPredictor: React.FC = () => {
             ].map(({ id, label, field, placeholder, type }) => (
               <motion.div key={id} className="space-y-1.5" variants={fieldVariant}>
                 <label className="block text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400" htmlFor={id}>{label}</label>
-                <input id={id} type="number" step={type === 'decimal' ? '0.1' : '1'} inputMode={type === 'decimal' ? 'decimal' : 'numeric'} placeholder={placeholder} className="predictor-input w-full h-12 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white font-medium outline-none" style={{ '--accent-rgb': ACCENT_RGB } as React.CSSProperties} value={(formData as any)[field] ?? ''} onChange={e => handleFieldChange(field as any, Number(e.target.value))} />
+                <input
+                  id={id}
+                  type="number"
+                  step={type === 'decimal' ? '0.1' : '1'}
+                  inputMode={type === 'decimal' ? 'decimal' : 'numeric'}
+                  placeholder={placeholder}
+                  className="predictor-input w-full h-12 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white font-medium outline-none"
+                  style={{ '--accent-rgb': ACCENT_RGB } as React.CSSProperties}
+                  value={(formData as any)[field] ?? ''}
+                  onFocus={e => e.target.select()}
+                  onChange={e => {
+                    const raw = e.target.value;
+                    if (raw === '') {
+                      handleFieldChange(field as any, '');
+                    } else {
+                      const normalized = raw.length > 1 && raw.startsWith('0') && !raw.startsWith('0.')
+                        ? raw.replace(/^0+/, '')
+                        : raw;
+                      handleFieldChange(field as any, normalized);
+                    }
+                  }}
+                />
                 {formErrors[field] && <p className="text-[10px] text-rose-500 font-bold">{formErrors[field]}</p>}
               </motion.div>
             ))}
@@ -141,8 +169,18 @@ const HeartAttackPredictor: React.FC = () => {
               <motion.div key={id} className="space-y-1.5" variants={fieldVariant}>
                 <label className="block text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400" htmlFor={id}>{label}</label>
                 <div className="relative">
-                  <select id={id} className="predictor-input w-full h-12 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white font-medium outline-none appearance-none pr-10 cursor-pointer" style={{ '--accent-rgb': ACCENT_RGB } as React.CSSProperties} value={(formData as any)[field] || options[0]} onChange={e => handleFieldChange(field as any, e.target.value)}>
-                    {options.map(o => <option key={o} value={o}>{o}</option>)}
+                  <select
+                    id={id}
+                    className="predictor-input w-full h-12 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white font-medium outline-none appearance-none pr-10 cursor-pointer bg-transparent dark:bg-slate-900/60"
+                    style={{ '--accent-rgb': ACCENT_RGB } as React.CSSProperties}
+                    value={(formData as any)[field] || options[0]}
+                    onChange={e => handleFieldChange(field as any, e.target.value)}
+                  >
+                    {options.map(o => (
+                      <option key={o} value={o} className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 py-2">
+                        {o}
+                      </option>
+                    ))}
                   </select>
                   <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"><ChevronDown className="w-4 h-4 text-red-600 dark:text-red-400" /></div>
                 </div>

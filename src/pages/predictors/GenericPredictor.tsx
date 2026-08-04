@@ -328,13 +328,13 @@ const GenericPredictor: React.FC = () => {
                       <div className="relative">
                         <select
                           id={f.name}
-                          className="predictor-input w-full h-12 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white font-medium outline-none appearance-none pr-10 cursor-pointer"
+                          className="predictor-input w-full h-12 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white font-medium outline-none appearance-none pr-10 cursor-pointer bg-transparent dark:bg-slate-900/60"
                           style={{ '--accent-rgb': cfg.rgb } as React.CSSProperties}
                           onChange={e => handleFieldChange(f.name, e.target.value)}
                           value={formData[f.name] || ''}
                         >
                           {f.options?.map(opt => (
-                            <option key={opt} value={opt} className="bg-white dark:bg-slate-900 text-slate-850 dark:text-white">{opt}</option>
+                            <option key={opt} value={opt} className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 py-2">{opt}</option>
                           ))}
                         </select>
                         <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
@@ -351,7 +351,12 @@ const GenericPredictor: React.FC = () => {
                         className="predictor-input w-full h-12 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white font-medium outline-none"
                         style={{ '--accent-rgb': cfg.rgb } as React.CSSProperties}
                         value={formData[f.name] ?? ''}
-                        onChange={e => handleFieldChange(f.name, e.target.value)}
+                        onFocus={e => e.target.select()}
+                        onChange={e => {
+                          const raw = e.target.value;
+                          const normalized = raw.length > 1 && raw.startsWith('0') && !raw.startsWith('0.') ? raw.replace(/^0+/, '') : raw;
+                          handleFieldChange(f.name, normalized);
+                        }}
                       />
                     )}
                     {formErrors[f.name] && <p className="text-[10px] text-rose-500 font-bold">{formErrors[f.name]}</p>}

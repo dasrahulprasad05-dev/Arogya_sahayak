@@ -91,7 +91,13 @@ const LiverHealth: React.FC = () => {
     setErrorMsg(null);
     setFormErrors({});
 
-    const validationResult = liverSchema.safeParse(formData);
+    const sanitizedInputs: any = { ...formData };
+    numFields.forEach(f => {
+      const v = sanitizedInputs[f.field];
+      sanitizedInputs[f.field] = (v === '' || v === undefined) ? undefined : Number(v);
+    });
+
+    const validationResult = liverSchema.safeParse(sanitizedInputs);
     if (!validationResult.success) {
       const errors: Record<string, string> = {};
       validationResult.error.issues.forEach(issue => {
@@ -138,9 +144,9 @@ const LiverHealth: React.FC = () => {
       style={{ '--accent-rgb': ACCENT_RGB } as React.CSSProperties}
     >
       {/* Background drifting blobs */}
-      <div className="absolute top-[-10%] left-[-15%] w-[400px] h-[400px] bg-emerald-500/3 dark:bg-emerald-500/10 rounded-full blur-[100px] pointer-events-none -z-10 animate-mesh-move"></div>
-      <div className="absolute top-[35%] right-[-10%] w-[450px] h-[450px] bg-teal-500/3 dark:bg-teal-500/10 rounded-full blur-[120px] pointer-events-none -z-10 animate-mesh-move" style={{ animationDuration: '25s', animationDelay: '-5s' }}></div>
-      <div className="absolute bottom-[-10%] left-[15%] w-[400px] h-[400px] bg-green-500/3 dark:bg-green-500/10 rounded-full blur-[110px] pointer-events-none -z-10 animate-mesh-move" style={{ animationDuration: '30s', animationDelay: '-10s' }}></div>
+      <div className="absolute top-[-10%] left-[-15%] w-[400px] h-[400px] bg-emerald-500/3 dark:bg-emerald-500/10 rounded-full blur-[100px] pointer-events-none -z-10 animate-mesh-move" />
+      <div className="absolute top-[35%] right-[-10%] w-[450px] h-[450px] bg-purple-500/3 dark:bg-purple-500/10 rounded-full blur-[120px] pointer-events-none -z-10 animate-mesh-move" style={{ animationDuration: '25s', animationDelay: '-5s' }} />
+      <div className="absolute bottom-[-10%] left-[15%] w-[400px] h-[400px] bg-teal-500/3 dark:bg-teal-500/10 rounded-full blur-[110px] pointer-events-none -z-10 animate-mesh-move" style={{ animationDuration: '30s', animationDelay: '-10s' }} />
 
       {/* Page Header */}
       <motion.div 
@@ -165,8 +171,8 @@ const LiverHealth: React.FC = () => {
             <FlaskConical className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
           </motion.div>
           <div>
-            <h1 className="text-3xl font-extrabold font-heading text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 via-primary to-green-500 dark:from-emerald-400 dark:via-primary dark:to-green-400">Liver Function Screener</h1>
-            <p className="text-slate-500 dark:text-slate-400 text-sm">Evaluate hepatic wellness indicators using total bilirubin, SGOT, SGPT, and protein metrics.</p>
+            <h1 className="text-3xl font-extrabold font-heading text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 via-primary to-teal-500 dark:from-emerald-400 dark:via-primary dark:to-teal-400">Liver Health Assessment</h1>
+            <p className="text-slate-500 dark:text-slate-400 text-sm">Assess hepatic function risks using bilirubin, transaminases (ALT/AST), and protein ratios.</p>
           </div>
         </div>
       </motion.div>
@@ -195,7 +201,7 @@ const LiverHealth: React.FC = () => {
             >
               <BrainCircuit className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
             </motion.span>
-            <span>Enter Hepatic Lab Profiles</span>
+            <span>Enter Hepatic Function &amp; Enzyme Panel</span>
           </motion.h3>
 
           <motion.div 
@@ -210,13 +216,13 @@ const LiverHealth: React.FC = () => {
               <div className="relative">
                 <select
                   id="liverGender"
-                  className="predictor-input w-full h-12 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white font-medium outline-none appearance-none pr-10 cursor-pointer"
+                  className="predictor-input w-full h-12 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white font-medium outline-none appearance-none pr-10 cursor-pointer bg-transparent dark:bg-slate-900/60"
                   style={{ '--accent-rgb': ACCENT_RGB } as React.CSSProperties}
                   value={formData.gender || 'Male'}
                   onChange={e => handleFieldChange('gender', e.target.value as any)}
                 >
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
+                  <option value="Male" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 py-2">Male</option>
+                  <option value="Female" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 py-2">Female</option>
                 </select>
                 <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
                   <ChevronDown className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
@@ -236,7 +242,12 @@ const LiverHealth: React.FC = () => {
                   className="predictor-input w-full h-12 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white font-medium outline-none"
                   style={{ '--accent-rgb': ACCENT_RGB } as React.CSSProperties}
                   value={(formData as any)[field] ?? ''}
-                  onChange={e => handleFieldChange(field, Number(e.target.value))}
+                  onFocus={e => e.target.select()}
+                  onChange={e => {
+                    const raw = e.target.value;
+                    const normalized = raw.length > 1 && raw.startsWith('0') && !raw.startsWith('0.') ? raw.replace(/^0+/, '') : raw;
+                    handleFieldChange(field, normalized);
+                  }}
                 />
                 {formErrors[field] && <p className="text-[10px] text-rose-500 font-bold">{formErrors[field]}</p>}
               </motion.div>

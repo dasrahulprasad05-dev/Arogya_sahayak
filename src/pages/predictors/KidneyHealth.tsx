@@ -94,7 +94,13 @@ const KidneyHealth: React.FC = () => {
     setErrorMsg(null);
     setFormErrors({});
 
-    const validationResult = kidneySchema.safeParse(formData);
+    const sanitizedInputs: any = { ...formData };
+    numFields.forEach(f => {
+      const v = sanitizedInputs[f.field];
+      sanitizedInputs[f.field] = (v === '' || v === undefined) ? undefined : Number(v);
+    });
+
+    const validationResult = kidneySchema.safeParse(sanitizedInputs);
     if (!validationResult.success) {
       const errors: Record<string, string> = {};
       validationResult.error.issues.forEach(issue => {
@@ -138,8 +144,8 @@ const KidneyHealth: React.FC = () => {
     >
       {/* Background drifting blobs */}
       <div className="absolute top-[-10%] left-[-15%] w-[400px] h-[400px] bg-blue-500/3 dark:bg-blue-500/10 rounded-full blur-[100px] pointer-events-none -z-10 animate-mesh-move" />
-      <div className="absolute top-[35%] right-[-10%] w-[450px] h-[450px] bg-purple-500/3 dark:bg-purple-500/10 rounded-full blur-[120px] pointer-events-none -z-10 animate-mesh-move" style={{ animationDuration: '25s', animationDelay: '-5s' }} />
-      <div className="absolute bottom-[-10%] left-[15%] w-[400px] h-[400px] bg-sky-500/3 dark:bg-sky-500/10 rounded-full blur-[110px] pointer-events-none -z-10 animate-mesh-move" style={{ animationDuration: '30s', animationDelay: '-10s' }} />
+      <div className="absolute top-[35%] right-[-10%] w-[450px] h-[450px] bg-indigo-500/3 dark:bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none -z-10 animate-mesh-move" style={{ animationDuration: '25s', animationDelay: '-5s' }} />
+      <div className="absolute bottom-[-10%] left-[15%] w-[400px] h-[400px] bg-indigo-500/3 dark:bg-indigo-500/10 rounded-full blur-[110px] pointer-events-none -z-10 animate-mesh-move" style={{ animationDuration: '30s', animationDelay: '-10s' }} />
 
       {/* Page Header */}
       <motion.div
@@ -164,11 +170,11 @@ const KidneyHealth: React.FC = () => {
             <Filter className="w-6 h-6 text-blue-600 dark:text-blue-400" />
           </motion.div>
           <div>
-            <h1 className="text-3xl font-extrabold font-heading text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-primary to-sky-500 dark:from-blue-400 dark:via-primary dark:to-sky-400">
-              Kidney Health Assessor
+            <h1 className="text-3xl font-extrabold font-heading text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-primary to-indigo-500 dark:from-blue-400 dark:via-primary dark:to-indigo-400">
+              Kidney Function Evaluation
             </h1>
             <p className="text-slate-500 dark:text-slate-400 text-sm">
-              Evaluate renal health indicators using serum urea, creatinine, and urine parameters.
+              Assess chronic kidney disease risk using renal metrics and urine biochemistry.
             </p>
           </div>
         </div>
@@ -197,7 +203,7 @@ const KidneyHealth: React.FC = () => {
             >
               <BrainCircuit className="w-5 h-5 text-blue-600 dark:text-blue-400 shrink-0" />
             </motion.span>
-            <span>Enter Renal Lab Metrics</span>
+            <span>Enter Renal Panel &amp; Urine Chemistry</span>
           </motion.h3>
 
           <motion.div
@@ -221,7 +227,12 @@ const KidneyHealth: React.FC = () => {
                   className="predictor-input w-full h-12 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white font-medium outline-none"
                   style={{ '--accent-rgb': ACCENT_RGB } as React.CSSProperties}
                   value={(formData as any)[field] ?? ''}
-                  onChange={e => handleFieldChange(field, Number(e.target.value))}
+                  onFocus={e => e.target.select()}
+                  onChange={e => {
+                    const raw = e.target.value;
+                    const normalized = raw.length > 1 && raw.startsWith('0') && !raw.startsWith('0.') ? raw.replace(/^0+/, '') : raw;
+                    handleFieldChange(field, normalized);
+                  }}
                 />
                 {formErrors[field] && <p className="text-[10px] text-rose-500 font-bold">{formErrors[field]}</p>}
               </motion.div>
@@ -235,13 +246,13 @@ const KidneyHealth: React.FC = () => {
               <div className="relative">
                 <select
                   id="kidneyRbc"
-                  className="predictor-input w-full h-12 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white font-medium outline-none appearance-none pr-10 cursor-pointer"
+                  className="predictor-input w-full h-12 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white font-medium outline-none appearance-none pr-10 cursor-pointer bg-transparent dark:bg-slate-900/60"
                   style={{ '--accent-rgb': ACCENT_RGB } as React.CSSProperties}
                   value={formData.redBloodCells || 'Normal'}
                   onChange={e => handleFieldChange('redBloodCells', e.target.value as any)}
                 >
-                  <option value="Normal">Normal</option>
-                  <option value="Abnormal">Abnormal</option>
+                  <option value="Normal" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 py-2">Normal</option>
+                  <option value="Abnormal" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 py-2">Abnormal</option>
                 </select>
                 <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
                   <ChevronDown className="w-4 h-4 text-blue-600 dark:text-blue-400" />
@@ -257,13 +268,13 @@ const KidneyHealth: React.FC = () => {
               <div className="relative">
                 <select
                   id="kidneyPus"
-                  className="predictor-input w-full h-12 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white font-medium outline-none appearance-none pr-10 cursor-pointer"
+                  className="predictor-input w-full h-12 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white font-medium outline-none appearance-none pr-10 cursor-pointer bg-transparent dark:bg-slate-900/60"
                   style={{ '--accent-rgb': ACCENT_RGB } as React.CSSProperties}
                   value={formData.pusCells || 'Normal'}
                   onChange={e => handleFieldChange('pusCells', e.target.value as any)}
                 >
-                  <option value="Normal">Normal</option>
-                  <option value="Abnormal">Abnormal</option>
+                  <option value="Normal" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 py-2">Normal</option>
+                  <option value="Abnormal" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 py-2">Abnormal</option>
                 </select>
                 <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
                   <ChevronDown className="w-4 h-4 text-blue-600 dark:text-blue-400" />

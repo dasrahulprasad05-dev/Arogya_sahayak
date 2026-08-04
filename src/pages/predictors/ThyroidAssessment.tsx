@@ -87,7 +87,13 @@ const ThyroidAssessment: React.FC = () => {
     setErrorMsg(null);
     setFormErrors({});
 
-    const validationResult = thyroidSchema.safeParse(formData);
+    const sanitizedInputs: any = { ...formData };
+    numFields.forEach(f => {
+      const v = sanitizedInputs[f.field];
+      sanitizedInputs[f.field] = (v === '' || v === undefined) ? undefined : Number(v);
+    });
+
+    const validationResult = thyroidSchema.safeParse(sanitizedInputs);
     if (!validationResult.success) {
       const errors: Record<string, string> = {};
       validationResult.error.issues.forEach(issue => {
@@ -161,8 +167,8 @@ const ThyroidAssessment: React.FC = () => {
             <Zap className="w-6 h-6 text-orange-600 dark:text-orange-400" />
           </motion.div>
           <div>
-            <h1 className="text-3xl font-extrabold font-heading text-transparent bg-clip-text bg-gradient-to-r from-orange-600 via-primary to-amber-500 dark:from-orange-400 dark:via-primary dark:to-amber-400">Thyroid Assessor</h1>
-            <p className="text-slate-500 dark:text-slate-400 text-sm">Evaluate thyroid parameters using serum TSH, free T3, and free T4 metrics.</p>
+            <h1 className="text-3xl font-extrabold font-heading text-transparent bg-clip-text bg-gradient-to-r from-orange-600 via-primary to-amber-500 dark:from-orange-400 dark:via-primary dark:to-amber-400">Thyroid Hormone Screener</h1>
+            <p className="text-slate-500 dark:text-slate-400 text-sm">Screen for hypothyroid and hyperthyroid risks using TSH, T3, T4 and symptomatic vitals.</p>
           </div>
         </div>
       </motion.div>
@@ -191,7 +197,7 @@ const ThyroidAssessment: React.FC = () => {
             >
               <BrainCircuit className="w-5 h-5 text-orange-600 dark:text-orange-400 shrink-0" />
             </motion.span>
-            <span>Enter Thyroid Lab Profiles</span>
+            <span>Enter Thyroid Hormonal &amp; Clinical Indicators</span>
           </motion.h3>
 
           <motion.div 
@@ -206,13 +212,13 @@ const ThyroidAssessment: React.FC = () => {
               <div className="relative">
                 <select
                   id="thGender"
-                  className="predictor-input w-full h-12 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white font-medium outline-none appearance-none pr-10 cursor-pointer"
+                  className="predictor-input w-full h-12 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white font-medium outline-none appearance-none pr-10 cursor-pointer bg-transparent dark:bg-slate-900/60"
                   style={{ '--accent-rgb': ACCENT_RGB } as React.CSSProperties}
                   value={formData.gender || 'Female'}
                   onChange={e => handleFieldChange('gender', e.target.value as any)}
                 >
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
+                  <option value="Male" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 py-2">Male</option>
+                  <option value="Female" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 py-2">Female</option>
                 </select>
                 <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
                   <ChevronDown className="w-4 h-4 text-orange-600 dark:text-orange-400" />
@@ -232,7 +238,12 @@ const ThyroidAssessment: React.FC = () => {
                   className="predictor-input w-full h-12 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white font-medium outline-none"
                   style={{ '--accent-rgb': ACCENT_RGB } as React.CSSProperties}
                   value={(formData as any)[field] ?? ''}
-                  onChange={e => handleFieldChange(field, Number(e.target.value))}
+                  onFocus={e => e.target.select()}
+                  onChange={e => {
+                    const raw = e.target.value;
+                    const normalized = raw.length > 1 && raw.startsWith('0') && !raw.startsWith('0.') ? raw.replace(/^0+/, '') : raw;
+                    handleFieldChange(field, normalized);
+                  }}
                 />
                 {formErrors[field] && <p className="text-[10px] text-rose-500 font-bold">{formErrors[field]}</p>}
               </motion.div>
@@ -244,14 +255,14 @@ const ThyroidAssessment: React.FC = () => {
               <div className="relative">
                 <select
                   id="wtChange"
-                  className="predictor-input w-full h-12 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white font-medium outline-none appearance-none pr-10 cursor-pointer"
+                  className="predictor-input w-full h-12 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white font-medium outline-none appearance-none pr-10 cursor-pointer bg-transparent dark:bg-slate-900/60"
                   style={{ '--accent-rgb': ACCENT_RGB } as React.CSSProperties}
                   value={formData.weightChange || 'None'}
                   onChange={e => handleFieldChange('weightChange', e.target.value as any)}
                 >
-                  <option value="None">No changes</option>
-                  <option value="Weight Loss">Weight Loss</option>
-                  <option value="Weight Gain">Weight Gain</option>
+                  <option value="None" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 py-2">No changes</option>
+                  <option value="Weight Loss" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 py-2">Weight Loss</option>
+                  <option value="Weight Gain" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 py-2">Weight Gain</option>
                 </select>
                 <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
                   <ChevronDown className="w-4 h-4 text-orange-600 dark:text-orange-400" />
@@ -265,14 +276,14 @@ const ThyroidAssessment: React.FC = () => {
               <div className="relative">
                 <select
                   id="tempSens"
-                  className="predictor-input w-full h-12 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white font-medium outline-none appearance-none pr-10 cursor-pointer"
+                  className="predictor-input w-full h-12 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white font-medium outline-none appearance-none pr-10 cursor-pointer bg-transparent dark:bg-slate-900/60"
                   style={{ '--accent-rgb': ACCENT_RGB } as React.CSSProperties}
                   value={formData.temperatureSensitivity || 'None'}
                   onChange={e => handleFieldChange('temperatureSensitivity', e.target.value as any)}
                 >
-                  <option value="None">Normal sensitivity</option>
-                  <option value="Cold Intolerance">Cold Intolerance</option>
-                  <option value="Heat Intolerance">Heat Intolerance</option>
+                  <option value="None" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 py-2">Normal sensitivity</option>
+                  <option value="Cold Intolerance" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 py-2">Cold Intolerance</option>
+                  <option value="Heat Intolerance" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 py-2">Heat Intolerance</option>
                 </select>
                 <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
                   <ChevronDown className="w-4 h-4 text-orange-600 dark:text-orange-400" />
