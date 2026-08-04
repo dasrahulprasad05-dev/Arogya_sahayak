@@ -73,7 +73,12 @@ const AdminLogin: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1.5" htmlFor="admin-password">Password</label>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="block text-sm font-medium" htmlFor="admin-password">Password</label>
+              <Link to="/forgot-password" className="text-xs text-amber-600 dark:text-amber-400 hover:underline font-medium">
+                Forgot Password?
+              </Link>
+            </div>
             <div className="relative">
               <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-muted-foreground"><Lock className="w-4 h-4" /></span>
               <input id="admin-password" type={showPassword ? 'text' : 'password'} required
@@ -91,9 +96,10 @@ const AdminLogin: React.FC = () => {
           </button>
         </form>
 
-        <p className="text-center text-sm text-muted-foreground mt-6">
-          <Link to="/login" className="text-primary hover:underline font-medium">← Back to Patient Login</Link>
-        </p>
+        <div className="flex flex-col items-center gap-2 mt-6 text-sm text-muted-foreground">
+          <p><Link to="/login" className="text-primary hover:underline font-medium">← Back to Patient Login</Link></p>
+          <p>Are you a doctor? <Link to="/doctor-login" className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium">Doctor Login</Link></p>
+        </div>
       </div>
     </div>
   );

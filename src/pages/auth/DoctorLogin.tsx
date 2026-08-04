@@ -83,7 +83,12 @@ const DoctorLogin: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1.5" htmlFor="doc-password">Password</label>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="block text-sm font-medium" htmlFor="doc-password">Password</label>
+              <Link to="/forgot-password" className="text-xs text-emerald-600 dark:text-emerald-400 hover:underline font-medium">
+                Forgot Password?
+              </Link>
+            </div>
             <div className="relative">
               <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-muted-foreground"><Lock className="w-4 h-4" /></span>
               <input id="doc-password" type={showPassword ? 'text' : 'password'} required
