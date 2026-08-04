@@ -4,9 +4,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '../../integrations/supabase/client';
 import { useAuth } from '../../context/AuthContext';
 import type { Doctor } from '../../lib/types/doctor';
+import { DAY_NAMES_SHORT } from '../../lib/types/doctor';
+import { formatTime12h } from '../../utils/formatTime';
 import {
   Shield, CheckCircle, XCircle, Clock, Users, Stethoscope, MapPin,
-  GraduationCap, Building2, LogOut, Search, RefreshCw
+  GraduationCap, Building2, LogOut, Search, RefreshCw, Calendar
 } from 'lucide-react';
 
 type Tab = 'pending' | 'approved' | 'rejected';
@@ -27,7 +29,7 @@ const AdminDashboard: React.FC = () => {
       // Fetch all doctors (admin can see all via RLS bypass or direct policy)
       const { data, error } = await supabase
         .from('doctors')
-        .select('*')
+        .select('*, doctor_time_slots(*)')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -198,6 +200,20 @@ const AdminDashboard: React.FC = () => {
                       <p className="text-[10px] text-muted-foreground">
                         Registered: {new Date(doctor.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                       </p>
+
+                      {/* Time slots / schedule info */}
+                      {(doctor as any).doctor_time_slots && (doctor as any).doctor_time_slots.length > 0 && (
+                        <div className="mt-2 p-2.5 bg-primary/5 border border-primary/10 rounded-lg space-y-1">
+                          <p className="text-[10px] font-semibold text-primary flex items-center gap-1"><Calendar className="w-3 h-3" /> Availability</p>
+                          <div className="flex flex-wrap gap-1.5">
+                            {(doctor as any).doctor_time_slots.map((slot: any, si: number) => (
+                              <span key={si} className="text-[10px] bg-muted px-2 py-0.5 rounded-md">
+                                {DAY_NAMES_SHORT[slot.day_of_week]} {formatTime12h(slot.start_time?.slice(0, 5))} – {formatTime12h(slot.end_time?.slice(0, 5))}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </div>
 
                     {/* Actions */}

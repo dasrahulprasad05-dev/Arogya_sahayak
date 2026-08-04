@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { supabase } from '../../integrations/supabase/client';
@@ -6,6 +6,7 @@ import { useAuth } from '../../context/AuthContext';
 import { INDIAN_STATES, getDistrictsForState } from '../../data/indianLocations';
 import type { Doctor, DoctorTimeSlot } from '../../lib/types/doctor';
 import { DAY_NAMES } from '../../lib/types/doctor';
+import { formatTime12h } from '../../utils/formatTime';
 import {
   ArrowLeft, Calendar, Clock, User, Phone, MapPin, CreditCard,
   Ticket, ChevronDown, ShieldAlert, CheckCircle, Fingerprint
@@ -32,6 +33,7 @@ const BookAppointment: React.FC = () => {
   const [address, setAddress] = useState('');
   const [appointmentDate, setAppointmentDate] = useState('');
   const [selectedSlotId, setSelectedSlotId] = useState('');
+  const dateInputRef = useRef<HTMLInputElement>(null);
 
   const districts = patientState ? getDistrictsForState(patientState) : [];
 
@@ -296,8 +298,11 @@ const BookAppointment: React.FC = () => {
           <div>
             <label className="block text-xs font-medium mb-1">Appointment Date</label>
             <div className="relative">
-              <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-muted-foreground"><Calendar className="w-4 h-4" /></span>
-              <input type="date" required className={inputClass} min={minDate} max={maxDate}
+              <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-muted-foreground cursor-pointer z-10"
+                onClick={() => dateInputRef.current?.showPicker?.()}>
+                <Calendar className="w-4 h-4" />
+              </span>
+              <input ref={dateInputRef} type="date" required className={inputClass} min={minDate} max={maxDate}
                 value={appointmentDate} onChange={e => { setAppointmentDate(e.target.value); setSelectedSlotId(''); }} />
             </div>
           </div>
@@ -317,7 +322,7 @@ const BookAppointment: React.FC = () => {
                           : 'bg-card border-border hover:border-primary/50'
                       }`}>
                       <Clock className="w-3.5 h-3.5" />
-                      {slot.start_time.slice(0, 5)} - {slot.end_time.slice(0, 5)}
+                      {formatTime12h(slot.start_time.slice(0, 5))} - {formatTime12h(slot.end_time.slice(0, 5))}
                     </button>
                   ))}
                 </div>

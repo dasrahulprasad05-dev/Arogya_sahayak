@@ -4,14 +4,23 @@ import { motion } from 'framer-motion';
 import { supabase } from '../../integrations/supabase/client';
 import { useAuth } from '../../context/AuthContext';
 import type { Appointment, Doctor } from '../../lib/types/doctor';
+import { DAY_NAMES } from '../../lib/types/doctor';
+import { formatTime12h } from '../../utils/formatTime';
 import {
   Stethoscope, Calendar, CheckCircle, XCircle, Clock, ScanLine,
   Users, LogOut, RefreshCw, ChevronLeft, ChevronRight, QrCode,
-  ClipboardList, BarChart3
+  ClipboardList, BarChart3, Settings, Plus, Trash2, Save
 } from 'lucide-react';
 
-type Tab = 'appointments' | 'calendar' | 'stats';
+type Tab = 'appointments' | 'calendar' | 'stats' | 'schedule';
 const DAY_NAMES_SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+interface EditableSlot {
+  day_of_week: number;
+  start_time: string;
+  end_time: string;
+  max_patients: number;
+}
 
 const DoctorDashboard: React.FC = () => {
   const { user, signOut } = useAuth();
@@ -24,6 +33,11 @@ const DoctorDashboard: React.FC = () => {
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [filterDate, setFilterDate] = useState<string>('');
 
+  // Schedule editing state
+  const [editSlots, setEditSlots] = useState<EditableSlot[]>([]);
+  const [savingSlots, setSavingSlots] = useState(false);
+  const [slotMsg, setSlotMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
   // Calendar state
   const [calMonth, setCalMonth] = useState(new Date().getMonth());
   const [calYear, setCalYear] = useState(new Date().getFullYear());
@@ -33,12 +47,21 @@ const DoctorDashboard: React.FC = () => {
     if (!user) return;
     setLoading(true);
     try {
-      const [docRes, aptRes] = await Promise.all([
+      const [docRes, aptRes, slotsRes] = await Promise.all([
         supabase.from('doctors').select('*').eq('id', user.id).single(),
         supabase.from('appointments').select('*').eq('doctor_id', user.id).order('appointment_date', { ascending: true }).order('token_number'),
+        supabase.from('doctor_time_slots').select('*').eq('doctor_id', user.id).order('day_of_week'),
       ]);
       if (docRes.data) setDoctor(docRes.data as Doctor);
       setAppointments((aptRes.data || []) as Appointment[]);
+      if (slotsRes.data && slotsRes.data.length > 0) {
+        setEditSlots(slotsRes.data.map((s: any) => ({
+          day_of_week: s.day_of_week,
+          start_time: s.start_time?.slice(0, 5) || '09:00',
+          end_time: s.end_time?.slice(0, 5) || '13:00',
+          max_patients: s.max_patients,
+        })));
+      }
     } catch { }
     finally { setLoading(false); }
   }, [user]);
@@ -99,8 +122,43 @@ const DoctorDashboard: React.FC = () => {
   const tabs = [
     { id: 'appointments' as Tab, label: 'Appointments', icon: ClipboardList, badge: pendingCount },
     { id: 'calendar' as Tab, label: 'Calendar', icon: Calendar },
+    { id: 'schedule' as Tab, label: 'Schedule', icon: Settings },
     { id: 'stats' as Tab, label: 'Stats', icon: BarChart3 },
   ];
+
+  // Schedule editing helpers
+  const addEditSlot = () => setEditSlots(prev => [...prev, { day_of_week: 1, start_time: '09:00', end_time: '13:00', max_patients: 20 }]);
+  const removeEditSlot = (idx: number) => setEditSlots(prev => prev.filter((_, i) => i !== idx));
+  const updateEditSlot = (idx: number, field: keyof EditableSlot, value: any) => {
+    setEditSlots(prev => prev.map((s, i) => i === idx ? { ...s, [field]: value } : s));
+  };
+
+  const handleSaveSchedule = async () => {
+    if (!user || editSlots.length === 0) return;
+    setSavingSlots(true);
+    setSlotMsg(null);
+    try {
+      // Delete existing slots
+      await supabase.from('doctor_time_slots').delete().eq('doctor_id', user.id);
+      // Insert new slots
+      const { error } = await supabase.from('doctor_time_slots').insert(
+        editSlots.map(s => ({
+          doctor_id: user.id,
+          day_of_week: s.day_of_week,
+          start_time: s.start_time + ':00',
+          end_time: s.end_time + ':00',
+          max_patients: s.max_patients,
+          is_active: true,
+        }))
+      );
+      if (error) throw error;
+      setSlotMsg({ type: 'success', text: 'Schedule updated successfully!' });
+    } catch (err: any) {
+      setSlotMsg({ type: 'error', text: err.message || 'Failed to save schedule.' });
+    } finally {
+      setSavingSlots(false);
+    }
+  };
 
   if (loading && !doctor) {
     return <div className="min-h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" /></div>;
@@ -337,6 +395,65 @@ const DoctorDashboard: React.FC = () => {
                 </div>
               )}
             </div>
+          </div>
+        )}
+
+        {/* ── Schedule Tab ── */}
+        {activeTab === 'schedule' && (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-lg font-semibold flex items-center gap-2"><Settings className="w-5 h-5 text-primary" /> Your Schedule</h2>
+                <p className="text-xs text-muted-foreground">Edit your weekly consultation availability. Changes affect future bookings only.</p>
+              </div>
+            </div>
+
+            {slotMsg && (
+              <div className={`p-3 text-sm rounded-lg ${slotMsg.type === 'success' ? 'bg-emerald-500/10 text-emerald-600' : 'bg-destructive/10 text-destructive'}`}>
+                {slotMsg.text}
+              </div>
+            )}
+
+            <div className="space-y-3">
+              {editSlots.map((slot, idx) => (
+                <div key={idx} className="flex flex-wrap items-end gap-3 p-3 bg-card border border-border rounded-lg">
+                  <div className="flex-1 min-w-[130px]">
+                    <label className="block text-xs font-medium mb-1">Day</label>
+                    <select className="w-full py-2 px-3 rounded-lg border border-border bg-background text-sm" value={slot.day_of_week} onChange={e => updateEditSlot(idx, 'day_of_week', Number(e.target.value))}>
+                      {DAY_NAMES.map((d, i) => <option key={i} value={i}>{d}</option>)}
+                    </select>
+                  </div>
+                  <div className="min-w-[100px]">
+                    <label className="block text-xs font-medium mb-1">Start</label>
+                    <input type="time" className="w-full py-2 px-3 rounded-lg border border-border bg-background text-sm" value={slot.start_time} onChange={e => updateEditSlot(idx, 'start_time', e.target.value)} />
+                    <span className="text-[10px] text-muted-foreground mt-0.5 block">{formatTime12h(slot.start_time)}</span>
+                  </div>
+                  <div className="min-w-[100px]">
+                    <label className="block text-xs font-medium mb-1">End</label>
+                    <input type="time" className="w-full py-2 px-3 rounded-lg border border-border bg-background text-sm" value={slot.end_time} onChange={e => updateEditSlot(idx, 'end_time', e.target.value)} />
+                    <span className="text-[10px] text-muted-foreground mt-0.5 block">{formatTime12h(slot.end_time)}</span>
+                  </div>
+                  <div className="min-w-[80px]">
+                    <label className="block text-xs font-medium mb-1">Max Patients</label>
+                    <input type="number" min={1} max={100} className="w-full py-2 px-3 rounded-lg border border-border bg-background text-sm" value={slot.max_patients} onChange={e => updateEditSlot(idx, 'max_patients', Number(e.target.value))} />
+                  </div>
+                  {editSlots.length > 1 && (
+                    <button type="button" onClick={() => removeEditSlot(idx)} className="p-2 text-destructive hover:bg-destructive/10 rounded-lg transition-colors">
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            <button type="button" onClick={addEditSlot} className="w-full py-2 border border-dashed border-border hover:border-primary text-muted-foreground hover:text-primary rounded-lg flex items-center justify-center gap-2 text-sm transition-all">
+              <Plus className="w-4 h-4" /> Add Another Slot
+            </button>
+
+            <button onClick={handleSaveSchedule} disabled={savingSlots || editSlots.length === 0}
+              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-6 rounded-xl flex items-center justify-center gap-2 shadow-md transition-all disabled:opacity-50">
+              {savingSlots ? 'Saving...' : <><Save className="w-4 h-4" /> Save Schedule</>}
+            </button>
           </div>
         )}
       </div>

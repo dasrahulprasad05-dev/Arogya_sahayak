@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { supabase } from '../../integrations/supabase/client';
 import { INDIAN_STATES, getDistrictsForState } from '../../data/indianLocations';
 import { DAY_NAMES } from '../../lib/types/doctor';
+import { formatTime12h } from '../../utils/formatTime';
 import {
   Mail, Lock, User as UserIcon, ShieldAlert, ArrowRight, Eye, EyeOff,
   Stethoscope, GraduationCap, Building2, MapPin, Clock, IndianRupee, ChevronDown, Plus, Trash2
@@ -357,10 +358,12 @@ const DoctorRegister: React.FC = () => {
                       <div className="min-w-[100px]">
                         <label className="block text-xs font-medium mb-1">Start</label>
                         <input type="time" className="w-full py-2 px-3 rounded-lg border border-border bg-background text-sm" value={slot.start_time} onChange={e => updateTimeSlot(idx, 'start_time', e.target.value)} />
+                        <span className="text-[10px] text-muted-foreground mt-0.5 block">{formatTime12h(slot.start_time)}</span>
                       </div>
                       <div className="min-w-[100px]">
                         <label className="block text-xs font-medium mb-1">End</label>
                         <input type="time" className="w-full py-2 px-3 rounded-lg border border-border bg-background text-sm" value={slot.end_time} onChange={e => updateTimeSlot(idx, 'end_time', e.target.value)} />
+                        <span className="text-[10px] text-muted-foreground mt-0.5 block">{formatTime12h(slot.end_time)}</span>
                       </div>
                       <div className="min-w-[80px]">
                         <label className="block text-xs font-medium mb-1">Max Patients</label>
