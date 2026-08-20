@@ -1,5 +1,4 @@
 from models import PredictionFacts
-import random
 
 def predict(inputs: dict) -> PredictionFacts:
     glucose = float(inputs.get('glucose', 90.0))
@@ -37,8 +36,7 @@ def predict(inputs: dict) -> PredictionFacts:
         score += 15
         flagged.append("Family history of diabetes reported.")
 
-    noise = random.randint(-5, 5)
-    final_score = min(100, max(0, score + noise))
+    final_score = min(100, max(0, score))
 
     riskLevel = 'Low'
     action = 'monitor'

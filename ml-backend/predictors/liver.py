@@ -1,5 +1,4 @@
 from models import PredictionFacts
-import random
 
 def predict(inputs: dict) -> PredictionFacts:
     bilirubin = float(inputs.get('bilirubin', 1.0))
@@ -25,8 +24,7 @@ def predict(inputs: dict) -> PredictionFacts:
         score += 15
         flagged.append("Combined transaminase elevation suggests active hepatic inflammation.")
 
-    noise = random.randint(-5, 5)
-    final_score = min(100, max(0, score + noise))
+    final_score = min(100, max(0, score))
 
     riskLevel = 'Low'
     action = 'monitor'

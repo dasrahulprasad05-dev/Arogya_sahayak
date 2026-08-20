@@ -1,14 +1,23 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { checkRateLimit } from "../_shared/rateLimit.ts";
 import { medicalResponseSchema, predictionFactsSchema } from "../_shared/responseSchema.ts";
+import { getAuthUserId } from "../_shared/authHelper.ts";
 
 const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY") || "";
 const FASTAPI_URL = Deno.env.get("FASTAPI_URL") || "";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
+const ALLOWED_ORIGINS = (Deno.env.get("ALLOWED_ORIGINS") || "*").split(",").map(o => o.trim());
+
+function getCorsHeaders(req: Request) {
+  const origin = req.headers.get("Origin") || "";
+  const allowedOrigin = ALLOWED_ORIGINS.includes("*")
+    ? "*"
+    : ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    "Access-Control-Allow-Origin": allowedOrigin,
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  };
+}
 
 interface PredictionFacts {
   version: string;
@@ -208,13 +217,14 @@ function computeServerRules(predictorId: string, inputs: Record<string, any>, lo
 }
 
 serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req);
+
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
 
   try {
-    const authHeader = req.headers.get("Authorization");
-    const userId = authHeader ? authHeader.substring(7) : "anonymous";
+    const userId = await getAuthUserId(req);
 
     // Rate Limit: 20 requests per user per minute
     const rateCheck = await checkRateLimit(userId, 20, 60000);

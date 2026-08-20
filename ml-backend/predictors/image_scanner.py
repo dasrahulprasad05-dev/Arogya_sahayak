@@ -1,8 +1,7 @@
 from models import PredictionFacts
-import random
 
 def predict(inputs: dict, localLabel: str = None) -> PredictionFacts:
-    score = 65 + random.randint(-5, 10)
+    score = 65
     flagged = []
     
     if localLabel:

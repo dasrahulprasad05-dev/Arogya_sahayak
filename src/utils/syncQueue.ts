@@ -64,9 +64,10 @@ export function enqueueLog(type: string, value: any, userId: string) {
     user_id: userId
   };
 
-  // 1. Save to local history
+  // 1. Save to local history (capped at 500 entries to prevent localStorage overflow)
   const history = getLocalHistory();
   history.unshift(item); // Newest first
+  if (history.length > 500) history.length = 500;
   saveLocalHistory(history);
 
   // 2. Add to sync queue if it's not a temporary/bypass user

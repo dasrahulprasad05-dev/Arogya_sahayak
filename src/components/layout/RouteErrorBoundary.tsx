@@ -25,6 +25,17 @@ export class RouteErrorBoundary extends Component<Props, State> {
     console.error('Uncaught route error:', error, errorInfo);
   }
 
+  /**
+   * Reset the error state when children change (i.e. navigation).
+   * This prevents the error boundary from being permanently stuck
+   * after a single route fails to load.
+   */
+  public componentDidUpdate(prevProps: Props) {
+    if (this.state.hasError && prevProps.children !== this.props.children) {
+      this.setState({ hasError: false, error: null });
+    }
+  }
+
   public render() {
     if (this.state.hasError) {
       return this.props.fallback || (
@@ -34,10 +45,10 @@ export class RouteErrorBoundary extends Component<Props, State> {
             There was a loading error. This can happen if you are offline or the page bundle failed to download.
           </p>
           <button
-            onClick={() => window.location.reload()}
+            onClick={() => this.setState({ hasError: false, error: null })}
             className="px-5 py-2.5 bg-primary text-white font-semibold rounded-xl text-sm transition-all hover:bg-primary/95 shadow-md shadow-primary/10 touch-target"
           >
-            Reload Page
+            Try Again
           </button>
         </div>
       );

@@ -1,5 +1,4 @@
 from models import PredictionFacts
-import random
 
 def predict(inputs: dict) -> PredictionFacts:
     tsh = float(inputs.get('tsh', 2.0))
@@ -23,8 +22,7 @@ def predict(inputs: dict) -> PredictionFacts:
         score += 25
         flagged.append("Elevated peripheral thyroid hormones (T3/T4) detected.")
 
-    noise = random.randint(-5, 5)
-    final_score = min(100, max(0, score + noise))
+    final_score = min(100, max(0, score))
 
     riskLevel = 'Low'
     action = 'monitor'

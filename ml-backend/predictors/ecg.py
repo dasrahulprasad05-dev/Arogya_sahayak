@@ -1,5 +1,4 @@
 from models import PredictionFacts
-import random
 
 def predict(inputs: dict) -> PredictionFacts:
     heart_rate = float(inputs.get('heartRate', 70))
@@ -27,8 +26,7 @@ def predict(inputs: dict) -> PredictionFacts:
         score += 20
         flagged.append(f"Abnormal rhythm noted: {rhythm}.")
 
-    noise = random.randint(-5, 5)
-    final_score = min(100, max(0, score + noise))
+    final_score = min(100, max(0, score))
 
     riskLevel = 'Low'
     action = 'monitor'

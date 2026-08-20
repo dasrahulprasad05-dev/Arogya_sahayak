@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { checkRateLimit } from "../_shared/rateLimit.ts";
 import { welcomeEmail, passwordResetEmail, predictionReportEmail } from "../_shared/emailTemplates.ts";
+import { getAuthUserId } from "../_shared/authHelper.ts";
 
 // ==========================================
 // AAROGYA SAHAYAK — SEND EMAIL EDGE FUNCTION
@@ -10,10 +11,18 @@ import { welcomeEmail, passwordResetEmail, predictionReportEmail } from "../_sha
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY") || "";
 const FROM_EMAIL = Deno.env.get("FROM_EMAIL") || "Aarogya Sahayak <onboarding@resend.dev>";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
+const ALLOWED_ORIGINS = (Deno.env.get("ALLOWED_ORIGINS") || "*").split(",").map(o => o.trim());
+
+function getCorsHeaders(req: Request) {
+  const origin = req.headers.get("Origin") || "";
+  const allowedOrigin = ALLOWED_ORIGINS.includes("*")
+    ? "*"
+    : ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    "Access-Control-Allow-Origin": allowedOrigin,
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  };
+}
 
 type EmailType = "welcome" | "password-reset" | "prediction-report";
 
@@ -24,6 +33,8 @@ interface EmailRequest {
 }
 
 serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req);
+
   // Handle CORS preflight
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -40,8 +51,7 @@ serve(async (req) => {
     }
 
     // Rate limit: 10 emails per user per minute
-    const authHeader = req.headers.get("Authorization");
-    const userId = authHeader ? authHeader.substring(7) : "anonymous";
+    const userId = await getAuthUserId(req);
     const rateCheck = await checkRateLimit(userId, 10, 60000);
     if (!rateCheck.allowed) {
       return new Response(

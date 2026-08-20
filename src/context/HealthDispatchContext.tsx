@@ -21,11 +21,18 @@ interface HealthDispatchContextProps {
 
 const HealthDispatchContext = createContext<HealthDispatchContextProps | undefined>(undefined);
 
+/** Dispatch a custom event so UI can show a login prompt when a guest tries to log data */
+function notifyLoginRequired() {
+  window.dispatchEvent(new CustomEvent('arogya_login_required', {
+    detail: { message: 'Please log in to save your health data.' }
+  }));
+}
+
 export const HealthDispatchProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user } = useAuth();
 
   const logWater = useCallback((glasses: number) => {
-    if (!user) return;
+    if (!user) { notifyLoginRequired(); return; }
     enqueueLog('water', { glasses }, user.id);
   }, [user]);
 

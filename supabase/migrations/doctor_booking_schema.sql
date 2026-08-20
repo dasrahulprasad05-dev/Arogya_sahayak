@@ -77,9 +77,9 @@ CREATE POLICY "Doctors read own profile" ON public.doctors
 CREATE POLICY "Doctors update own profile" ON public.doctors
   FOR UPDATE USING (auth.uid() = id);
 
--- Anyone can insert (register as doctor)
-CREATE POLICY "Anyone can register as doctor" ON public.doctors
-  FOR INSERT WITH CHECK (true);
+-- Authenticated users can register as doctor (only for their own user ID)
+CREATE POLICY "Authenticated users can register as doctor" ON public.doctors
+  FOR INSERT WITH CHECK (auth.uid() = id);
 
 -- Admins can read all doctors
 CREATE POLICY "Admins read all doctors" ON public.doctors

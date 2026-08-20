@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Any, Dict, Optional
 from models import PredictionFacts
@@ -16,6 +17,17 @@ import predictors.generic as generic
 import predictors.image_scanner as image_scanner
 
 app = FastAPI(title="Medical Predictor ML Backend")
+
+# CORS Middleware — restrict origins in production via ALLOWED_ORIGINS env var
+import os
+allowed_origins = os.environ.get("ALLOWED_ORIGINS", "http://localhost:5173,http://localhost:4173").split(",")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[o.strip() for o in allowed_origins],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class PredictionRequest(BaseModel):
     predictorId: str

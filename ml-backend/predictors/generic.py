@@ -1,5 +1,4 @@
 from models import PredictionFacts
-import random
 
 def predict(inputs: dict) -> PredictionFacts:
     score = 10
@@ -33,8 +32,7 @@ def predict(inputs: dict) -> PredictionFacts:
         except ValueError:
             pass
 
-    noise = random.randint(-5, 5)
-    final_score = min(100, max(0, score + noise))
+    final_score = min(100, max(0, score))
 
     riskLevel = 'Low'
     action = 'monitor'

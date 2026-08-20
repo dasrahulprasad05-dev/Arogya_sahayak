@@ -1,5 +1,4 @@
 from models import PredictionFacts
-import random
 
 def predict(inputs: dict) -> PredictionFacts:
     age = float(inputs.get('age', 30))
@@ -28,8 +27,7 @@ def predict(inputs: dict) -> PredictionFacts:
         score += (len(warning_signs) * 15)
         flagged.append(f"Reported warning signs: {', '.join(warning_signs)}")
 
-    noise = random.randint(-5, 5)
-    final_score = min(100, max(0, score + noise))
+    final_score = min(100, max(0, score))
 
     riskLevel = 'Low'
     action = 'monitor'

@@ -1,5 +1,4 @@
 from models import PredictionFacts
-import random
 
 def predict(inputs: dict) -> PredictionFacts:
     urea = float(inputs.get('urea', 20))
@@ -21,8 +20,7 @@ def predict(inputs: dict) -> PredictionFacts:
         score += 30
         flagged.append(f"Decreased eGFR ({egfr} mL/min) suggests reduced kidney filtration function.")
 
-    noise = random.randint(-5, 5)
-    final_score = min(100, max(0, score + noise))
+    final_score = min(100, max(0, score))
 
     riskLevel = 'Low'
     action = 'monitor'

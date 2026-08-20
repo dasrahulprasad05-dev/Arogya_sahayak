@@ -52,7 +52,8 @@ export const HealthReadProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   }, [refreshLocalState]);
 
   // Today's Date helpers in local string format
-  const todayStr = useMemo(() => new Date().toDateString(), []);
+  // Recomputed each render (cheap) so it stays correct across midnight
+  const todayStr = new Date().toDateString();
 
   // Today's snapshot values
   const todaySnapshot = useMemo(() => {
@@ -106,7 +107,7 @@ export const HealthReadProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       const quality = Number(lastSleep.value.quality || 0);
       // Sleep hours score (max +10)
       if (hrs >= 7 && hrs <= 9) score += 10;
-      else if (hrs >= 6 || hrs <= 10) score += 5;
+      else if (hrs >= 6 && hrs <= 10) score += 5;
 
       // Quality score (max +10)
       score += Math.min((quality / 5) * 10, 10);

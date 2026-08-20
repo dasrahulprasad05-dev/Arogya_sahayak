@@ -15,7 +15,7 @@ const DoctorCard: React.FC<DoctorCardProps> = ({ doctor, index = 0 }) => {
 
   const initials = doctor.full_name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
 
-  // Generate consistent color from specialty
+  // Generate consistent color from specialty — each specialty has a unique color
   const colorMap: Record<string, string> = {
     cardiologist: 'bg-rose-500/10 text-rose-600 dark:text-rose-400',
     diabetologist: 'bg-cyan-500/10 text-cyan-600 dark:text-cyan-400',
@@ -28,13 +28,13 @@ const DoctorCard: React.FC<DoctorCardProps> = ({ doctor, index = 0 }) => {
     pulmonologist: 'bg-lime-500/10 text-lime-600 dark:text-lime-400',
     dermatologist: 'bg-purple-500/10 text-purple-600 dark:text-purple-400',
     gynecologist: 'bg-fuchsia-500/10 text-fuchsia-600 dark:text-fuchsia-400',
-    psychiatrist: 'bg-sky-500/10 text-sky-600 dark:text-sky-400',
+    psychiatrist: 'bg-violet-500/10 text-violet-600 dark:text-violet-400',
     orthopedic: 'bg-stone-500/10 text-stone-600 dark:text-stone-400',
     general_physician: 'bg-teal-500/10 text-teal-600 dark:text-teal-400',
-    pediatrician: 'bg-violet-500/10 text-violet-600 dark:text-violet-400',
-    ophthalmologist: 'bg-sky-500/10 text-sky-600 dark:text-sky-400',
-    dentist: 'bg-cyan-500/10 text-cyan-600 dark:text-cyan-400',
-    ent: 'bg-teal-500/10 text-teal-600 dark:text-teal-400',
+    pediatrician: 'bg-sky-500/10 text-sky-600 dark:text-sky-400',
+    ophthalmologist: 'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400',
+    dentist: 'bg-red-500/10 text-red-600 dark:text-red-400',
+    ent: 'bg-slate-500/10 text-slate-600 dark:text-slate-400',
   };
 
   const avatarColor = colorMap[doctor.specialty_id] || 'bg-primary/10 text-primary';

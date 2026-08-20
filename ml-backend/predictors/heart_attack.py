@@ -1,12 +1,11 @@
 from models import PredictionFacts
-import random
 
 def predict(inputs: dict) -> PredictionFacts:
     age = inputs.get('age', 0)
     rbp = inputs.get('restingBloodPressure', 120)
     chol = inputs.get('cholesterol', 200)
 
-    # ML Mock Heuristics (Pretending to be a RandomForest Voting Ensemble)
+    # Deterministic clinical heuristic scoring
     score = 20
     flagged = []
     
@@ -19,10 +18,8 @@ def predict(inputs: dict) -> PredictionFacts:
     if chol > 240:
         score += 20
         flagged.append("High serum cholesterol detected")
-        
-    # Add some random 'ML' noise to simulate probabilistic model
-    noise = random.randint(-5, 5)
-    final_score = min(100, max(0, score + noise))
+
+    final_score = min(100, max(0, score))
 
     riskLevel = 'Low'
     action = 'monitor'
