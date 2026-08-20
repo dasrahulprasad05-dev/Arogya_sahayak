@@ -7,8 +7,9 @@ import type { Language } from '../../context/LanguageContext';
 import { useTheme } from '../../context/ThemeContext';
 import { useHealthRead } from '../../context/HealthReadContext';
 import { triggerSync } from '../../utils/syncQueue';
+import { useFamily } from '../../context/FamilyContext';
 import { 
-  Home, Activity, BrainCircuit, Camera, User, Sun, Moon, Wifi, WifiOff, RefreshCw, LogOut, LogIn, ChevronLeft, ChevronRight, Menu, Stethoscope, Ticket, Bot
+  Home, Activity, BrainCircuit, Camera, User, Sun, Moon, Wifi, WifiOff, RefreshCw, LogOut, LogIn, ChevronLeft, ChevronRight, Menu, Stethoscope, Ticket, Bot, Users
 } from 'lucide-react';
 
 const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -16,6 +17,7 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
   const { theme, toggleTheme } = useTheme();
   const { language, setLanguage, t } = useLanguage();
   const { syncQueueLength } = useHealthRead();
+  const { members, activeMember, setActiveMemberId } = useFamily();
   const location = useLocation();
   const navigate = useNavigate();
   const prefersReducedMotion = useReducedMotion();
@@ -205,6 +207,24 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
                 <div className="flex items-center gap-1 text-amber-600 dark:text-amber-500 text-xs font-medium"><WifiOff className="w-4 h-4" /><span>Offline ({syncQueueLength} saved)</span></div>
               )}
             </div>
+
+            {/* Family Member Switcher */}
+            {members.length > 1 && (
+              <div className="flex items-center gap-1.5 bg-muted/60 px-2 py-1 rounded-lg border border-border text-xs">
+                <Users className="w-3.5 h-3.5 text-primary shrink-0" />
+                <select
+                  value={activeMember.id}
+                  onChange={(e) => setActiveMemberId(e.target.value)}
+                  className="bg-transparent text-foreground font-semibold text-xs focus:outline-none cursor-pointer"
+                >
+                  {members.map(m => (
+                    <option key={m.id} value={m.id} className="bg-card text-foreground">
+                      {m.name} ({m.relationship})
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
 
             <div className="flex items-center bg-muted/60 rounded-lg p-0.5 border border-border">
               {languages.map(lang => (

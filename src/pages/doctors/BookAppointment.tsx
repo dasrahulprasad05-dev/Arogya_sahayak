@@ -12,9 +12,12 @@ import {
   Ticket, ChevronDown, ShieldAlert, CheckCircle, Fingerprint
 } from 'lucide-react';
 
+import { useLocation } from 'react-router-dom';
+
 const BookAppointment: React.FC = () => {
   const { doctorId } = useParams<{ doctorId: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useAuth();
 
   const [doctor, setDoctor] = useState<Doctor | null>(null);
@@ -24,7 +27,7 @@ const BookAppointment: React.FC = () => {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [success, setSuccess] = useState<{ ticketId: string; tokenNumber: number } | null>(null);
 
-  // Form fields
+  // Form fields (pre-filled from location.state if referred by AI chatbot)
   const [patientName, setPatientName] = useState(user?.user_metadata?.full_name || '');
   const [aadhaar, setAadhaar] = useState('');
   const [mobile, setMobile] = useState('');
@@ -33,6 +36,7 @@ const BookAppointment: React.FC = () => {
   const [address, setAddress] = useState('');
   const [appointmentDate, setAppointmentDate] = useState('');
   const [selectedSlotId, setSelectedSlotId] = useState('');
+  const [visitReason, setVisitReason] = useState(location.state?.triageSummary || '');
   const dateInputRef = useRef<HTMLInputElement>(null);
 
   const districts = patientState ? getDistrictsForState(patientState) : [];
@@ -287,6 +291,16 @@ const BookAppointment: React.FC = () => {
                 <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-muted-foreground"><MapPin className="w-4 h-4" /></span>
                 <input type="text" className={inputClass} placeholder="Village/Street, Pin code" value={address} onChange={e => setAddress(e.target.value)} />
               </div>
+            </div>
+
+            <div className="sm:col-span-2">
+              <label className="block text-xs font-medium mb-1">Reason for Visit / AI Triage Notes</label>
+              <textarea
+                className="w-full p-3 rounded-lg border border-border bg-background/50 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-xs resize-none h-20"
+                placeholder="Briefly describe your symptoms or pre-filled AI triage advice..."
+                value={visitReason}
+                onChange={e => setVisitReason(e.target.value)}
+              />
             </div>
           </div>
         </div>

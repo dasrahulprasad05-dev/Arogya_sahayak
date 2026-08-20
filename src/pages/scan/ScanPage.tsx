@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
 import { scanToolsConfig } from '../../lib/cnn/scanConfig';
@@ -17,6 +18,7 @@ import {
   ShieldAlert,
   RefreshCw,
   Scan,
+  FileText
 } from 'lucide-react';
 
 const DEFAULT_SCAN_CFG = {
@@ -30,6 +32,7 @@ const DEFAULT_SCAN_CFG = {
 
 const ScanPage: React.FC = () => {
   const { t } = useLanguage();
+  const navigate = useNavigate();
   const { logScan } = useHealthDispatch();
   const { requireAuth, showLoginModal, setShowLoginModal } = useRequireAuth();
 
@@ -260,6 +263,17 @@ const ScanPage: React.FC = () => {
             transition={{ duration: 0.3, ease: 'easeOut' }}
             className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5"
           >
+            {/* Prescription & Medicine OCR Card */}
+            <FeatureCard
+              icon={FileText}
+              title="Prescription & Medicine OCR"
+              description="Snap prescription slips or tablet strips to extract dosages and set reminder alarms"
+              rgb="16, 185, 129"
+              index={0}
+              footerLabel="Open OCR Scanner"
+              badge="New • Vision AI"
+              onClick={() => navigate('/scan/prescription')}
+            />
             {Object.values(scanToolsConfig).map((tool, index) => {
               const cfg = scanConfigs[tool.id] ?? DEFAULT_SCAN_CFG;
               return (

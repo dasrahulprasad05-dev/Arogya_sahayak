@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useSearchParams, useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { supabase } from '../../integrations/supabase/client';
 import type { Doctor } from '../../lib/types/doctor';
 import DoctorCard from '../../components/doctors/DoctorCard';
 import {
   Search, Stethoscope, SlidersHorizontal,
-  Users, X, Ticket
+  Users, X, Ticket, Sparkles
 } from 'lucide-react';
 
 const SPECIALTIES = [
@@ -34,6 +34,7 @@ type SortOption = 'rating' | 'experience' | 'fee_low' | 'fee_high' | 'name';
 
 const DoctorDirectory: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [loading, setLoading] = useState(true);
@@ -41,6 +42,21 @@ const DoctorDirectory: React.FC = () => {
   const [selectedSpecialty, setSelectedSpecialty] = useState<string>(searchParams.get('specialty') || '');
   const [sortBy, setSortBy] = useState<SortOption>('rating');
   const [showFilters, setShowFilters] = useState(false);
+
+  // Check navigation state for AI chatbot referral
+  const prefillSpecialist = location.state?.prefillSpecialist;
+
+  useEffect(() => {
+    if (prefillSpecialist) {
+      const match = SPECIALTIES.find(s => 
+        prefillSpecialist.toLowerCase().includes(s.id) || 
+        prefillSpecialist.toLowerCase().includes(s.name.toLowerCase())
+      );
+      if (match) {
+        setSelectedSpecialty(match.id);
+      }
+    }
+  }, [prefillSpecialist]);
 
   useEffect(() => {
     const fetchDoctors = async () => {
@@ -141,6 +157,28 @@ const DoctorDirectory: React.FC = () => {
           My Bookings & Tickets
         </button>
       </div>
+
+      {/* AI Triage Referral Banner */}
+      {prefillSpecialist && (
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="p-3.5 bg-primary/10 border border-primary/25 rounded-2xl flex items-center justify-between gap-3 text-xs"
+        >
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-primary shrink-0 animate-pulse" />
+            <span>
+              <strong>AI Triage Referral:</strong> Filtered for <strong>{prefillSpecialist}</strong> based on your consultation.
+            </span>
+          </div>
+          <button
+            onClick={() => setSelectedSpecialty('')}
+            className="text-muted-foreground hover:text-foreground text-[11px] underline shrink-0"
+          >
+            Clear Filter
+          </button>
+        </motion.div>
+      )}
 
       {/* Search + Filter Bar */}
       <div className="space-y-3">

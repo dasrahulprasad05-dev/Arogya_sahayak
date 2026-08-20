@@ -515,7 +515,12 @@ const HealthChat: React.FC = () => {
                         {msg.structured.followUp}
                       </span>
                       <button
-                        onClick={() => navigate('/doctors')}
+                        onClick={() => navigate('/doctors', { 
+                          state: { 
+                            prefillSpecialist: msg.structured?.specialist, 
+                            triageSummary: msg.structured?.content 
+                          } 
+                        })}
                         className="text-xs font-bold text-primary hover:underline flex items-center gap-1 shrink-0"
                       >
                         <span>Find Doctors</span>
@@ -537,7 +542,12 @@ const HealthChat: React.FC = () => {
                     )}
 
                     <button
-                      onClick={() => navigate('/doctors')}
+                      onClick={() => navigate('/doctors', { 
+                        state: { 
+                          prefillSpecialist: msg.structured?.specialist, 
+                          triageSummary: msg.structured?.content 
+                        } 
+                      })}
                       className="flex-1 bg-primary hover:bg-primary/95 text-white font-bold py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 text-xs shadow-md shadow-primary/20 transition-all touch-target"
                     >
                       <Stethoscope className="w-4 h-4" />

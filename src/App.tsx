@@ -8,6 +8,7 @@ import { LanguageProvider } from './context/LanguageContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { HealthReadProvider } from './context/HealthReadContext';
 import { HealthDispatchProvider } from './context/HealthDispatchContext';
+import { FamilyProvider } from './context/FamilyContext';
 
 // Error Boundary & Layout
 import RouteErrorBoundary from './components/layout/RouteErrorBoundary';
@@ -54,8 +55,9 @@ const AnemiaChecker = lazy(() => import('./pages/predictors/AnemiaChecker'));
 const ThyroidAssessment = lazy(() => import('./pages/predictors/ThyroidAssessment'));
 const GenericPredictor = lazy(() => import('./pages/predictors/GenericPredictor'));
 
-// CNN Scan Route
+// CNN Scan & OCR Routes
 const ScanPage = lazy(() => import('./pages/scan/ScanPage'));
+const PrescriptionScanner = lazy(() => import('./pages/scan/PrescriptionScanner'));
 
 // AI Medical Assistant & RAG Chat
 const HealthChat = lazy(() => import('./pages/chat/HealthChat'));
@@ -148,6 +150,7 @@ const App: React.FC = () => {
           <ThemeProvider>
             <HealthReadProvider>
               <HealthDispatchProvider>
+                <FamilyProvider>
                 <BrowserRouter>
                   <Suspense fallback={<div className="p-8 text-center text-primary font-bold">Initializing Router...</div>}>
                     <Routes>
@@ -335,10 +338,15 @@ const App: React.FC = () => {
                         </ProtectedRoute>
                       } />
 
-                      {/* On-device ML Scans — browsable */}
+                      {/* On-device ML Scans & OCR — browsable */}
                       <Route path="/scan" element={
                         <BrowsableRoute>
                           <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><ScanPage /></Suspense></RouteErrorBoundary>
+                        </BrowsableRoute>
+                      } />
+                      <Route path="/scan/prescription" element={
+                        <BrowsableRoute>
+                          <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><PrescriptionScanner /></Suspense></RouteErrorBoundary>
                         </BrowsableRoute>
                       } />
 
@@ -372,6 +380,7 @@ const App: React.FC = () => {
                   </Suspense>
                   <FloatingChatButton />
                 </BrowserRouter>
+                </FamilyProvider>
               </HealthDispatchProvider>
             </HealthReadProvider>
           </ThemeProvider>

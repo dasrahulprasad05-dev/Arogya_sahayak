@@ -8,6 +8,7 @@ import { useTheme } from '../context/ThemeContext';
 import { supabase } from '../integrations/supabase/client';
 import { useHealthRead } from '../context/HealthReadContext';
 import PredictionResult from '../components/medical/PredictionResult';
+import { useFamily, type Relationship } from '../context/FamilyContext';
 import {
   User,
   Sun,
@@ -23,7 +24,11 @@ import {
   Download,
   Eye,
   Calendar,
-  Ticket
+  Ticket,
+  Users,
+  Plus,
+  Trash2,
+  UserPlus
 } from 'lucide-react';
 
 /* ---------------------------------------------------
@@ -173,6 +178,14 @@ const ProfilePage: React.FC = () => {
 
   const [fullName, setFullName] = useState(() => user?.user_metadata?.full_name || '');
   const [loading, setLoading] = useState(false);
+
+  const { members, activeMember, setActiveMemberId, addFamilyMember, removeFamilyMember } = useFamily();
+  const [showAddMember, setShowAddMember] = useState(false);
+  const [newMemberName, setNewMemberName] = useState('');
+  const [newMemberRel, setNewMemberRel] = useState<Relationship>('father');
+  const [newMemberAge, setNewMemberAge] = useState(55);
+  const [newMemberGender, setNewMemberGender] = useState<'male' | 'female' | 'other'>('male');
+  const [newMemberBlood, setNewMemberBlood] = useState('B+');
 
   const { logs } = useHealthRead();
   const predictionLogs = logs.filter((log) => log.type === 'prediction').slice(0, 10);
@@ -388,6 +401,183 @@ const ProfilePage: React.FC = () => {
                 </AnimatePresence>
               </motion.button>
             </div>
+          </div>
+        </motion.div>
+
+        {/* Family Health Profiles Card */}
+        <motion.div
+          variants={itemVariants}
+          className="bg-card border border-border rounded-2xl p-6 shadow-sm glass space-y-4"
+        >
+          <div className="flex items-center justify-between">
+            <h3 className="font-heading font-bold text-lg text-foreground flex items-center gap-2">
+              <Users className="w-5 h-5 text-primary" />
+              Family Health Profiles
+            </h3>
+            <button
+              onClick={() => setShowAddMember(!showAddMember)}
+              className="px-3 py-1.5 bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span>{showAddMember ? 'Cancel' : 'Add Member'}</span>
+            </button>
+          </div>
+
+          <p className="text-xs text-muted-foreground">
+            Track symptoms, blood pressure, and medicine reminders separately for your family members.
+          </p>
+
+          {/* Add Member Form */}
+          {showAddMember && (
+            <motion.form
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              className="p-4 bg-muted/40 border border-border rounded-xl space-y-3 text-xs"
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (!newMemberName.trim()) return;
+                addFamilyMember({
+                  name: newMemberName.trim(),
+                  relationship: newMemberRel,
+                  age: newMemberAge,
+                  gender: newMemberGender,
+                  bloodGroup: newMemberBlood,
+                  chronicConditions: []
+                });
+                setNewMemberName('');
+                setShowAddMember(false);
+                pushToast('success', `Added ${newMemberName} to Family Profiles!`);
+              }}
+            >
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[11px] font-semibold mb-1">Full Name</label>
+                  <input
+                    type="text"
+                    required
+                    value={newMemberName}
+                    onChange={e => setNewMemberName(e.target.value)}
+                    placeholder="e.g. Ramesh Prasad"
+                    className="w-full p-2 rounded-lg border border-border bg-card text-xs focus:border-primary outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-semibold mb-1">Relationship</label>
+                  <select
+                    value={newMemberRel}
+                    onChange={e => setNewMemberRel(e.target.value as Relationship)}
+                    className="w-full p-2 rounded-lg border border-border bg-card text-xs focus:border-primary outline-none"
+                  >
+                    <option value="father">Father (ବାପା / पिता)</option>
+                    <option value="mother">Mother (ମା' / माँ)</option>
+                    <option value="spouse">Spouse (ସ୍ୱାମୀ/ସ୍ତ୍ରୀ / जीवनसाथी)</option>
+                    <option value="son">Son (ପୁଅ / बेटा)</option>
+                    <option value="daughter">Daughter (ଝିଅ / बेटी)</option>
+                    <option value="other">Other Relative</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-[11px] font-semibold mb-1">Age</label>
+                  <input
+                    type="number"
+                    min={1}
+                    max={120}
+                    value={newMemberAge}
+                    onChange={e => setNewMemberAge(Number(e.target.value))}
+                    className="w-full p-2 rounded-lg border border-border bg-card text-xs focus:border-primary outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-semibold mb-1">Gender</label>
+                  <select
+                    value={newMemberGender}
+                    onChange={e => setNewMemberGender(e.target.value as 'male' | 'female' | 'other')}
+                    className="w-full p-2 rounded-lg border border-border bg-card text-xs focus:border-primary outline-none"
+                  >
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-[11px] font-semibold mb-1">Blood Group</label>
+                  <select
+                    value={newMemberBlood}
+                    onChange={e => setNewMemberBlood(e.target.value)}
+                    className="w-full p-2 rounded-lg border border-border bg-card text-xs focus:border-primary outline-none"
+                  >
+                    {['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'].map(bg => (
+                      <option key={bg} value={bg}>{bg}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <button
+                type="submit"
+                className="w-full py-2 bg-primary text-white font-bold rounded-lg text-xs flex items-center justify-center gap-1.5 shadow-sm"
+              >
+                <UserPlus className="w-3.5 h-3.5" /> Save Family Member
+              </button>
+            </motion.form>
+          )}
+
+          {/* Members List */}
+          <div className="space-y-2">
+            {members.map(member => (
+              <div
+                key={member.id}
+                className={`p-3 rounded-xl border flex items-center justify-between gap-3 text-xs transition-all ${
+                  activeMember.id === member.id
+                    ? 'border-primary/50 bg-primary/5 shadow-sm'
+                    : 'border-border bg-card/60'
+                }`}
+              >
+                <div className="flex items-center gap-2.5">
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs ${member.avatarColor || 'bg-primary text-white'}`}>
+                    {member.name.slice(0, 1).toUpperCase()}
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold text-foreground">{member.name}</span>
+                      {activeMember.id === member.id && (
+                        <span className="px-1.5 py-0.2 bg-primary/15 text-primary text-[10px] font-bold rounded">
+                          Active
+                        </span>
+                      )}
+                    </div>
+                    <span className="text-[11px] text-muted-foreground capitalize">
+                      {member.relationship} • {member.age} yrs • {member.bloodGroup || 'Blood: Unknown'}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  {activeMember.id !== member.id && (
+                    <button
+                      onClick={() => {
+                        setActiveMemberId(member.id);
+                        pushToast('success', `Switched active profile to ${member.name}`);
+                      }}
+                      className="px-2.5 py-1 bg-muted hover:bg-muted/80 rounded-lg text-[11px] font-semibold text-foreground transition-all"
+                    >
+                      Select
+                    </button>
+                  )}
+                  {member.id !== 'self' && (
+                    <button
+                      onClick={() => {
+                        removeFamilyMember(member.id);
+                        pushToast('success', `Removed ${member.name}`);
+                      }}
+                      className="p-1.5 text-muted-foreground hover:text-destructive rounded-lg transition-all"
+                      title="Remove Member"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
         </motion.div>
 
