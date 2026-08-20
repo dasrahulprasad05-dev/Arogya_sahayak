@@ -50,6 +50,7 @@ const ImageScanner: React.FC<ImageScannerProps> = ({
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
+  const lastInferredSrcRef = useRef<string | null>(null);
 
   // Lazy load model when scanner mounts
   useEffect(() => {
@@ -75,6 +76,7 @@ const ImageScanner: React.FC<ImageScannerProps> = ({
     setQualityReport(null);
     setActiveHeatmapUrl(null);
     setShowHeatmapPreview(false);
+    lastInferredSrcRef.current = null;
     const reader = new FileReader();
     reader.onload = () => {
       setImageSrc(reader.result as string);
@@ -101,6 +103,7 @@ const ImageScanner: React.FC<ImageScannerProps> = ({
     setQualityReport(null);
     setActiveHeatmapUrl(null);
     setShowHeatmapPreview(false);
+    lastInferredSrcRef.current = null;
     const reader = new FileReader();
     reader.onload = () => {
       setImageSrc(reader.result as string);
@@ -109,7 +112,11 @@ const ImageScanner: React.FC<ImageScannerProps> = ({
   };
 
   const handleRunInference = async () => {
-    if (!imageRef.current || !modelReady) return;
+    if (!imageRef.current || !modelReady || !imageSrc) return;
+    
+    // Prevent re-triggering inference if the image has already been analyzed
+    if (lastInferredSrcRef.current === imageSrc) return;
+    lastInferredSrcRef.current = imageSrc;
 
     setProcessing(true);
     setErrorMsg(null);
@@ -227,13 +234,23 @@ const ImageScanner: React.FC<ImageScannerProps> = ({
           >
             {imageSrc ? (
               <div className="w-full h-full min-h-[270px] relative group flex items-center justify-center p-2">
+                {/* Base Image */}
                 <img 
                   ref={imageRef}
-                  src={showHeatmapPreview && activeHeatmapUrl ? activeHeatmapUrl : imageSrc} 
+                  src={imageSrc} 
                   alt="Upload preview" 
-                  className="max-h-[260px] w-auto object-contain rounded-lg"
+                  className={`max-h-[260px] w-auto object-contain rounded-lg transition-opacity duration-300 ${showHeatmapPreview ? 'opacity-0' : 'opacity-100'}`}
                   onLoad={handleRunInference}
                 />
+
+                {/* Heatmap Overlay View */}
+                {showHeatmapPreview && activeHeatmapUrl && (
+                  <img 
+                    src={activeHeatmapUrl} 
+                    alt="Grad-CAM Heatmap Overlay" 
+                    className="absolute inset-0 max-h-[260px] w-auto mx-auto my-auto object-contain rounded-lg shadow-lg"
+                  />
+                )}
 
                 {/* Local scan badge */}
                 <div className="absolute top-3 right-3 bg-card/90 backdrop-blur px-2.5 py-1 rounded-full border border-border text-[10px] font-bold text-foreground shadow-sm">
@@ -244,11 +261,23 @@ const ImageScanner: React.FC<ImageScannerProps> = ({
                 {activeHeatmapUrl && !processing && (
                   <button
                     type="button"
-                    onClick={() => setShowHeatmapPreview(!showHeatmapPreview)}
-                    className="absolute bottom-3 right-3 bg-card/90 hover:bg-card border border-border px-3 py-1.5 rounded-xl text-xs font-bold text-foreground shadow-md flex items-center gap-1.5 transition-all"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowHeatmapPreview(!showHeatmapPreview);
+                    }}
+                    className="absolute bottom-3 right-3 bg-card/95 hover:bg-card border border-border px-3 py-1.5 rounded-xl text-xs font-bold text-foreground shadow-lg flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer z-20"
                   >
-                    {showHeatmapPreview ? <Eye className="w-3.5 h-3.5" /> : <Flame className="w-3.5 h-3.5 text-rose-500" />}
-                    <span>{showHeatmapPreview ? 'Show Original' : 'Preview Heatmap'}</span>
+                    {showHeatmapPreview ? (
+                      <>
+                        <Eye className="w-3.5 h-3.5 text-cyan-400" />
+                        <span>Show Original Scan</span>
+                      </>
+                    ) : (
+                      <>
+                        <Flame className="w-3.5 h-3.5 text-rose-500 animate-pulse" />
+                        <span>Preview Heatmap</span>
+                      </>
+                    )}
                   </button>
                 )}
               </div>
@@ -278,92 +307,74 @@ const ImageScanner: React.FC<ImageScannerProps> = ({
               </div>
             )}
 
-            {/* Spinner Overlay during prediction */}
+            {/* In-flight scanning laser & spinner */}
             {processing && (
-              <div className="absolute inset-0 bg-card/85 backdrop-blur-sm flex flex-col items-center justify-center text-foreground text-xs font-bold gap-3 z-10">
-                <div 
-                  className="absolute left-0 right-0 h-0.5 animate-scan-sweep"
-                  style={{ 
-                    background: `linear-gradient(90deg, transparent, rgb(${rgb}), transparent)`,
-                    boxShadow: `0 0 12px rgb(${rgb})`
-                  }}
-                />
-                <RefreshCw className={`w-8 h-8 ${textClass} animate-spin`} />
-                <span className="tracking-wide text-foreground">Extracting CNN features &amp; generating Grad-CAM...</span>
-                <span className="text-[10px] text-muted-foreground">Laplacian Quality: Validated</span>
+              <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex flex-col items-center justify-center gap-3 z-30">
+                <div className="relative">
+                  <div className={`w-12 h-12 rounded-full ${bgClass} flex items-center justify-center`}>
+                    <RefreshCw className={`w-6 h-6 ${textClass} animate-spin`} />
+                  </div>
+                </div>
+                <span className="text-xs font-bold text-foreground tracking-wide">
+                  Extracting 1024-D CNN Activation Tensor...
+                </span>
               </div>
             )}
           </div>
 
-          {/* Image Quality Gate Diagnostics */}
+          {/* 3. Quality & Edge Feedback Flags */}
           {qualityReport && (
-            <div className="bg-card border border-border rounded-xl p-3.5 space-y-2">
-              <div className="flex items-center justify-between text-xs">
-                <div className="flex items-center gap-1.5 font-bold">
-                  {qualityReport.isAcceptable ? (
-                    <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                  ) : (
-                    <AlertTriangle className="w-4 h-4 text-rose-500" />
-                  )}
-                  <span>Image Quality Inspection</span>
-                </div>
-                <span className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-md ${
-                  qualityReport.status === 'excellent' ? 'bg-emerald-500/10 text-emerald-500' :
-                  qualityReport.status === 'acceptable' ? 'bg-amber-500/10 text-amber-500' :
-                  'bg-rose-500/10 text-rose-500'
-                }`}>
-                  {qualityReport.status}
+            <div className="p-3 bg-card/60 border border-border rounded-xl flex items-center justify-between text-xs">
+              <div className="flex items-center gap-2">
+                {qualityReport.isAcceptable ? (
+                  <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                ) : (
+                  <AlertTriangle className="w-4 h-4 text-amber-500" />
+                )}
+                <span className="font-semibold text-foreground">
+                  Image Quality: <strong className="capitalize">{qualityReport.status}</strong>
                 </span>
               </div>
-
-              <div className="grid grid-cols-3 gap-2 pt-1 text-[10px] text-muted-foreground">
-                <div className="bg-muted/50 p-2 rounded-lg text-center">
-                  <span className="block font-semibold">Sharpness</span>
-                  <span className="font-mono font-bold text-foreground">{qualityReport.blurScore}/100</span>
-                </div>
-                <div className="bg-muted/50 p-2 rounded-lg text-center">
-                  <span className="block font-semibold">Luminance</span>
-                  <span className="font-mono font-bold text-foreground">{qualityReport.brightnessScore}/255</span>
-                </div>
-                <div className="bg-muted/50 p-2 rounded-lg text-center">
-                  <span className="block font-semibold">Contrast</span>
-                  <span className="font-mono font-bold text-foreground">{qualityReport.contrastScore}/100</span>
-                </div>
+              <div className="flex items-center gap-3 text-[11px] text-muted-foreground font-mono">
+                <span>Sharpness: {qualityReport.blurScore}</span>
+                <span>Brightness: {qualityReport.brightnessScore}</span>
               </div>
             </div>
           )}
 
-          {/* Privacy Badge */}
-          <div className="flex items-center justify-center gap-1.5 text-[10px] font-semibold text-emerald-500 bg-emerald-500/10 border border-emerald-500/20 rounded-lg py-1.5 px-3 w-fit mx-auto">
-            <Lock className="w-3.5 h-3.5 text-emerald-500" />
-            <span>On-Device Neural Inference • Zero Cloud Image Upload</span>
-          </div>
-
-          {/* Error Alert */}
+          {/* Error display */}
           {errorMsg && (
-            <div className="p-3.5 bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-xs rounded-xl flex items-start gap-2.5">
-              <ShieldAlert className="w-5 h-5 shrink-0 mt-0.5 text-rose-500" />
-              <div>
-                <span className="font-bold block mb-0.5">Quality Gate Rejection</span>
-                <p className="leading-relaxed opacity-95">{errorMsg}</p>
-              </div>
+            <div className="p-3.5 bg-destructive/10 border border-destructive/20 rounded-xl flex items-start gap-2.5 text-xs text-red-500 dark:text-red-400">
+              <ShieldAlert className="w-4 h-4 shrink-0 mt-0.5" />
+              <span className="leading-relaxed">{errorMsg}</span>
             </div>
           )}
 
-          {/* Reset / Retake Button */}
+          {/* Action button bar */}
           {imageSrc && !processing && (
-            <button
-              onClick={() => {
-                setImageSrc(null);
-                setQualityReport(null);
-                setErrorMsg(null);
-                setActiveHeatmapUrl(null);
-                setShowHeatmapPreview(false);
-              }}
-              className="w-full border border-border bg-muted/40 hover:bg-muted text-foreground font-semibold py-2.5 rounded-xl text-xs transition-all touch-target"
-            >
-              Retake / Upload New Scan
-            </button>
+            <div className="flex items-center justify-between pt-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setImageSrc(null);
+                  setQualityReport(null);
+                  setErrorMsg(null);
+                  setActiveHeatmapUrl(null);
+                  setShowHeatmapPreview(false);
+                  lastInferredSrcRef.current = null;
+                }}
+                className="px-4 py-2 border border-border text-xs font-semibold rounded-xl hover:bg-muted text-muted-foreground hover:text-foreground transition-all"
+              >
+                Retake / Upload New Scan
+              </button>
+
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] text-muted-foreground bg-muted/60 px-3 py-1.5 rounded-lg font-mono flex items-center gap-1.5">
+                  <Lock className="w-3 h-3 text-emerald-500" />
+                  On-Device Neural Inference &bull; Zero Cloud Image Upload
+                </span>
+              </div>
+            </div>
           )}
 
         </div>
