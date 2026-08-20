@@ -290,13 +290,37 @@ const ImageScanner: React.FC<ImageScannerProps> = ({
                   <span className="text-sm font-bold text-foreground block">Upload or Capture Medical Image</span>
                   <p className="text-[10px] text-muted-foreground mt-1">Accepts clinical photos, radiographs, or Dermatoscope scans (PNG/JPG)</p>
                 </div>
-                <button
-                  onClick={() => fileInputRef.current?.click()}
-                  type="button"
-                  className={`text-white font-bold py-2.5 px-6 rounded-xl text-xs transition-all bg-gradient-to-r ${gradientClass} ${glowClass} hover:scale-[1.02] transform touch-target shadow-md`}
-                >
-                  Select Scan Image
-                </button>
+                <div className="flex flex-col sm:flex-row items-center gap-2.5">
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    type="button"
+                    className={`text-white font-bold py-2.5 px-6 rounded-xl text-xs transition-all bg-gradient-to-r ${gradientClass} ${glowClass} hover:scale-[1.02] transform touch-target shadow-md`}
+                  >
+                    Select Scan Image
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      const sampleMap: Record<string, string> = {
+                        chest: '/samples/chest_xray_sample.jpg',
+                        skin: '/samples/skin_lesion_sample.jpg',
+                        cataract_eye: '/samples/cataract_eye_sample.jpg',
+                      };
+                      const sampleUrl = (toolId && sampleMap[toolId]) || '/samples/chest_xray_sample.jpg';
+                      setErrorMsg(null);
+                      setQualityReport(null);
+                      setActiveHeatmapUrl(null);
+                      setShowHeatmapPreview(false);
+                      lastInferredSrcRef.current = null;
+                      setImageSrc(sampleUrl);
+                    }}
+                    type="button"
+                    className="border border-border/80 hover:border-primary/60 bg-muted/40 hover:bg-muted text-foreground font-bold py-2.5 px-4 rounded-xl text-xs transition-all flex items-center gap-1.5 shadow-sm"
+                  >
+                    <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                    <span>⚡ Try Demo Sample</span>
+                  </button>
+                </div>
                 <input 
                   ref={fileInputRef}
                   type="file" 
