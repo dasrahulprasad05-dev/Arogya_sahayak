@@ -5,7 +5,7 @@
  *  Generates an A4 clinical triage summary document containing:
  *  • Original scan & Grad-CAM Heatmap overlay
  *  • Risk classification & calibrated confidence index
- *  • Visual reasoning points & clinical recommendations
+ *  • Visual reasoning points & clinical recommendations (cleanly sanitized)
  *  • Quality gate metrics (sharpness, illumination)
  *  • Medical disclaimer & doctor referral details
  */
@@ -23,9 +23,35 @@ export interface ScanPdfData {
   timestamp?: string;
 }
 
+/**
+ * Strips raw emojis, surrogate pairs, and markdown wrappers that cause
+ * corrupted character artifacts in jsPDF standard Helvetica font rendering.
+ */
+export function sanitizePdfText(text: string): string {
+  if (!text) return '';
+  return text
+    .replace(/\*\*(.*?)\*\*/g, '$1')
+    .replace(/\*(.*?)\*/g, '$1')
+    .replace(/__(.*?)__/g, '$1')
+    .replace(/_(.*?)_/g, '$1')
+    // Remove emojis, symbols, and non-printable surrogate pairs
+    .replace(/[\u{1F000}-\u{1FFFF}]/gu, '')
+    .replace(/[\u{2600}-\u{27BF}]/gu, '')
+    .replace(/[\u{2300}-\u{23FF}]/gu, '')
+    .replace(/[\u{FE00}-\u{FE0F}]/gu, '')
+    .replace(/[\u{200B}-\u{200D}]/gu, '')
+    .replace(/[\u{2700}-\u{27BF}]/gu, '')
+    .replace(/[\u{E000}-\u{F8FF}]/gu, '')
+    .replace(/[\u{203C}-\u{3299}]/gu, '')
+    .replace(/[^\x20-\x7E\xA0-\xFF]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 export const generateScanReportPdf = async (data: ScanPdfData): Promise<void> => {
   const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
   const pageW = doc.internal.pageSize.getWidth();
+  const pageH = doc.internal.pageSize.getHeight();
   const margin = 14;
   let y = margin;
 
@@ -36,7 +62,7 @@ export const generateScanReportPdf = async (data: ScanPdfData): Promise<void> =>
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(16);
   doc.setFont('helvetica', 'bold');
-  doc.text('AAROGYA SAHAYAK', margin, 12);
+  doc.text('AROGYA SAHAYAK', margin, 12);
 
   doc.setFontSize(8);
   doc.setFont('helvetica', 'normal');
@@ -44,7 +70,8 @@ export const generateScanReportPdf = async (data: ScanPdfData): Promise<void> =>
   doc.text('AI-Assisted Diagnostic Triage & Explainability Report', margin, 18);
 
   doc.setTextColor(255, 255, 255);
-  doc.setFontSize(9);
+  doc.setFontSize(8.5);
+  doc.setFont('helvetica', 'bold');
   doc.text(`DATE: ${new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}`, pageW - margin, 14, { align: 'right' });
 
   y = 34;
@@ -53,7 +80,7 @@ export const generateScanReportPdf = async (data: ScanPdfData): Promise<void> =>
   doc.setFontSize(13);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(30, 41, 59);
-  doc.text(data.toolName.toUpperCase(), margin, y);
+  doc.text(sanitizePdfText(data.toolName).toUpperCase(), margin, y);
 
   // Risk Badge Color Coding
   const risk = data.result.risk || 'Insufficient Data';
@@ -77,7 +104,7 @@ export const generateScanReportPdf = async (data: ScanPdfData): Promise<void> =>
   doc.setDrawColor(226, 232, 240);
   doc.roundedRect(margin, y, pageW - 2 * margin, 18, 2, 2, 'FD');
 
-  doc.setFontSize(8);
+  doc.setFontSize(7.5);
   doc.setTextColor(100, 116, 139);
   doc.text('CALIBRATED CONFIDENCE INDEX', margin + 4, y + 6);
   doc.text('SAFETY GATE STATUS', margin + 70, y + 6);
@@ -100,14 +127,14 @@ export const generateScanReportPdf = async (data: ScanPdfData): Promise<void> =>
 
   // ── 4. Side-by-Side Images (Original Scan + Grad-CAM Heatmap) ──
   const imgW = (pageW - 2 * margin - 8) / 2;
-  const imgH = 50;
+  const imgH = 48;
 
   if (data.originalImage) {
     try {
       doc.addImage(data.originalImage, 'JPEG', margin, y, imgW, imgH);
-      doc.setFontSize(7);
+      doc.setFontSize(7.5);
       doc.setFont('helvetica', 'bold');
-      doc.setTextColor(100, 116, 139);
+      doc.setTextColor(71, 85, 105);
       doc.text('ORIGINAL CAPTURED SCAN', margin, y + imgH + 4);
     } catch {
       doc.rect(margin, y, imgW, imgH, 'S');
@@ -118,20 +145,20 @@ export const generateScanReportPdf = async (data: ScanPdfData): Promise<void> =>
   if (data.heatmapImage) {
     try {
       doc.addImage(data.heatmapImage, 'PNG', margin + imgW + 8, y, imgW, imgH);
-      doc.setFontSize(7);
+      doc.setFontSize(7.5);
       doc.setFont('helvetica', 'bold');
-      doc.setTextColor(100, 116, 139);
-      doc.text('🔥 GRAD-CAM ACTIVATION HEATMAP', margin + imgW + 8, y + imgH + 4);
+      doc.setTextColor(71, 85, 105);
+      doc.text('GRAD-CAM ACTIVATION HEATMAP', margin + imgW + 8, y + imgH + 4);
     } catch {
       doc.rect(margin + imgW + 8, y, imgW, imgH, 'S');
       doc.text('Grad-CAM Heatmap', margin + imgW + 18, y + 25);
     }
   }
 
-  y += imgH + 10;
+  y += imgH + 9;
 
   // ── 5. Clinical Findings & Reasoning ──
-  doc.setFontSize(10);
+  doc.setFontSize(9.5);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(15, 23, 42);
   doc.text('CLINICAL OBSERVATIONS & REASONING', margin, y);
@@ -142,15 +169,22 @@ export const generateScanReportPdf = async (data: ScanPdfData): Promise<void> =>
   doc.setTextColor(51, 65, 85);
 
   data.result.reasoning.forEach((point) => {
-    const lines = doc.splitTextToSize(`•  ${point}`, pageW - 2 * margin);
-    doc.text(lines, margin, y);
-    y += lines.length * 4.5;
+    const cleanPoint = sanitizePdfText(point);
+    if (!cleanPoint) return;
+
+    // Bullet circle
+    doc.setFillColor(100, 116, 139);
+    doc.circle(margin + 1.5, y - 1, 0.7, 'F');
+
+    const lines = doc.splitTextToSize(cleanPoint, pageW - 2 * margin - 5);
+    doc.text(lines, margin + 4, y);
+    y += lines.length * 4.2;
   });
 
-  y += 4;
+  y += 3;
 
   // ── 6. Actionable Clinical Recommendations ──
-  doc.setFontSize(10);
+  doc.setFontSize(9.5);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(15, 23, 42);
   doc.text('ACTIONABLE HEALTH RECOMMENDATIONS', margin, y);
@@ -161,24 +195,32 @@ export const generateScanReportPdf = async (data: ScanPdfData): Promise<void> =>
   doc.setTextColor(51, 65, 85);
 
   data.result.recommendations.forEach((rec) => {
-    const lines = doc.splitTextToSize(`•  ${rec}`, pageW - 2 * margin);
-    doc.text(lines, margin, y);
-    y += lines.length * 4.5;
+    const cleanRec = sanitizePdfText(rec);
+    if (!cleanRec) return;
+
+    // Bullet circle
+    doc.setFillColor(16, 185, 129); // emerald bullet
+    doc.circle(margin + 1.5, y - 1, 0.8, 'F');
+
+    const lines = doc.splitTextToSize(cleanRec, pageW - 2 * margin - 5);
+    doc.text(lines, margin + 4, y);
+    y += lines.length * 4.2;
   });
 
-  y += 6;
+  y += 4;
 
   // ── 7. Disclaimer & Legal Footer ──
+  const footerY = Math.max(y, pageH - 22);
   doc.setDrawColor(226, 232, 240);
-  doc.line(margin, y, pageW - margin, y);
-  y += 5;
+  doc.line(margin, footerY, pageW - margin, footerY);
 
   doc.setFontSize(6.5);
   doc.setFont('helvetica', 'italic');
   doc.setTextColor(148, 163, 184);
-  const disclaimer = data.result.disclaimer || '⚕️ MEDICAL DISCLAIMER: This is an AI-assisted triage screening tool, not a clinical diagnosis. Always consult a licensed healthcare professional for medical diagnosis and treatment.';
-  const discLines = doc.splitTextToSize(disclaimer, pageW - 2 * margin);
-  doc.text(discLines, margin, y);
+  const disclaimerRaw = data.result.disclaimer || 'MEDICAL DISCLAIMER: This is an automated AI triage screening tool, not a definitive clinical diagnosis. Always consult a licensed medical doctor or Primary Health Centre (PHC) specialist for diagnosis and treatment.';
+  const cleanDisclaimer = sanitizePdfText(disclaimerRaw);
+  const discLines = doc.splitTextToSize(`DISCLAIMER: ${cleanDisclaimer}`, pageW - 2 * margin);
+  doc.text(discLines, margin, footerY + 4);
 
   doc.save(`Arogya_ScanReport_${data.toolName.replace(/\s+/g, '_')}_${Date.now()}.pdf`);
 };

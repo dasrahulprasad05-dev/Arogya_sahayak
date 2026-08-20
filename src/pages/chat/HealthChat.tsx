@@ -6,6 +6,7 @@ import type { Language } from '../../context/LanguageContext';
 import { getClinicalAssessment } from '../../services/clinicalAIService';
 import type { StructuredResponse } from '../../services/clinicalAIService';
 import jsPDF from 'jspdf';
+import { sanitizePdfText } from '../../utils/scanPdfReport';
 import {
   Bot,
   User,
@@ -275,7 +276,7 @@ const HealthChat: React.FC = () => {
         y += 5;
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(30, 41, 59);
-        const lines = doc.splitTextToSize(msg.text || '', pageW - 28);
+        const lines = doc.splitTextToSize(sanitizePdfText(msg.text || ''), pageW - 28);
         doc.text(lines, 14, y);
         y += lines.length * 4.5 + 4;
       } else if (msg.structured) {
@@ -286,7 +287,7 @@ const HealthChat: React.FC = () => {
         y += 5;
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(51, 65, 85);
-        const overviewLines = doc.splitTextToSize(msg.structured.content, pageW - 28);
+        const overviewLines = doc.splitTextToSize(sanitizePdfText(msg.structured.content), pageW - 28);
         doc.text(overviewLines, 14, y);
         y += overviewLines.length * 4.5 + 4;
 
@@ -296,7 +297,9 @@ const HealthChat: React.FC = () => {
           y += 4.5;
           doc.setFont('helvetica', 'normal');
           msg.structured.recommendations.forEach(item => {
-            const hLines = doc.splitTextToSize(`• ${item}`, pageW - 28);
+            const cleanItem = sanitizePdfText(item);
+            if (!cleanItem) return;
+            const hLines = doc.splitTextToSize(`• ${cleanItem}`, pageW - 28);
             doc.text(hLines, 14, y);
             y += hLines.length * 4.5;
           });
@@ -311,7 +314,9 @@ const HealthChat: React.FC = () => {
           doc.setFont('helvetica', 'normal');
           doc.setTextColor(51, 65, 85);
           msg.structured.warnings.forEach(item => {
-            const rLines = doc.splitTextToSize(`• ${item}`, pageW - 28);
+            const cleanWarning = sanitizePdfText(item);
+            if (!cleanWarning) return;
+            const rLines = doc.splitTextToSize(`• ${cleanWarning}`, pageW - 28);
             doc.text(rLines, 14, y);
             y += rLines.length * 4.5;
           });
@@ -325,7 +330,7 @@ const HealthChat: React.FC = () => {
         y += 5;
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(51, 65, 85);
-        const lines = doc.splitTextToSize(msg.text, pageW - 28);
+        const lines = doc.splitTextToSize(sanitizePdfText(msg.text), pageW - 28);
         doc.text(lines, 14, y);
         y += lines.length * 4.5 + 4;
       }
