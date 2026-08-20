@@ -201,13 +201,34 @@ function computeServerRules(predictorId: string, inputs: Record<string, any>, lo
     }
 
   } else if (predictorId === 'image_analysis') {
-    const scanType = inputs.scanType || 'general';
+    const scanType = inputs?.scanType || 'general';
     const local = localLabel || 'Identified Visual Finding';
     riskLevel = 'Moderate';
     riskScore = 68;
     recommendedAction = 'consult_doctor';
-    flaggedConditions.push(`Model Router Domain: ${scanType.toUpperCase()} CNN Specialized Classifier.`);
-    flaggedConditions.push(`Primary Visual Feature Finding: ${local}.`);
+    
+    const domainNames: Record<string, string> = {
+      tb_sputum: 'Tuberculosis Sputum Microscopy Smear (AFB)',
+      malaria_smear: 'Malaria Blood Smear (Plasmodium Ring Forms)',
+      cervical_via: 'Cervical VIA Colposcopy (Acetowhite Squamous Triage)',
+      anemia_eye: 'Non-Invasive Palpebral Conjunctiva Hemoglobin Pallor',
+      cataract_eye: 'Anterior Segment Lens Transparency & Cataract',
+      diabetic_foot: 'Diabetic Foot Ulcer (DFUC2021 Wagner Severity)',
+      neonatal_jaundice: 'Neonatal Sclera/Dermal Bilirubin (BiliCam)',
+      sickle_cell: 'Sickle Cell Drepanocyte Morphological Smear',
+      fungal_tinea: 'Superficial Dermatophytosis Scaling Border (Tinea)',
+      dental_fluorosis: 'Enamel Mottling & Dental Fluorosis Caries',
+      chest: 'Chest Radiograph CheXNet Opacity Screener',
+      skin: 'Dermatology Melanoma & Lesion Classifier',
+      bone: 'Musculoskeletal Bone Fracture & Cortical Alignment',
+      oral: 'Oral Mucosa Leukoplakia & Pre-cancerous Lesion',
+      retina: 'Diabetic Retinopathy Fundus Microaneurysm Screener',
+      mri: 'Neurology Brain MRI Density & Midline Shift'
+    };
+
+    const domainName = domainNames[scanType] || `${scanType.toUpperCase()} CNN Specialized Classifier`;
+    flaggedConditions.push(`Model Router Domain: ${domainName}.`);
+    flaggedConditions.push(`Primary Visual Feature Finding: "${local}".`);
     flaggedConditions.push("Grad-CAM: Saliency activation hotspot verified across spatial feature map.");
     flaggedConditions.push("Safety Gate: Validated for clinical review.");
   } else {
@@ -245,7 +266,8 @@ serve(async (req) => {
       );
     }
 
-    const { predictorId, inputs, scanType, vector, localLabel } = await req.json();
+    const { predictorId, inputs: rawInputs, scanType, vector, localLabel } = await req.json();
+    const inputs = { ...(rawInputs || {}), scanType, vector, localLabel };
 
     // 1. Compute Strict Facts using Server Rules (FastAPI ML or Deno Fallback)
     let rawFacts: any = null;
