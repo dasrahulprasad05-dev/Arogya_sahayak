@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
 import type { Language } from '../../context/LanguageContext';
@@ -16,13 +16,15 @@ import {
   ShieldAlert,
   Download,
   Stethoscope,
-  RefreshCw,
-  HelpCircle,
   Volume2,
   VolumeX,
   CheckCircle2,
   ArrowRight,
-  FileCheck
+  FileCheck,
+  Heart,
+  Shield,
+  MessageCircle,
+  Zap
 } from 'lucide-react';
 
 interface StructuredResponse {
@@ -53,7 +55,7 @@ const HealthChat: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [speakingMessageId, setSpeakingMessageId] = useState<string | null>(null);
-  const [quickTopics, setQuickTopics] = useState<{ label: string; query: string }[]>([]);
+  const [quickTopics, setQuickTopics] = useState<{ label: string; query: string; icon: string }[]>([]);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<any>(null);
@@ -64,7 +66,7 @@ const HealthChat: React.FC = () => {
       ? 'ନମସ୍କାର! ମୁଁ ଆପଣଙ୍କର AI ସ୍ୱାସ୍ଥ୍ୟ ସହାୟକ। ଆପଣଙ୍କର ଯେକୌଣସି ରୋଗର ଲକ୍ଷଣ, ଘରୋଇ ଉପଚାର କିମ୍ବା ଡାକ୍ତରୀ ପରାମର୍ଶ ବିଷୟରେ ଓଡ଼ିଆ, ହିନ୍ଦୀ ବା ଇଂରାଜୀରେ ପଚାରନ୍ତୁ।'
       : language === 'hi'
       ? 'नमस्ते! मैं आपका AI स्वास्थ्य सहायक हूँ। आप किसी भी बीमारी के लक्षण, घरेलू उपचार या डॉक्टर की सलाह के बारे में हिंदी, उड़िया या अंग्रेजी में पूछ सकते हैं।'
-      : 'Hello! I am your AI Health Assistant. Ask me about any symptoms, safe home care, diet tips, or medical guidance in English, Hindi, or Odia.';
+      : 'Hello! I\'m your AI Health Assistant powered by clinical intelligence. Ask me about symptoms, home remedies, diet guidance, or when to see a doctor — in English, Hindi, or Odia.';
 
     setMessages([
       {
@@ -78,24 +80,24 @@ const HealthChat: React.FC = () => {
     // Localized quick prompts
     if (language === 'or') {
       setQuickTopics([
-        { label: 'ମୋତେ ୩ ଦିନ ହେଲା ପ୍ରବଳ ଜ୍ୱର ଓ ଗଣ୍ଠି ବିନ୍ଧା (Dengue/Malaria)', query: 'ମୋତେ ୩ ଦିନ ହେଲା ପ୍ରବଳ ଜ୍ୱର ଏବଂ ଗଣ୍ଠି ବିନ୍ଧା ହେଉଛି' },
-        { label: 'ଡାଇବେଟିସ୍ ପାଇଁ ଘରୋଇ ଖାଦ୍ୟ ତାଲିକା (Diabetes Diet)', query: 'ଡାଇବେଟିସ୍ ନିୟନ୍ତ୍ରଣ ପାଇଁ ଘରୋଇ ଖାଦ୍ୟ ତାଲିକା କ\'ଣ?' },
-        { label: 'ଓଡ଼ିଶା ମମତା ଯୋଜନା ଓ ଗର୍ଭବତୀ ଯତ୍ନ (Maternal Health)', query: 'ଓଡ଼ିଶାରେ ଗର୍ଭବତୀ ମହିଳାଙ୍କ ପାଇଁ ମମତା ଯୋଜନା ବିଷୟରେ କୁହନ୍ତୁ' },
-        { label: 'ବିଜୁ ସ୍ୱାସ୍ଥ୍ୟ କଲ୍ୟାଣ ଯୋଜନା (BSKY Guide)', query: 'ବିଜୁ ସ୍ୱାସ୍ଥ୍ୟ କଲ୍ୟାଣ ଯୋଜନା BSKY କାର୍ଡରେ ମାଗଣା ଚିକିତ୍ସା କିପରି ପାଇବେ?' }
+        { label: 'ଜ୍ୱର ଓ ଗଣ୍ଠି ବିନ୍ଧା', query: 'ମୋତେ ୩ ଦିନ ହେଲା ପ୍ରବଳ ଜ୍ୱର ଏବଂ ଗଣ୍ଠି ବିନ୍ଧା ହେଉଛି', icon: '🤒' },
+        { label: 'ଡାଇବେଟିସ୍ ଡାଏଟ୍', query: 'ଡାଇବେଟିସ୍ ନିୟନ୍ତ୍ରଣ ପାଇଁ ଘରୋଇ ଖାଦ୍ୟ ତାଲିକା କ\'ଣ?', icon: '🍽️' },
+        { label: 'ମମତା ଯୋଜନା', query: 'ଓଡ଼ିଶାରେ ଗର୍ଭବତୀ ମହିଳାଙ୍କ ପାଇଁ ମମତା ଯୋଜନା ବିଷୟରେ କୁହନ୍ତୁ', icon: '🤰' },
+        { label: 'BSKY କାର୍ଡ', query: 'ବିଜୁ ସ୍ୱାସ୍ଥ୍ୟ କଲ୍ୟାଣ ଯୋଜନା BSKY କାର୍ଡରେ ମାଗଣା ଚିକିତ୍ସା କିପରି ପାଇବେ?', icon: '🏥' }
       ]);
     } else if (language === 'hi') {
       setQuickTopics([
-        { label: '3 दिन से तेज बुखार और सिरदर्द (Dengue/Malaria)', query: 'मुझे 3 दिन से तेज बुखार और सिरदर्द है, क्या करें?' },
-        { label: 'डायबिटीज (शुगर) डाइट प्लान (Diabetes Diet)', query: 'डायबिटीज कंट्रोल करने के लिए भारतीय घरेलू डाइट प्लान बताएं' },
-        { label: 'गर्भावस्था देखभाल एवं ममता योजना (Maternal Health)', query: 'गर्भावस्था के दौरान जरूरी देखभाल और ममता योजना के बारे में बताएं' },
-        { label: 'आयुष्मान भारत कार्ड से मुफ्त इलाज (PM-JAY)', query: 'आयुष्मान भारत योजना के तहत मुफ्त अस्पताल में इलाज कैसे मिलता है?' }
+        { label: 'बुखार और सिरदर्द', query: 'मुझे 3 दिन से तेज बुखार और सिरदर्द है, क्या करें?', icon: '🤒' },
+        { label: 'डायबिटीज डाइट', query: 'डायबिटीज कंट्रोल करने के लिए भारतीय घरेलू डाइट प्लान बताएं', icon: '🍽️' },
+        { label: 'गर्भावस्था देखभाल', query: 'गर्भावस्था के दौरान जरूरी देखभाल और ममता योजना के बारे में बताएं', icon: '🤰' },
+        { label: 'आयुष्मान भारत', query: 'आयुष्मान भारत योजना के तहत मुफ्त अस्पताल में इलाज कैसे मिलता है?', icon: '🏥' }
       ]);
     } else {
       setQuickTopics([
-        { label: 'High fever & body chills for 3 days', query: 'I have high fever and severe shivering for 3 days' },
-        { label: 'Indian diet plan for Type 2 Diabetes', query: 'What is the best Indian diet and home remedies for managing diabetes?' },
-        { label: 'Maternal health & Odisha MAMATA scheme', query: 'Tell me about maternal health guidelines and MAMATA scheme in Odisha' },
-        { label: 'Ayushman Bharat PM-JAY hospital coverage', query: 'How to get free cashless treatment under Ayushman Bharat scheme?' }
+        { label: 'Fever & Chills', query: 'I have high fever and severe shivering for 3 days', icon: '🤒' },
+        { label: 'Diabetes Diet', query: 'What is the best Indian diet and home remedies for managing diabetes?', icon: '🍽️' },
+        { label: 'Maternal Health', query: 'Tell me about maternal health guidelines and MAMATA scheme in Odisha', icon: '🤰' },
+        { label: 'Ayushman Bharat', query: 'How to get free cashless treatment under Ayushman Bharat scheme?', icon: '🏥' }
       ]);
     }
   }, [language]);
@@ -127,7 +129,7 @@ const HealthChat: React.FC = () => {
     else if (language === 'hi') utterance.lang = 'hi-IN';
     else utterance.lang = 'en-IN';
 
-    utterance.rate = 0.95; // Slightly slower for clinical clarity
+    utterance.rate = 0.95;
     utterance.onend = () => setSpeakingMessageId(null);
     utterance.onerror = () => setSpeakingMessageId(null);
 
@@ -154,7 +156,6 @@ const HealthChat: React.FC = () => {
     recognition.continuous = false;
     recognition.interimResults = false;
 
-    // Set recognition language
     if (language === 'or') recognition.lang = 'or-IN';
     else if (language === 'hi') recognition.lang = 'hi-IN';
     else recognition.lang = 'en-IN';
@@ -377,279 +378,346 @@ const HealthChat: React.FC = () => {
     { code: 'or', label: 'ଓ', name: 'ଓଡ଼ିଆ' }
   ];
 
+  const getConfidenceColor = (c: number) => {
+    if (c >= 0.85) return 'from-emerald-500 to-teal-500';
+    if (c >= 0.6) return 'from-amber-500 to-orange-500';
+    return 'from-rose-500 to-red-500';
+  };
+
   return (
-    <div className="max-w-4xl mx-auto space-y-4 pb-12">
+    <div className="max-w-4xl mx-auto flex flex-col h-[calc(100vh-140px)] md:h-[calc(100vh-120px)] relative">
       
-      {/* ── Top Header & Language Bar ──────────────── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-card border border-border p-4 rounded-2xl shadow-sm">
-        <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-violet-600 to-primary flex items-center justify-center text-white shadow-md shadow-primary/20 shrink-0">
-            <Bot className="w-6 h-6" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="font-heading font-extrabold text-lg text-foreground">
-                {language === 'or' ? 'AI ସ୍ୱାସ୍ଥ୍ୟ ପରାମର୍ଶ ସାଥୀ' : language === 'hi' ? 'AI स्वास्थ्य परामर्श साथी' : 'AI Health Consultation Assistant'}
+      {/* ── Decorative Background Blurs ──────────── */}
+      <div className="pointer-events-none absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br from-violet-500/15 to-primary/10 rounded-full blur-3xl" />
+      <div className="pointer-events-none absolute top-1/3 -left-10 w-32 h-32 bg-gradient-to-br from-emerald-500/10 to-teal-400/10 rounded-full blur-3xl" />
+
+      {/* ── Premium Header ──────────────────────── */}
+      <motion.div 
+        initial={{ opacity: 0, y: -12 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="relative z-10 bg-gradient-to-r from-violet-600 via-purple-600 to-primary rounded-2xl p-4 sm:p-5 shadow-xl shadow-primary/15 mb-4"
+      >
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="relative">
+              <div className="w-12 h-12 rounded-2xl bg-white/15 backdrop-blur-sm flex items-center justify-center text-white shadow-inner border border-white/20">
+                <Bot className="w-6 h-6" />
+              </div>
+              <span className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-400 rounded-full border-2 border-violet-600 animate-pulse" />
+            </div>
+            <div>
+              <h1 className="font-heading font-extrabold text-white text-base sm:text-lg flex items-center gap-2">
+                {language === 'or' ? 'AI ସ୍ୱାସ୍ଥ୍ୟ ସାଥୀ' : language === 'hi' ? 'AI स्वास्थ्य साथी' : 'AI Health Assistant'}
+                <span className="text-[9px] font-bold px-2 py-0.5 bg-white/15 text-white/90 rounded-full border border-white/20 flex items-center gap-1 backdrop-blur-sm">
+                  <Zap className="w-2.5 h-2.5" />
+                  <span>Clinical AI</span>
+                </span>
               </h1>
-              <span className="text-[10px] font-bold px-2 py-0.5 bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 rounded-full border border-emerald-500/30 flex items-center gap-1">
-                <FileCheck className="w-3 h-3" />
-                <span>LangGraph RAG</span>
-              </span>
+              <p className="text-white/70 text-[11px] sm:text-xs mt-0.5">
+                {language === 'or' ? '২৪/৭ ସ୍ୱାସ୍ଥ୍ୟ ସହାୟତା • ଓଡ଼ିଆ, ହିନ୍ଦୀ, ଇଂରାଜୀ' : language === 'hi' ? '24/7 स्वास्थ्य सहायता • हिंदी, उड़िया, अंग्रेजी' : '24/7 clinical triage • English, Hindi & Odia'}
+              </p>
             </div>
-            <p className="text-xs text-muted-foreground">
-              {language === 'or' ? 'ଓଡ଼ିଆ, ହିନ୍ଦୀ ଏବଂ ଇଂରାଜୀରେ ୨୪/୭ ସ୍ୱାସ୍ଥ୍ୟ ସହାୟତା' : language === 'hi' ? 'हिंदी, उड़िया और अंग्रेजी में 24/7 स्वास्थ्य सहायता' : '24/7 Clinical triage in English, Hindi & Odia'}
-            </p>
+          </div>
+
+          <div className="flex items-center gap-2">
+            {/* Language Switcher */}
+            <div className="flex items-center bg-white/10 backdrop-blur-sm p-1 rounded-xl border border-white/15">
+              {languages.map((l) => (
+                <button
+                  key={l.code}
+                  onClick={() => setLanguage(l.code)}
+                  className={`px-3 py-1.5 text-[11px] font-bold rounded-lg transition-all ${
+                    language === l.code
+                      ? 'bg-white text-violet-700 shadow-sm'
+                      : 'text-white/70 hover:text-white hover:bg-white/10'
+                  }`}
+                >
+                  {l.name}
+                </button>
+              ))}
+            </div>
+
+            <button
+              onClick={handleExportPdf}
+              title="Download Consultation PDF"
+              className="p-2.5 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/15 text-white rounded-xl transition-all shadow-sm"
+            >
+              <Download className="w-4 h-4" />
+            </button>
           </div>
         </div>
+      </motion.div>
 
-        {/* Action buttons & Language Switcher */}
-        <div className="flex items-center gap-2 self-end sm:self-center">
-          <div className="flex items-center bg-muted/60 p-1 rounded-xl border border-border">
-            {languages.map((l) => (
-              <button
-                key={l.code}
-                onClick={() => setLanguage(l.code)}
-                className={`px-3 py-1 text-xs font-bold rounded-lg transition-all ${
-                  language === l.code
-                    ? 'bg-primary text-white shadow-sm'
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
+      {/* ── Chat Messages Container ────────────── */}
+      <div className="flex-1 bg-card/60 backdrop-blur-sm border border-border rounded-2xl shadow-lg overflow-hidden flex flex-col mb-3">
+        <div className="flex-1 overflow-y-auto p-4 md:p-5 space-y-5">
+          <AnimatePresence initial={false}>
+            {messages.map((msg) => (
+              <motion.div
+                key={msg.id}
+                initial={{ opacity: 0, y: 16, scale: 0.97 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                className={`flex items-end gap-2.5 ${msg.sender === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
               >
-                {l.name}
-              </button>
-            ))}
-          </div>
+                {/* Avatar */}
+                <motion.div 
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: 0.1, type: 'spring', stiffness: 400, damping: 20 }}
+                  className={`w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold shrink-0 shadow-md ${
+                    msg.sender === 'user' 
+                      ? 'bg-gradient-to-br from-primary to-violet-600 text-white' 
+                      : 'bg-gradient-to-br from-emerald-500 to-teal-500 text-white'
+                  }`}
+                >
+                  {msg.sender === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
+                </motion.div>
 
-          <button
-            onClick={handleExportPdf}
-            title="Download Consultation PDF"
-            className="p-2 bg-card hover:bg-muted border border-border text-foreground rounded-xl transition-all shadow-sm"
-          >
-            <Download className="w-4 h-4" />
-          </button>
+                {/* Content Bubble */}
+                <div className={`max-w-[82%] sm:max-w-[75%] space-y-2`}>
+                  {/* Plain Text Message */}
+                  {msg.text && (
+                    <div className={`relative group ${
+                      msg.sender === 'user'
+                        ? 'bg-gradient-to-br from-primary to-violet-600 text-white rounded-2xl rounded-br-md px-4 py-3 shadow-lg shadow-primary/15'
+                        : 'bg-card border border-border text-foreground rounded-2xl rounded-bl-md px-4 py-3 shadow-sm'
+                    }`}>
+                      <p className="text-[13px] sm:text-sm leading-relaxed">{msg.text}</p>
+                      {msg.sender === 'bot' && (
+                        <button
+                          type="button"
+                          onClick={() => handleSpeak(msg.id, msg.text || '')}
+                          className="absolute -bottom-2 -right-2 p-1.5 bg-card border border-border rounded-lg shadow-sm text-muted-foreground hover:text-primary opacity-0 group-hover:opacity-100 transition-all"
+                          title={speakingMessageId === msg.id ? 'Stop speaking' : 'Listen audio'}
+                        >
+                          {speakingMessageId === msg.id ? <VolumeX className="w-3 h-3 text-rose-500 animate-pulse" /> : <Volume2 className="w-3 h-3" />}
+                        </button>
+                      )}
+                    </div>
+                  )}
+
+                  {/* ── Structured Clinical Response Card ── */}
+                  {msg.structured && (
+                    <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-lg">
+                      {/* Confidence Header Strip */}
+                      <div className={`bg-gradient-to-r ${getConfidenceColor(msg.structured.confidence)} px-4 py-2.5 flex items-center justify-between`}>
+                        <div className="flex items-center gap-2">
+                          <div className="w-6 h-6 rounded-lg bg-white/20 flex items-center justify-center">
+                            <Shield className="w-3.5 h-3.5 text-white" />
+                          </div>
+                          <span className="text-white text-[11px] font-bold tracking-wide uppercase">
+                            {Math.round(msg.structured.confidence * 100)}% Confidence
+                          </span>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => handleSpeak(msg.id, msg.structured?.content || '')}
+                            className="p-1.5 bg-white/15 hover:bg-white/25 text-white rounded-lg transition-all backdrop-blur-sm"
+                            title={speakingMessageId === msg.id ? 'Stop' : 'Listen'}
+                          >
+                            {speakingMessageId === msg.id ? <VolumeX className="w-3.5 h-3.5 animate-pulse" /> : <Volume2 className="w-3.5 h-3.5" />}
+                          </button>
+
+                          {msg.structured.emergency_sos ? (
+                            <span className="px-2.5 py-1 bg-white/20 text-white font-extrabold text-[10px] rounded-full flex items-center gap-1 animate-pulse">
+                              🚨 SOS
+                            </span>
+                          ) : (
+                            <span className="px-2.5 py-1 bg-white/20 text-white font-bold text-[10px] rounded-full flex items-center gap-1">
+                              <CheckCircle2 className="w-3 h-3" /> Verified
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Card Body */}
+                      <div className="p-4 sm:p-5 space-y-4">
+                        {/* Source Tag */}
+                        {msg.structured.sources && msg.structured.sources.length > 0 && (
+                          <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
+                            <FileCheck className="w-3 h-3 text-emerald-500" />
+                            <span className="font-medium">{msg.structured.sources[0]}</span>
+                          </div>
+                        )}
+
+                        {/* Main Clinical Content */}
+                        <p className="text-foreground text-[13px] sm:text-sm leading-relaxed font-medium whitespace-pre-line">
+                          {msg.structured.content}
+                        </p>
+
+                        {/* ── Safe Home Care (Green Card) ── */}
+                        {msg.structured.recommendations && msg.structured.recommendations.length > 0 && (
+                          <div className="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-500/10 dark:to-teal-500/5 border border-emerald-200/60 dark:border-emerald-500/20 rounded-xl p-4">
+                            <div className="flex items-center gap-2 mb-2.5">
+                              <div className="w-6 h-6 rounded-lg bg-emerald-500/15 flex items-center justify-center">
+                                <Heart className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                              </div>
+                              <span className="font-bold text-emerald-700 dark:text-emerald-400 text-xs">
+                                {language === 'or' ? 'ଘରୋଇ ଉପଚାର ଓ ଆହାର' : language === 'hi' ? 'घरेलू उपचार एवं आहार' : 'Safe Home Care & Diet'}
+                              </span>
+                            </div>
+                            <ul className="space-y-2">
+                              {msg.structured.recommendations.map((item, idx) => (
+                                <li key={idx} className="flex items-start gap-2 text-xs text-foreground/85 leading-relaxed">
+                                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5" />
+                                  <span>{item}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+
+                        {/* ── Warning Signs (Amber Card) ── */}
+                        {msg.structured.warnings && msg.structured.warnings.length > 0 && (
+                          <div className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-500/10 dark:to-orange-500/5 border border-amber-200/60 dark:border-amber-500/20 rounded-xl p-4">
+                            <div className="flex items-center gap-2 mb-2.5">
+                              <div className="w-6 h-6 rounded-lg bg-amber-500/15 flex items-center justify-center">
+                                <ShieldAlert className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+                              </div>
+                              <span className="font-bold text-amber-700 dark:text-amber-400 text-xs">
+                                {language === 'or' ? 'ଡାକ୍ତରଙ୍କୁ କେବେ ଦେଖାଇବେ' : language === 'hi' ? 'डॉक्टर को कब दिखाएं' : 'When to See a Doctor'}
+                              </span>
+                            </div>
+                            <ul className="space-y-2">
+                              {msg.structured.warnings.map((item, idx) => (
+                                <li key={idx} className="flex items-start gap-2 text-xs text-foreground/85 leading-relaxed">
+                                  <ShieldAlert className="w-3.5 h-3.5 text-amber-500 shrink-0 mt-0.5" />
+                                  <span>{item}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+
+                        {/* ── Follow-Up Prompt ── */}
+                        {msg.structured.followUp && (
+                          <div className="flex items-center justify-between gap-3 p-3.5 bg-muted/40 border border-border rounded-xl">
+                            <div className="flex items-center gap-2">
+                              <MessageCircle className="w-4 h-4 text-primary shrink-0" />
+                              <span className="text-xs text-muted-foreground">{msg.structured.followUp}</span>
+                            </div>
+                            <button
+                              onClick={() => navigate('/doctors', { 
+                                state: { 
+                                  prefillSpecialist: msg.structured?.specialist, 
+                                  triageSummary: msg.structured?.content 
+                                } 
+                              })}
+                              className="text-[11px] font-bold text-primary hover:text-primary/80 flex items-center gap-1 shrink-0 transition-colors"
+                            >
+                              <span>Find Doctors</span>
+                              <ArrowRight className="w-3 h-3" />
+                            </button>
+                          </div>
+                        )}
+
+                        {/* ── CTA Action Buttons ── */}
+                        <div className="flex flex-wrap gap-2 pt-1">
+                          {msg.structured.emergency_sos && (
+                            <a
+                              href="tel:108"
+                              className="flex-1 bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-700 hover:to-red-700 text-white font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 text-xs shadow-lg shadow-rose-500/25 transition-all animate-pulse"
+                            >
+                              <PhoneCall className="w-4 h-4" />
+                              <span>Call 108 Emergency</span>
+                            </a>
+                          )}
+
+                          <button
+                            onClick={() => navigate('/doctors', { 
+                              state: { 
+                                prefillSpecialist: msg.structured?.specialist, 
+                                triageSummary: msg.structured?.content 
+                              } 
+                            })}
+                            className="flex-1 bg-gradient-to-r from-primary to-violet-600 hover:from-primary/90 hover:to-violet-600/90 text-white font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 text-xs shadow-lg shadow-primary/20 transition-all"
+                          >
+                            <Stethoscope className="w-4 h-4" />
+                            <span>{msg.structured.specialist || 'Consult Specialist'}</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  <span className="text-[10px] text-muted-foreground/70 block px-1 mt-1">
+                    {msg.timestamp}
+                  </span>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+
+          {/* ── Typing Indicator ──────────────────── */}
+          <AnimatePresence>
+            {loading && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -5 }}
+                className="flex items-end gap-2.5"
+              >
+                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center shadow-md">
+                  <Bot className="w-4 h-4 text-white" />
+                </div>
+                <div className="bg-card border border-border rounded-2xl rounded-bl-md px-5 py-3.5 shadow-sm">
+                  <div className="flex items-center gap-1.5">
+                    <motion.div animate={{ scale: [1, 1.4, 1] }} transition={{ duration: 0.6, repeat: Infinity, delay: 0 }} className="w-2 h-2 bg-primary/60 rounded-full" />
+                    <motion.div animate={{ scale: [1, 1.4, 1] }} transition={{ duration: 0.6, repeat: Infinity, delay: 0.15 }} className="w-2 h-2 bg-primary/60 rounded-full" />
+                    <motion.div animate={{ scale: [1, 1.4, 1] }} transition={{ duration: 0.6, repeat: Infinity, delay: 0.3 }} className="w-2 h-2 bg-primary/60 rounded-full" />
+                    <span className="text-[11px] text-muted-foreground ml-2 font-medium">
+                      {language === 'or' ? 'ବିଶ୍ଳେଷଣ ହେଉଛି...' : language === 'hi' ? 'विश्लेषण हो रहा है...' : 'Analyzing...'}
+                    </span>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <div ref={messagesEndRef} />
         </div>
       </div>
 
-      {/* ── Chat Messages Container ───────────────── */}
-      <div className="bg-card border border-border rounded-2xl p-4 md:p-6 shadow-md min-h-[480px] max-h-[580px] overflow-y-auto space-y-4">
-        {messages.map((msg) => (
-          <motion.div
-            key={msg.id}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.25 }}
-            className={`flex items-start gap-3 ${msg.sender === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
-          >
-            {/* Avatar */}
-            <div className={`w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold shrink-0 ${
-              msg.sender === 'user' 
-                ? 'bg-primary text-white shadow-md shadow-primary/20' 
-                : 'bg-violet-500/15 text-violet-600 dark:text-violet-400 border border-violet-500/25'
-            }`}>
-              {msg.sender === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
-            </div>
-
-            {/* Content Bubble */}
-            <div className={`max-w-[85%] sm:max-w-[78%] space-y-2`}>
-              {/* Text Message */}
-              {msg.text && (
-                <div className={`p-4 rounded-2xl text-xs sm:text-sm leading-relaxed shadow-sm relative group ${
-                  msg.sender === 'user'
-                    ? 'bg-primary text-white rounded-tr-none'
-                    : 'bg-muted/60 text-foreground border border-border rounded-tl-none'
-                }`}>
-                  <span>{msg.text}</span>
-                  {msg.sender === 'bot' && (
-                    <button
-                      type="button"
-                      onClick={() => handleSpeak(msg.id, msg.text || '')}
-                      className="ml-2 p-1 text-muted-foreground hover:text-foreground inline-flex items-center align-middle"
-                      title={speakingMessageId === msg.id ? 'Stop speaking' : 'Listen audio'}
-                    >
-                      {speakingMessageId === msg.id ? <VolumeX className="w-3.5 h-3.5 text-rose-500 animate-pulse" /> : <Volume2 className="w-3.5 h-3.5" />}
-                    </button>
-                  )}
-                </div>
-              )}
-
-              {/* Structured Clinical Response Card */}
-              {msg.structured && (
-                <div className="bg-card border border-border rounded-2xl p-4 sm:p-5 shadow-lg space-y-4 text-xs sm:text-sm">
-                  {/* Top Bar: Confidence Score & Verification Badge */}
-                  <div className="flex items-center justify-between gap-3 border-b border-border pb-3 flex-wrap">
-                    <div className="flex items-center gap-2">
-                      <span className="px-2.5 py-0.5 bg-primary/10 text-primary font-extrabold text-[10px] rounded-md border border-primary/20">
-                        {Math.round(msg.structured.confidence * 100)}% Match Confidence
-                      </span>
-                      {msg.structured.sources && msg.structured.sources.length > 0 && (
-                        <span className="text-[10px] text-muted-foreground flex items-center gap-1">
-                          <CheckCircle2 className="w-3 h-3 text-emerald-500" />
-                          <span>{msg.structured.sources[0]}</span>
-                        </span>
-                      )}
-                    </div>
-
-                    <div className="flex items-center gap-1.5">
-                      {/* TTS Audio button */}
-                      <button
-                        type="button"
-                        onClick={() => handleSpeak(msg.id, msg.structured?.content || '')}
-                        className="p-1.5 bg-muted/60 hover:bg-muted text-foreground rounded-lg border border-border text-[11px] flex items-center gap-1 transition-all"
-                        title={speakingMessageId === msg.id ? 'Stop speaking' : 'Listen to response'}
-                      >
-                        {speakingMessageId === msg.id ? <VolumeX className="w-3.5 h-3.5 text-rose-500 animate-pulse" /> : <Volume2 className="w-3.5 h-3.5 text-primary" />}
-                        <span className="text-[10px] font-semibold">{speakingMessageId === msg.id ? 'Stop' : 'Listen'}</span>
-                      </button>
-
-                      {msg.structured.emergency_sos ? (
-                        <span className="px-3 py-1 bg-rose-500/15 text-rose-600 dark:text-rose-400 font-extrabold text-xs rounded-full border border-rose-500/30 shrink-0">
-                          🚨 EMERGENCY
-                        </span>
-                      ) : (
-                        <span className="px-3 py-1 bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-extrabold text-xs rounded-full border border-emerald-500/30 shrink-0">
-                          Verified Triage
-                        </span>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Main Clinical Content */}
-                  <p className="text-foreground leading-relaxed font-medium whitespace-pre-line">
-                    {msg.structured.content}
-                  </p>
-
-                  {/* Safe Home Care Recommendations (Green Action Card) */}
-                  {msg.structured.recommendations && msg.structured.recommendations.length > 0 && (
-                    <div className="space-y-2 bg-emerald-500/5 border border-emerald-500/20 p-3.5 rounded-xl">
-                      <div className="flex items-center gap-1.5 font-bold text-emerald-700 dark:text-emerald-400 text-xs">
-                        <Sparkles className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                        <span>
-                          {language === 'or' ? 'ଘରୋଇ ଉପଚାର ଓ ଆହାର ପରାମର୍ଶ:' : language === 'hi' ? 'घरेलू उपचार एवं आहार सलाह:' : 'Safe Home Care & Diet Guidance:'}
-                        </span>
-                      </div>
-                      <ul className="space-y-1.5 pl-4 text-xs text-foreground/85 list-disc leading-relaxed">
-                        {msg.structured.recommendations.map((item, idx) => (
-                          <li key={idx}>{item}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-
-                  {/* Red Flag Warnings (Red Alert Card) */}
-                  {msg.structured.warnings && msg.structured.warnings.length > 0 && (
-                    <div className="space-y-2 bg-amber-500/5 border border-amber-500/20 p-3.5 rounded-xl">
-                      <div className="flex items-center gap-1.5 font-bold text-amber-700 dark:text-amber-400 text-xs">
-                        <ShieldAlert className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
-                        <span>
-                          {language === 'or' ? 'ଡାକ୍ତରଙ୍କୁ କେବେ ଦେଖାଇବେ (ବିପଦ ସଙ୍କେତ):' : language === 'hi' ? 'डॉक्टर को कब दिखाएं (चेतावनी के लक्षण):' : 'When to See a Doctor (Red Flags):'}
-                        </span>
-                      </div>
-                      <ul className="space-y-1.5 pl-4 text-xs text-foreground/85 list-disc leading-relaxed">
-                        {msg.structured.warnings.map((item, idx) => (
-                          <li key={idx}>{item}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-
-                  {/* Interactive Follow-Up Chip Prompt */}
-                  {msg.structured.followUp && (
-                    <div className="p-3 bg-muted/40 border border-border rounded-xl flex items-center justify-between gap-2">
-                      <span className="text-xs text-muted-foreground italic">
-                        {msg.structured.followUp}
-                      </span>
-                      <button
-                        onClick={() => navigate('/doctors', { 
-                          state: { 
-                            prefillSpecialist: msg.structured?.specialist, 
-                            triageSummary: msg.structured?.content 
-                          } 
-                        })}
-                        className="text-xs font-bold text-primary hover:underline flex items-center gap-1 shrink-0"
-                      >
-                        <span>Find Doctors</span>
-                        <ArrowRight className="w-3 h-3" />
-                      </button>
-                    </div>
-                  )}
-
-                  {/* Action CTA Buttons */}
-                  <div className="flex flex-wrap gap-2 pt-2 border-t border-border">
-                    {msg.structured.emergency_sos && (
-                      <a
-                        href="tel:108"
-                        className="flex-1 bg-rose-600 hover:bg-rose-700 text-white font-bold py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 text-xs shadow-md shadow-rose-500/20 transition-all touch-target animate-pulse"
-                      >
-                        <PhoneCall className="w-4 h-4" />
-                        <span>Call 108 Emergency Ambulance</span>
-                      </a>
-                    )}
-
-                    <button
-                      onClick={() => navigate('/doctors', { 
-                        state: { 
-                          prefillSpecialist: msg.structured?.specialist, 
-                          triageSummary: msg.structured?.content 
-                        } 
-                      })}
-                      className="flex-1 bg-primary hover:bg-primary/95 text-white font-bold py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 text-xs shadow-md shadow-primary/20 transition-all touch-target"
-                    >
-                      <Stethoscope className="w-4 h-4" />
-                      <span>{msg.structured.specialist || 'Consult Specialist Doctor'}</span>
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              <span className="text-[10px] text-muted-foreground block px-1">
-                {msg.timestamp}
-              </span>
-            </div>
-          </motion.div>
-        ))}
-
-        {/* Loading Spinner */}
-        {loading && (
-          <div className="flex items-center gap-2 text-xs text-muted-foreground p-3 bg-muted/40 rounded-xl w-fit">
-            <RefreshCw className="w-4 h-4 text-primary animate-spin" />
-            <span>
-              {language === 'or' ? 'LangGraph ସ୍ୱାସ୍ଥ୍ୟ ତଥ୍ୟ ଯାଞ୍ଚ କରାଯାଉଛି...' : language === 'hi' ? 'LangGraph स्वास्थ्य जानकारी जांची जा रही है...' : 'Running LangGraph clinical state machine...'}
-            </span>
-          </div>
-        )}
-
-        <div ref={messagesEndRef} />
-      </div>
-
-      {/* ── Quick Symptom Chips ───────────────────── */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
-        <span className="text-[11px] font-bold text-muted-foreground shrink-0 flex items-center gap-1">
-          <HelpCircle className="w-3.5 h-3.5 text-primary" />
-          <span>Suggestions:</span>
+      {/* ── Quick Suggestion Chips ─────────────── */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar mb-2">
+        <span className="text-[10px] font-bold text-muted-foreground shrink-0 flex items-center gap-1 uppercase tracking-wider">
+          <Sparkles className="w-3 h-3 text-primary" />
+          <span>Quick Ask</span>
         </span>
         {quickTopics.map((topic, idx) => (
-          <button
+          <motion.button
             key={idx}
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
             onClick={() => handleSendMessage(topic.query)}
             disabled={loading}
-            className="text-xs bg-card hover:bg-muted border border-border px-3 py-1.5 rounded-full font-medium text-foreground whitespace-nowrap shrink-0 shadow-sm transition-all hover:border-primary/50"
+            className="text-[11px] bg-card hover:bg-muted border border-border px-3.5 py-2 rounded-xl font-semibold text-foreground whitespace-nowrap shrink-0 shadow-sm transition-all hover:border-primary/40 hover:shadow-md flex items-center gap-1.5"
           >
-            {topic.label}
-          </button>
+            <span>{topic.icon}</span>
+            <span>{topic.label}</span>
+          </motion.button>
         ))}
       </div>
 
-      {/* ── Input Bar ─────────────────────────────── */}
-      <div className="relative flex items-center gap-2 bg-card border border-border rounded-2xl p-2 shadow-lg">
-        {/* Voice Input Button */}
+      {/* ── Premium Input Bar ──────────────────── */}
+      <motion.div 
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.15 }}
+        className="relative flex items-center gap-2 bg-card border-2 border-border hover:border-primary/30 focus-within:border-primary/50 rounded-2xl p-2 shadow-xl shadow-black/5 transition-all"
+      >
+        {/* Voice Input */}
         <button
           type="button"
           onClick={toggleRecording}
           disabled={loading}
           className={`p-3 rounded-xl transition-all shrink-0 ${
             isRecording
-              ? 'bg-rose-500 text-white animate-pulse shadow-md shadow-rose-500/30'
-              : 'bg-muted/70 hover:bg-muted text-foreground'
+              ? 'bg-gradient-to-br from-rose-500 to-red-500 text-white shadow-lg shadow-rose-500/30 animate-pulse'
+              : 'bg-muted/70 hover:bg-muted text-muted-foreground hover:text-foreground'
           }`}
           title={isRecording ? 'Listening... Click to stop' : `Voice input in ${language.toUpperCase()}`}
         >
@@ -664,14 +732,14 @@ const HealthChat: React.FC = () => {
           onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
           placeholder={
             isRecording
-              ? 'Listening to voice...'
+              ? (language === 'or' ? 'ଶୁଣୁଛି...' : language === 'hi' ? 'सुन रहा हूँ...' : 'Listening...')
               : language === 'or'
-              ? 'ଲକ୍ଷଣ ବା ସ୍ୱାସ୍ଥ୍ୟ ପ୍ରଶ୍ନ ଲେଖନ୍ତୁ (ଯଥା: ମୁଣ୍ଡ ବିନ୍ଧା, ଜ୍ୱର, ମମତା ଯୋଜନା)...'
+              ? 'ଲକ୍ଷଣ ବା ସ୍ୱାସ୍ଥ୍ୟ ପ୍ରଶ୍ନ ଲେଖନ୍ତୁ...'
               : language === 'hi'
-              ? 'लक्षण या बीमारी के बारे में लिखें (जैसे: सिरदर्द, बुखार, ममता योजना)...'
-              : 'Type your symptoms or health query (e.g., fever, chest pain, diabetes diet)...'
+              ? 'लक्षण या स्वास्थ्य प्रश्न लिखें...'
+              : 'Describe your symptoms or ask a health question...'
           }
-          className="flex-1 bg-transparent text-sm text-foreground focus:outline-none px-2 placeholder:text-muted-foreground"
+          className="flex-1 bg-transparent text-sm text-foreground focus:outline-none px-2 placeholder:text-muted-foreground/60"
           disabled={loading}
         />
 
@@ -680,11 +748,11 @@ const HealthChat: React.FC = () => {
           type="button"
           onClick={() => handleSendMessage()}
           disabled={!inputText.trim() || loading}
-          className="p-3 bg-primary hover:bg-primary/95 disabled:opacity-50 text-white rounded-xl transition-all shrink-0 shadow-md shadow-primary/20 touch-target"
+          className="p-3 bg-gradient-to-br from-primary to-violet-600 hover:from-primary/90 hover:to-violet-600/90 disabled:opacity-40 disabled:from-muted disabled:to-muted text-white rounded-xl transition-all shrink-0 shadow-lg shadow-primary/25"
         >
-          <Send className="w-4 h-4" />
+          <Send className="w-4.5 h-4.5" />
         </button>
-      </div>
+      </motion.div>
 
     </div>
   );
