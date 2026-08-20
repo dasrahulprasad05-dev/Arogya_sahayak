@@ -62,7 +62,7 @@ Keep it concise, calm, and actionable. Do NOT diagnose.`;
               "Authorization": `Bearer ${GEMINI_API_KEY}`
             },
             body: JSON.stringify({
-              model: "llama-3.1-8b-instant",
+              model: "openai/gpt-oss-20b",
               messages: [
                 { role: "system", content: systemPrompt },
                 { role: "user", content: `User Request:\n${userMessage}` }
@@ -71,12 +71,10 @@ Keep it concise, calm, and actionable. Do NOT diagnose.`;
           }
         );
 
-        if (!response.ok) {
-          throw new Error("Groq API call failed");
+        if (response.ok) {
+          const data = await response.json();
+          suggestion = data.choices?.[0]?.message?.content || "";
         }
-
-        const data = await response.json();
-        suggestion = data.choices?.[0]?.message?.content || "";
       } catch (err) {
         console.error("Groq request error:", err);
       }
