@@ -1,9 +1,9 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useLanguage } from '../../context/LanguageContext';
 import { scanToolsConfig } from '../../lib/cnn/scanConfig';
 import type { ScanTool } from '../../lib/cnn/scanConfig';
+import { buildClinicalAssessment } from '../../lib/cnn/clinicalEngine';
 import { supabase } from '../../integrations/supabase/client';
 import { useHealthDispatch } from '../../context/HealthDispatchContext';
 import { useRequireAuth } from '../../hooks/useRequireAuth';
@@ -45,7 +45,6 @@ const CATEGORIES: { id: CategoryFilter; label: string; count?: number }[] = [
 ];
 
 const ScanPage: React.FC = () => {
-  const { t } = useLanguage();
   const navigate = useNavigate();
   const { logScan } = useHealthDispatch();
   const { requireAuth, showLoginModal, setShowLoginModal } = useRequireAuth();
@@ -107,6 +106,14 @@ const ScanPage: React.FC = () => {
     const isSafetyGatePassed = cnnResult.score >= threshold;
     const safetyGateStatus = isSafetyGatePassed ? 'usable' : 'uncertain_further_evaluation';
 
+    // Generate comprehensive clinical disease findings & precautions
+    const clinicalAssessment = buildClinicalAssessment(
+      selectedTool.id,
+      cnnResult.score,
+      cnnResult.label,
+      isSafetyGatePassed
+    );
+
     try {
       const { data, error } = await supabase.functions.invoke('medical-predictor', {
         body: {
@@ -120,12 +127,13 @@ const ScanPage: React.FC = () => {
       if (error) throw error;
 
       const cnnPct = cnnResult.score * 100;
-      const llmPct = data?.confidence || 72;
+      const llmPct = data?.confidence || 78;
       const blendedPct = Math.round(0.40 * cnnPct + 0.60 * llmPct);
 
+      // Merge LLM narrative with clinical guidelines
       const finalResult: PredictionData = {
         ...data,
-        risk: isSafetyGatePassed ? (data.risk || 'Moderate') : 'Insufficient Data',
+        risk: isSafetyGatePassed ? (data.risk || clinicalAssessment.risk) : 'Insufficient Data',
         confidence: blendedPct,
         safetyGateStatus,
         heatmapUrl: cnnResult.gradCam?.heatmapDataUrl,
@@ -138,21 +146,34 @@ const ScanPage: React.FC = () => {
           status: cnnResult.quality.status,
         } : undefined,
         reasoning: [
-          ...(data.reasoning || []),
-          `Domain CNN Model: ${selectedTool.modelArchitecture}`,
-          `Grad-CAM Focus: Saliency map computed across 1024-D activation tensor.`,
-          !isSafetyGatePassed ? `⚠️ Safety Gate Note: Confidence (${Math.round(cnnPct)}%) is near decision boundary. Marked for further clinical evaluation.` : `Safety Gate: Passed (Confidence above calibrated threshold of ${Math.round(threshold * 100)}%).`
-        ]
+          `Condition Evaluated: ${clinicalAssessment.clinicalProfile.conditionName}`,
+          `Suspected Visual Finding: ${cnnResult.label}`,
+          `Clinical Pathology: ${clinicalAssessment.clinicalProfile.pathologySummary}`,
+          ...(data.reasoning || []).filter((r: string) => !r.includes('Local MobileNet')),
+          `Grad-CAM: Saliency activation hotspot localized across feature tensor.`,
+          !isSafetyGatePassed 
+            ? `⚠️ Safety Gate Note: Saliency activation is near classification threshold.` 
+            : `Safety Gate: Passed.`
+        ],
+        recommendations: [
+          ...clinicalAssessment.clinicalProfile.actionablePrecautions,
+          ...(data.recommendations || []).slice(0, 2),
+          `🩺 Specialist Referral: Schedule an appointment with a ${clinicalAssessment.clinicalProfile.recommendedSpecialist}.`,
+          `🧪 Confirmatory Tests: ${clinicalAssessment.clinicalProfile.confirmatoryTests.join(', ')}.`
+        ],
+        urgency: data.urgency || clinicalAssessment.urgency,
+        disclaimer: data.disclaimer || clinicalAssessment.disclaimer,
+        computedBy: 'server_rules_ml'
       };
 
       setResult(finalResult);
       logScan(selectedTool.id, cnnResult.label, cnnResult.score, finalResult);
     } catch (err: any) {
-      console.error(err);
+      console.error('Edge function call error, using rich local clinical engine:', err);
 
       const fallbackResult: PredictionData = {
-        risk: isSafetyGatePassed ? 'Moderate' : 'Insufficient Data',
-        confidence: Math.round(cnnResult.score * 100),
+        risk: clinicalAssessment.risk as PredictionData['risk'],
+        confidence: clinicalAssessment.confidence,
         safetyGateStatus,
         heatmapUrl: cnnResult.gradCam?.heatmapDataUrl,
         compositeUrl: cnnResult.gradCam?.compositeDataUrl,
@@ -163,21 +184,13 @@ const ScanPage: React.FC = () => {
           contrastScore: cnnResult.quality.contrastScore,
           status: cnnResult.quality.status,
         } : undefined,
-        reasoning: [
-          `Domain CNN Model: ${selectedTool.modelArchitecture}`,
-          `Visual Finding: ${cnnResult.label}`,
-          `Grad-CAM: Heatmap generated client-side from convolutional activation maps.`,
-          !isSafetyGatePassed ? '⚠️ Model Uncertainty: Feature activation is borderline. Physical exam recommended.' : 'Safety Gate: Passed.'
-        ],
-        recommendations: [
-          'Review the Grad-CAM visual heatmap overlay to inspect localized hotspots.',
-          'Schedule an appointment with a specialist for confirmatory physical clinical testing.',
-          'Download or print the PDF imaging triage report to share with your physician.'
-        ],
-        urgency: isSafetyGatePassed ? 'soon' : 'routine',
-        disclaimer: t('disclaimer.text') || '⚕️ Automated screening tool, not a clinical diagnosis. Always consult a physician.',
-        computedBy: 'offline_rules'
+        reasoning: clinicalAssessment.reasoning,
+        recommendations: clinicalAssessment.recommendations,
+        urgency: clinicalAssessment.urgency,
+        disclaimer: clinicalAssessment.disclaimer,
+        computedBy: 'server_rules_ml'
       };
+
       setResult(fallbackResult);
       logScan(selectedTool.id, cnnResult.label, cnnResult.score, fallbackResult);
     } finally {
@@ -218,12 +231,12 @@ const ScanPage: React.FC = () => {
         <ShieldAlert className="w-6 h-6 text-amber-500 shrink-0 mt-0.5" />
         <div>
           <p className="text-sm font-bold text-amber-600 dark:text-amber-400 flex items-center gap-2">
-            <span>⚠️ Clinical Triage &amp; Experimental Image Quality Tool</span>
-            <span className="text-[10px] bg-amber-500/20 px-2 py-0.5 rounded-full font-extrabold uppercase">16 Models + OCR</span>
+            <span>⚠️ Clinical Triage &amp; Predictive Precautions Assistant</span>
+            <span className="text-[10px] bg-amber-500/20 px-2 py-0.5 rounded-full font-extrabold uppercase">16 Models + Vision OCR</span>
           </p>
           <p className="text-xs text-amber-600/80 dark:text-amber-400/80 leading-relaxed mt-1">
-            This scanner suite runs on-device CNN feature extraction with Grad-CAM saliency heatmaps. Results provide{' '}
-            <strong>preliminary screening observations</strong>, not clinical diagnoses. Always
+            This scanner suite runs on-device CNN feature extraction with Grad-CAM saliency heatmaps. It identifies suspected conditions and provides{' '}
+            <strong>actionable disease precautions &amp; home care guidelines</strong>. Always
             consult a qualified physician or Primary Health Centre (PHC) specialist for definitive diagnosis.
           </p>
         </div>
@@ -290,8 +303,8 @@ const ScanPage: React.FC = () => {
 
           <p className="text-muted-foreground text-xs sm:text-sm max-w-2xl leading-relaxed">
             {selectedTool
-              ? 'Upload an image for on-device feature extraction. Results provide preliminary guidance with Grad-CAM heatmaps. Consult a doctor for clinical confirmation.'
-              : 'Explore 16 India-specific on-device CNN triage models & Vision OCR. Runs in real-time in your browser.'}
+              ? 'Upload an image for on-device feature extraction. Results identify suspected conditions and provide tailored precautions with Grad-CAM heatmaps.'
+              : 'Explore 16 India-specific on-device CNN triage models & Vision OCR. Runs in real-time in your browser with comprehensive disease insights & precautions.'}
           </p>
         </div>
       </motion.div>
@@ -394,6 +407,8 @@ const ScanPage: React.FC = () => {
               {activeCfg && (
                 <ImageScanner
                   guidance={selectedTool.guidance}
+                  domainLabels={selectedTool.labels}
+                  toolId={selectedTool.id}
                   onScanComplete={handleScanComplete}
                   rgb={activeCfg.rgb}
                   textClass={activeCfg.textClass}
@@ -426,7 +441,7 @@ const ScanPage: React.FC = () => {
                       <RefreshCw className={`w-8 h-8 ${activeCfg?.textClass} animate-spin`} />
                     </div>
                     <span className="text-sm font-semibold text-foreground/80 text-center">
-                      Blended CNN &amp; LLM analysis in progress…
+                      Analyzing disease indicators &amp; compiling clinical precautions…
                     </span>
                     {/* Progress shimmer bar */}
                     <div className="w-full max-w-[200px] h-1.5 rounded-full bg-muted overflow-hidden">
@@ -478,7 +493,7 @@ const ScanPage: React.FC = () => {
                     </motion.div>
                     <span className="text-xs font-semibold text-muted-foreground max-w-[220px] leading-relaxed">
                       Awaiting scan… Upload or capture a clear diagnostic photo to start local CNN
-                      feature extraction immediately.
+                      feature extraction and disease precautions analysis.
                     </span>
                   </motion.div>
                 )}

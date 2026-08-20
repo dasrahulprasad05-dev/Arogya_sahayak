@@ -17,6 +17,8 @@ export interface ScanCompletePayload {
 interface ImageScannerProps {
   onScanComplete: (result: ScanCompletePayload) => void;
   guidance: string;
+  domainLabels?: string[];
+  toolId?: string;
   rgb: string;
   textClass: string;
   bgClass: string;
@@ -27,6 +29,8 @@ interface ImageScannerProps {
 const ImageScanner: React.FC<ImageScannerProps> = ({ 
   onScanComplete, 
   guidance,
+  domainLabels,
+  toolId,
   rgb,
   textClass,
   bgClass,
@@ -121,8 +125,8 @@ const ImageScanner: React.FC<ImageScannerProps> = ({
         return;
       }
 
-      // 2. Run local MobileNet feature extraction + Grad-CAM generation
-      const result = await extractFeatures(imageRef.current);
+      // 2. Run local MobileNet feature extraction + Grad-CAM generation with domain mapping
+      const result = await extractFeatures(imageRef.current, domainLabels, toolId);
 
       if (result.gradCam) {
         setActiveHeatmapUrl(result.gradCam.compositeDataUrl);
