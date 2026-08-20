@@ -61,7 +61,7 @@ Structure: (1) Possible causes (2) Warning signs (3) Recommended action (4) When
               "Authorization": `Bearer ${GEMINI_API_KEY}`
             },
             body: JSON.stringify({
-              model: "openai/gpt-oss-20b",
+              model: "llama-3.3-70b-versatile",
               messages: [
                 { role: "system", content: systemPrompt },
                 { role: "user", content: `Patient Vitals/Symptoms:\n${userMessage}` }

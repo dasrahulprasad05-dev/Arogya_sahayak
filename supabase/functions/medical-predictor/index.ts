@@ -342,7 +342,7 @@ Recommended Action: ${facts.recommendedAction}`;
               "Authorization": `Bearer ${GEMINI_API_KEY}`
             },
             body: JSON.stringify({
-              model: "openai/gpt-oss-20b",
+              model: "llama-3.3-70b-versatile",
               response_format: { type: "json_object" },
               messages: [
                 { role: "system", content: systemPrompt },
