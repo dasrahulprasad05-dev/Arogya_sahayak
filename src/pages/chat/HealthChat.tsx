@@ -20,11 +20,6 @@ import {
   Volume2,
   VolumeX,
   CheckCircle2,
-  ArrowRight,
-  FileCheck,
-  Heart,
-  Shield,
-  MessageCircle,
   Zap
 } from 'lucide-react';
 
@@ -358,45 +353,54 @@ const HealthChat: React.FC = () => {
       <div className="pointer-events-none absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br from-violet-500/15 to-primary/10 rounded-full blur-3xl" />
       <div className="pointer-events-none absolute top-1/3 -left-10 w-32 h-32 bg-gradient-to-br from-emerald-500/10 to-teal-400/10 rounded-full blur-3xl" />
 
-      {/* ── Premium Header ──────────────────────── */}
+      {/* ── Premium Header with Continuous Live Gradient Animation ── */}
       <motion.div 
         initial={{ opacity: 0, y: -12 }}
         animate={{ opacity: 1, y: 0 }}
-        className="relative z-10 bg-gradient-to-r from-violet-600 via-purple-600 to-primary rounded-2xl p-4 sm:p-5 shadow-xl shadow-primary/15 mb-4"
+        className="relative z-10 animate-live-gradient rounded-2xl p-4 sm:p-5 shadow-2xl shadow-primary/25 mb-4 overflow-hidden border border-white/20"
       >
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        {/* Floating Aurora Glow Orbs */}
+        <div className="pointer-events-none absolute -top-12 -left-12 w-48 h-48 bg-white/20 rounded-full blur-2xl animate-float-slow" />
+        <div className="pointer-events-none absolute -bottom-12 -right-12 w-48 h-48 bg-cyan-300/25 rounded-full blur-2xl animate-float" />
+        <div className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-32 bg-fuchsia-400/20 rounded-full blur-3xl animate-pulse-slow" />
+
+        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="relative">
-              <div className="w-12 h-12 rounded-2xl bg-white/15 backdrop-blur-sm flex items-center justify-center text-white shadow-inner border border-white/20">
+              <div className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-white shadow-inner border border-white/30">
                 <Bot className="w-6 h-6" />
               </div>
-              <span className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-400 rounded-full border-2 border-violet-600 animate-pulse" />
+              <span className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-400 rounded-full border-2 border-white animate-pulse" />
+              <span className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-400 rounded-full animate-ping opacity-75" />
             </div>
             <div>
-              <h1 className="font-heading font-extrabold text-white text-base sm:text-lg flex items-center gap-2">
+              <h1 className="font-heading font-extrabold text-white text-base sm:text-lg flex items-center gap-2 drop-shadow-sm">
                 {language === 'or' ? 'AI ସ୍ୱାସ୍ଥ୍ୟ ସାଥୀ' : language === 'hi' ? 'AI स्वास्थ्य साथी' : 'AI Health Assistant'}
-                <span className="text-[9px] font-bold px-2 py-0.5 bg-white/15 text-white/90 rounded-full border border-white/20 flex items-center gap-1 backdrop-blur-sm">
-                  <Zap className="w-2.5 h-2.5" />
+                <span className="text-[9px] font-bold px-2.5 py-0.5 bg-white/20 text-white rounded-full border border-white/30 flex items-center gap-1 backdrop-blur-md shadow-sm">
+                  <Zap className="w-2.5 h-2.5 text-amber-300 animate-pulse" />
                   <span>Clinical AI</span>
                 </span>
               </h1>
-              <p className="text-white/70 text-[11px] sm:text-xs mt-0.5">
-                {language === 'or' ? '২৪/৭ ସ୍ୱାସ୍ଥ୍ୟ ସହାୟତା • ଓଡ଼ିଆ, ହିନ୍ଦୀ, ଇଂରାଜୀ' : language === 'hi' ? '24/7 स्वास्थ्य सहायता • हिंदी, उड़िया, अंग्रेजी' : '24/7 clinical triage • English, Hindi & Odia'}
+              <p className="text-white/90 text-[11px] sm:text-xs mt-0.5 font-medium flex items-center gap-1.5 drop-shadow-xs">
+                <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-300 animate-pulse"></span>
+                <span>
+                  {language === 'or' ? '২৪/୭ ସ୍ୱାସ୍ଥ୍ୟ ସହାୟତା • ଓଡ଼ିଆ, ହିନ୍ଦୀ, ଇଂରାଜୀ' : language === 'hi' ? '24/7 स्वास्थ्य सहायता • हिंदी, उड़िया, अंग्रेजी' : '24/7 clinical triage • English, Hindi & Odia'}
+                </span>
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
             {/* Language Switcher */}
-            <div className="flex items-center bg-white/10 backdrop-blur-sm p-1 rounded-xl border border-white/15">
+            <div className="flex items-center bg-black/15 backdrop-blur-md p-1 rounded-xl border border-white/20 shadow-inner">
               {languages.map((l) => (
                 <button
                   key={l.code}
                   onClick={() => setLanguage(l.code)}
-                  className={`px-3 py-1.5 text-[11px] font-bold rounded-lg transition-all ${
+                  className={`px-3 py-1.5 text-[11px] font-bold rounded-lg transition-all outline-none focus:outline-none ${
                     language === l.code
-                      ? 'bg-white text-violet-700 shadow-sm'
-                      : 'text-white/70 hover:text-white hover:bg-white/10'
+                      ? 'bg-white text-violet-700 shadow-md font-extrabold'
+                      : 'text-white/80 hover:text-white hover:bg-white/15'
                   }`}
                 >
                   {l.name}
@@ -407,7 +411,7 @@ const HealthChat: React.FC = () => {
             <button
               onClick={handleExportPdf}
               title="Download Consultation PDF"
-              className="p-2.5 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/15 text-white rounded-xl transition-all shadow-sm"
+              className="p-2.5 bg-white/15 hover:bg-white/25 active:scale-95 backdrop-blur-md border border-white/25 text-white rounded-xl transition-all shadow-sm outline-none focus:outline-none"
             >
               <Download className="w-4 h-4" />
             </button>
@@ -448,161 +452,143 @@ const HealthChat: React.FC = () => {
                     <div className={`relative group ${
                       msg.sender === 'user'
                         ? 'bg-gradient-to-br from-primary to-violet-600 text-white rounded-2xl rounded-br-md px-4 py-3 shadow-lg shadow-primary/15'
-                        : 'bg-card border border-border text-foreground rounded-2xl rounded-bl-md px-4 py-3 shadow-sm'
+                        : 'bg-card border border-border/80 text-foreground rounded-2xl rounded-bl-md px-4 py-3 shadow-sm'
                     }`}>
-                      <p className="text-[13px] sm:text-sm leading-relaxed">{msg.text}</p>
+                      <p className="text-xs sm:text-sm leading-relaxed whitespace-pre-wrap font-body font-normal">
+                        {msg.text}
+                      </p>
+
+                      {/* TTS Speak Button for Bot Messages */}
                       {msg.sender === 'bot' && (
                         <button
-                          type="button"
                           onClick={() => handleSpeak(msg.id, msg.text || '')}
-                          className="absolute -bottom-2 -right-2 p-1.5 bg-card border border-border rounded-lg shadow-sm text-muted-foreground hover:text-primary opacity-0 group-hover:opacity-100 transition-all"
-                          title={speakingMessageId === msg.id ? 'Stop speaking' : 'Listen audio'}
+                          className="mt-2 text-[11px] text-muted-foreground hover:text-primary flex items-center gap-1 transition-colors outline-none focus:outline-none"
+                          title="Listen to message"
                         >
-                          {speakingMessageId === msg.id ? <VolumeX className="w-3 h-3 text-rose-500 animate-pulse" /> : <Volume2 className="w-3 h-3" />}
+                          {speakingMessageId === msg.id ? (
+                            <>
+                              <VolumeX className="w-3.5 h-3.5 text-rose-500 animate-pulse" />
+                              <span className="text-rose-500 font-semibold">Stop Voice</span>
+                            </>
+                          ) : (
+                            <>
+                              <Volume2 className="w-3.5 h-3.5" />
+                              <span>Listen</span>
+                            </>
+                          )}
                         </button>
                       )}
                     </div>
                   )}
 
-                  {/* ── Structured Clinical Response Card ── */}
+                  {/* Structured Clinical Response Card */}
                   {msg.structured && (
-                    <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-lg">
-                      {/* Confidence Header Strip */}
-                      <div className={`bg-gradient-to-r ${getConfidenceColor(msg.structured.confidence)} px-4 py-2.5 flex items-center justify-between`}>
+                    <div className="bg-card border border-border rounded-2xl rounded-bl-md p-4 sm:p-5 shadow-md space-y-4">
+                      
+                      {/* Card Header & Confidence */}
+                      <div className="flex items-center justify-between pb-3 border-b border-border/60">
                         <div className="flex items-center gap-2">
-                          <div className="w-6 h-6 rounded-lg bg-white/20 flex items-center justify-center">
-                            <Shield className="w-3.5 h-3.5 text-white" />
-                          </div>
-                          <span className="text-white text-[11px] font-bold tracking-wide uppercase">
-                            {Math.round(msg.structured.confidence * 100)}% Confidence
+                          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                          <span className="text-xs font-bold font-heading text-foreground">
+                            Clinical Health Guidance
                           </span>
                         </div>
-
-                        <div className="flex items-center gap-2">
-                          <button
-                            type="button"
-                            onClick={() => handleSpeak(msg.id, msg.structured?.content || '')}
-                            className="p-1.5 bg-white/15 hover:bg-white/25 text-white rounded-lg transition-all backdrop-blur-sm"
-                            title={speakingMessageId === msg.id ? 'Stop' : 'Listen'}
-                          >
-                            {speakingMessageId === msg.id ? <VolumeX className="w-3.5 h-3.5 animate-pulse" /> : <Volume2 className="w-3.5 h-3.5" />}
-                          </button>
-
-                          {msg.structured.emergency_sos ? (
-                            <span className="px-2.5 py-1 bg-white/20 text-white font-extrabold text-[10px] rounded-full flex items-center gap-1 animate-pulse">
-                              🚨 SOS
-                            </span>
-                          ) : (
-                            <span className="px-2.5 py-1 bg-white/20 text-white font-bold text-[10px] rounded-full flex items-center gap-1">
-                              <CheckCircle2 className="w-3 h-3" /> Verified
-                            </span>
-                          )}
+                        <div className="flex items-center gap-1.5">
+                          <div className="w-16 sm:w-20 bg-muted rounded-full h-1.5 overflow-hidden">
+                            <div 
+                              className={`h-full bg-gradient-to-r ${getConfidenceColor(msg.structured.confidence || 0.85)}`}
+                              style={{ width: `${Math.round((msg.structured.confidence || 0.85) * 100)}%` }}
+                            />
+                          </div>
+                          <span className="text-[10px] font-mono font-bold text-muted-foreground">
+                            {Math.round((msg.structured.confidence || 0.85) * 100)}%
+                          </span>
                         </div>
                       </div>
 
-                      {/* Card Body */}
-                      <div className="p-4 sm:p-5 space-y-4">
-                        {/* Source Tag */}
-                        {msg.structured.sources && msg.structured.sources.length > 0 && (
-                          <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
-                            <FileCheck className="w-3 h-3 text-emerald-500" />
-                            <span className="font-medium">{msg.structured.sources[0]}</span>
-                          </div>
-                        )}
-
-                        {/* Main Clinical Content */}
-                        <p className="text-foreground text-[13px] sm:text-sm leading-relaxed font-medium whitespace-pre-line">
+                      {/* Primary Clinical Advice */}
+                      <div className="space-y-1">
+                        <p className="text-xs sm:text-sm text-foreground/90 font-medium leading-relaxed">
                           {msg.structured.content}
                         </p>
+                      </div>
 
-                        {/* ── Safe Home Care (Green Card) ── */}
-                        {msg.structured.recommendations && msg.structured.recommendations.length > 0 && (
-                          <div className="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-500/10 dark:to-teal-500/5 border border-emerald-200/60 dark:border-emerald-500/20 rounded-xl p-4">
-                            <div className="flex items-center gap-2 mb-2.5">
-                              <div className="w-6 h-6 rounded-lg bg-emerald-500/15 flex items-center justify-center">
-                                <Heart className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                              </div>
-                              <span className="font-bold text-emerald-700 dark:text-emerald-400 text-xs">
-                                {language === 'or' ? 'ଘରୋଇ ଉପଚାର ଓ ଆହାର' : language === 'hi' ? 'घरेलू उपचार एवं आहार' : 'Safe Home Care & Diet'}
-                              </span>
-                            </div>
-                            <ul className="space-y-2">
-                              {msg.structured.recommendations.map((item, idx) => (
-                                <li key={idx} className="flex items-start gap-2 text-xs text-foreground/85 leading-relaxed">
-                                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5" />
-                                  <span>{item}</span>
-                                </li>
-                              ))}
-                            </ul>
+                      {/* Safe Home Care Recommendations */}
+                      {msg.structured.recommendations && msg.structured.recommendations.length > 0 && (
+                        <div className="bg-emerald-500/5 dark:bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-3.5 space-y-2">
+                          <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-700 dark:text-emerald-300">
+                            <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+                            <span>Recommended Care & Remedies</span>
                           </div>
-                        )}
+                          <ul className="space-y-1.5">
+                            {msg.structured.recommendations.map((rec, i) => (
+                              <li key={i} className="text-xs text-foreground/80 flex items-start gap-2">
+                                <span className="w-1 h-1 rounded-full bg-emerald-500 mt-1.5 shrink-0" />
+                                <span>{rec}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
 
-                        {/* ── Warning Signs (Amber Card) ── */}
-                        {msg.structured.warnings && msg.structured.warnings.length > 0 && (
-                          <div className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-500/10 dark:to-orange-500/5 border border-amber-200/60 dark:border-amber-500/20 rounded-xl p-4">
-                            <div className="flex items-center gap-2 mb-2.5">
-                              <div className="w-6 h-6 rounded-lg bg-amber-500/15 flex items-center justify-center">
-                                <ShieldAlert className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-                              </div>
-                              <span className="font-bold text-amber-700 dark:text-amber-400 text-xs">
-                                {language === 'or' ? 'ଡାକ୍ତରଙ୍କୁ କେବେ ଦେଖାଇବେ' : language === 'hi' ? 'डॉक्टर को कब दिखाएं' : 'When to See a Doctor'}
-                              </span>
-                            </div>
-                            <ul className="space-y-2">
-                              {msg.structured.warnings.map((item, idx) => (
-                                <li key={idx} className="flex items-start gap-2 text-xs text-foreground/85 leading-relaxed">
-                                  <ShieldAlert className="w-3.5 h-3.5 text-amber-500 shrink-0 mt-0.5" />
-                                  <span>{item}</span>
-                                </li>
-                              ))}
-                            </ul>
+                      {/* Red Flags / Warning Signs */}
+                      {msg.structured.warnings && msg.structured.warnings.length > 0 && (
+                        <div className="bg-rose-500/5 dark:bg-rose-500/10 border border-rose-500/20 rounded-xl p-3.5 space-y-2">
+                          <div className="flex items-center gap-1.5 text-xs font-bold text-rose-600 dark:text-rose-400">
+                            <ShieldAlert className="w-3.5 h-3.5 shrink-0" />
+                            <span>When to Consult a Doctor (Red Flags)</span>
                           </div>
-                        )}
+                          <ul className="space-y-1.5">
+                            {msg.structured.warnings.map((warn, i) => (
+                              <li key={i} className="text-xs text-foreground/80 flex items-start gap-2">
+                                <span className="w-1 h-1 rounded-full bg-rose-500 mt-1.5 shrink-0" />
+                                <span>{warn}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
 
-                        {/* ── Follow-Up Prompt ── */}
-                        {msg.structured.followUp && (
-                          <div className="flex items-center justify-between gap-3 p-3.5 bg-muted/40 border border-border rounded-xl">
-                            <div className="flex items-center gap-2">
-                              <MessageCircle className="w-4 h-4 text-primary shrink-0" />
-                              <span className="text-xs text-muted-foreground">{msg.structured.followUp}</span>
-                            </div>
-                            <button
-                              onClick={() => navigate('/doctors', { 
-                                state: { 
-                                  prefillSpecialist: msg.structured?.specialist, 
-                                  triageSummary: msg.structured?.content 
-                                } 
-                              })}
-                              className="text-[11px] font-bold text-primary hover:text-primary/80 flex items-center gap-1 shrink-0 transition-colors"
-                            >
-                              <span>Find Doctors</span>
-                              <ArrowRight className="w-3 h-3" />
-                            </button>
-                          </div>
-                        )}
-
-                        {/* ── CTA Action Buttons ── */}
-                        <div className="flex flex-wrap gap-2 pt-1">
-                          {msg.structured.emergency_sos && (
-                            <a
-                              href="tel:108"
-                              className="flex-1 bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-700 hover:to-red-700 text-white font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 text-xs shadow-lg shadow-rose-500/25 transition-all animate-pulse"
-                            >
-                              <PhoneCall className="w-4 h-4" />
-                              <span>Call 108 Emergency</span>
-                            </a>
+                      {/* Actions Footer: TTS + SOS + Doctor Direct Appointment */}
+                      <div className="pt-2 border-t border-border/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <button
+                          onClick={() => handleSpeak(msg.id, `${msg.structured?.content}. Care guidance: ${msg.structured?.recommendations?.join(', ')}`)}
+                          className="text-[11px] text-muted-foreground hover:text-primary flex items-center gap-1 transition-colors outline-none focus:outline-none"
+                        >
+                          {speakingMessageId === msg.id ? (
+                            <>
+                              <VolumeX className="w-3.5 h-3.5 text-rose-500 animate-pulse" />
+                              <span className="text-rose-500 font-semibold">Stop Voice</span>
+                            </>
+                          ) : (
+                            <>
+                              <Volume2 className="w-3.5 h-3.5" />
+                              <span>Listen to Assessment</span>
+                            </>
                           )}
+                        </button>
 
+                        <div className="flex items-center gap-2">
+                          {/* 108 Emergency Call */}
+                          <a
+                            href="tel:108"
+                            className="bg-rose-600 hover:bg-rose-700 text-white font-bold py-2 px-3 rounded-xl flex items-center gap-1.5 text-[11px] shadow-sm transition-all outline-none focus:outline-none"
+                          >
+                            <PhoneCall className="w-3.5 h-3.5" />
+                            <span>108 SOS</span>
+                          </a>
+
+                          {/* Pre-fill Doctor Booking */}
                           <button
                             onClick={() => navigate('/doctors', { 
                               state: { 
-                                prefillSpecialist: msg.structured?.specialist, 
+                                specialist: msg.structured?.specialist, 
                                 triageSummary: msg.structured?.content 
                               } 
                             })}
-                            className="flex-1 bg-gradient-to-r from-primary to-violet-600 hover:from-primary/90 hover:to-violet-600/90 text-white font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 text-xs shadow-lg shadow-primary/20 transition-all"
+                            className="bg-gradient-to-r from-primary to-violet-600 hover:from-primary/90 hover:to-violet-600/90 text-white font-bold py-2 px-3 rounded-xl flex items-center gap-1.5 text-[11px] shadow-md shadow-primary/20 transition-all outline-none focus:outline-none"
                           >
-                            <Stethoscope className="w-4 h-4" />
+                            <Stethoscope className="w-3.5 h-3.5" />
                             <span>{msg.structured.specialist || 'Consult Specialist'}</span>
                           </button>
                         </div>
@@ -661,7 +647,7 @@ const HealthChat: React.FC = () => {
             whileTap={{ scale: 0.97 }}
             onClick={() => handleSendMessage(topic.query)}
             disabled={loading}
-            className="text-[11px] bg-card hover:bg-muted border border-border px-3.5 py-2 rounded-xl font-semibold text-foreground whitespace-nowrap shrink-0 shadow-sm transition-all hover:border-primary/40 hover:shadow-md flex items-center gap-1.5"
+            className="text-[11px] bg-card hover:bg-muted border border-border px-3.5 py-2 rounded-xl font-semibold text-foreground whitespace-nowrap shrink-0 shadow-sm transition-all hover:border-primary/40 hover:shadow-md flex items-center gap-1.5 outline-none focus:outline-none"
           >
             <span>{topic.icon}</span>
             <span>{topic.label}</span>
@@ -674,17 +660,17 @@ const HealthChat: React.FC = () => {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.15 }}
-        className="relative flex items-center gap-2 bg-card border-2 border-border hover:border-primary/30 focus-within:border-primary/50 rounded-2xl p-2 shadow-xl shadow-black/5 transition-all"
+        className="relative flex items-center gap-2 bg-card border-2 border-border/80 hover:border-primary/40 focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/15 rounded-2xl p-2 shadow-xl shadow-black/5 transition-all duration-200"
       >
         {/* Voice Input */}
         <button
           type="button"
           onClick={toggleRecording}
           disabled={loading}
-          className={`p-3 rounded-xl transition-all shrink-0 ${
+          className={`p-3 rounded-xl transition-all shrink-0 outline-none focus:outline-none ${
             isRecording
               ? 'bg-gradient-to-br from-rose-500 to-red-500 text-white shadow-lg shadow-rose-500/30 animate-pulse'
-              : 'bg-muted/70 hover:bg-muted text-muted-foreground hover:text-foreground'
+              : 'bg-muted/70 hover:bg-muted text-muted-foreground hover:text-foreground active:scale-95'
           }`}
           title={isRecording ? 'Listening... Click to stop' : `Voice input in ${language.toUpperCase()}`}
         >
@@ -706,7 +692,7 @@ const HealthChat: React.FC = () => {
               ? 'लक्षण या स्वास्थ्य प्रश्न लिखें...'
               : 'Describe your symptoms or ask a health question...'
           }
-          className="flex-1 bg-transparent text-sm text-foreground focus:outline-none px-2 placeholder:text-muted-foreground/60"
+          className="chat-input-field flex-1 bg-transparent text-sm text-foreground outline-none border-none ring-0 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 shadow-none px-2 placeholder:text-muted-foreground/60"
           disabled={loading}
         />
 
@@ -715,7 +701,7 @@ const HealthChat: React.FC = () => {
           type="button"
           onClick={() => handleSendMessage()}
           disabled={!inputText.trim() || loading}
-          className="p-3 bg-gradient-to-br from-primary to-violet-600 hover:from-primary/90 hover:to-violet-600/90 disabled:opacity-40 disabled:from-muted disabled:to-muted text-white rounded-xl transition-all shrink-0 shadow-lg shadow-primary/25"
+          className="p-3 bg-gradient-to-br from-primary to-violet-600 hover:from-primary/90 hover:to-violet-600/90 disabled:opacity-40 disabled:from-muted disabled:to-muted text-white rounded-xl transition-all shrink-0 shadow-lg shadow-primary/25 outline-none focus:outline-none active:scale-95"
         >
           <Send className="w-4.5 h-4.5" />
         </button>

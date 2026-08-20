@@ -853,3 +853,45 @@ select option {
   background-color: #1e293b !important;
   color: #38bdf8 !important;
 }
+
+/* ============================================ */
+/* Continuous Live Shifting Gradient Animations */
+/* ============================================ */
+
+@keyframes live-gradient-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-live-gradient {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 25%, #d946ef 50%, #06b6d4 75%, #7c3aed 100%);
+  background-size: 300% 300%;
+  animation: live-gradient-flow 10s ease infinite;
+}
+
+.animate-live-gradient-glow {
+  background: linear-gradient(135deg, #7c3aed 0%, #3b82f6 25%, #06b6d4 50%, #10b981 75%, #8b5cf6 100%);
+  background-size: 350% 350%;
+  animation: live-gradient-flow 12s ease-in-out infinite;
+}
+
+/* Seamless Chat Input Box - Remove any square focus outline */
+.chat-input-field,
+.chat-input-field:focus,
+.chat-input-field:focus-visible,
+.chat-input-field:active {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  -webkit-appearance: none !important;
+  --tw-ring-offset-shadow: 0 0 #0000 !important;
+  --tw-ring-shadow: 0 0 #0000 !important;
+}
+
