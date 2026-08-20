@@ -1,0 +1,161 @@
+[
+  {
+    "id": "dengue",
+    "disease_name": "Dengue Fever (ଡେଙ୍ଗୁ ଜ୍ୱର / डेंगू बुखार)",
+    "category": "Vector-Borne",
+    "keywords": ["dengue", "dengu", "platelet", "mosquito", "breakbone", "ଡେଙ୍ଗୁ", "ପ୍ଲେଟଲେଟ୍", "डेंगू", "प्लेटलेट्स", "मच्छर"],
+    "overview_en": "Dengue is a viral infection transmitted by Aedes aegypti mosquitoes. Characterized by high fever, severe retro-orbital eye pain, joint/muscle aches (breakbone fever), and skin rash.",
+    "overview_hi": "डेंगू एडीज मच्छर के काटने से फैलने वाला वायरल संक्रमण है। इसमें तेज बुखार, आंखों के पीछे दर्द, जोड़ों में असहनीय दर्द और शरीर पर चकत्ते होते हैं।",
+    "overview_or": "ଡେଙ୍ଗୁ ଏଡିସ୍ ମଶା କାମୁଡ଼ିବା ଦ୍ୱାରା ବ୍ୟାପୁଥିବା ଏକ ଭୂତାଣୁ ଜନିତ ରୋଗ। ଏଥିରେ ପ୍ରବଳ ଜ୍ୱର, ଆଖି ପଛପଟେ ଯନ୍ତ୍ରଣା, ଗଣ୍ଠି ବିନ୍ଧା ଏବଂ ଚର୍ମରେ ଲାଲ ଦାଗ ହୁଏ।",
+    "safe_home_care_en": [
+      "Drink abundant fluids: Coconut water, ORS solution, pomegranate juice, and fresh lime water (minimum 3–4 litres daily).",
+      "Get complete bed rest and use mosquito repellent/nets to prevent spreading.",
+      "Take only Paracetamol for fever relief under medical advice. NEVER take Aspirin, Ibuprofen, or Brufen as they increase bleeding risk.",
+      "Papaya leaf extract syrup (under physician guidance) can provide supportive nutritional care."
+    ],
+    "safe_home_care_hi": [
+      "भरपूर तरल पदार्थ पिएं: नारियल पानी, ओआरएस घोल, अनार का रस और नींबू पानी (प्रतिदिन 3-4 लीटर)।",
+      "पूरा आराम करें और मच्छरदानी का उपयोग करें ताकि घर के अन्य लोगों को न फैले।",
+      "बुखार के लिए केवल पैरासिटामोल लें। एस्पिरिन या ब्रूफेन (Ibuprofen) भूलकर भी न लें क्योंकि इससे ब्लीडिंग का खतरा बढ़ता है।",
+      "पपीते के पत्ते का रस प्लेटलेट्स के लिए पारंपरिक सहायक उपाय माना जाता है।"
+    ],
+    "safe_home_care_or": [
+      "ପ୍ରଚୁର ତରଳ ପଦାର୍ଥ ପିଅନ୍ତୁ: ଡାବ ପାଣି, ORS ଘୋଳ, ଲେମ୍ବୁ ପାଣି ଏବଂ ତାଜା ଫଳ ରସ (ଦିନକୁ ୩-୪ ଲିଟର)।",
+      "ସମ୍ପୂର୍ଣ୍ଣ ବିଶ୍ରାମ ନିଅନ୍ତୁ ଏବଂ ମଶାରୀ ବ୍ୟବହାର କରନ୍ତୁ।",
+      "ଜ୍ୱର ପାଇଁ କେବଳ ପାରାସିଟାମୋଲ୍ ବ୍ୟବହାର କରନ୍ତୁ। ଆସ୍ପିରିନ୍ କିମ୍ବା ଆଇବୁପ୍ରୋଫେନ୍ (Ibuprofen) ଆଦୌ ଖାଆନ୍ତୁ ନାହିଁ।",
+      "ଅମୃତଭଣ୍ଡା ପତ୍ର ରସ ପ୍ଲେଟଲେଟ୍ ପାଇଁ ସହାୟକ ହୋଇଥାଏ।"
+    ],
+    "red_flags_en": [
+      "Platelet count drops below 50,000 / microLitre.",
+      "Bleeding from gums, nose, black stools, or persistent vomiting.",
+      "Severe persistent abdominal pain or extreme lethargy."
+    ],
+    "red_flags_hi": [
+      "प्लेटलेट काउंट 50,000 से नीचे गिरना।",
+      "मसूड़ों, नाक से खून आना, उल्टी में खून या काला मल होना।",
+      "पेट में तेज दर्द या बहुत ज्यादा कमजोरी व चक्कर आना।"
+    ],
+    "red_flags_or": [
+      "ପ୍ଲେଟଲେଟ୍ ସଂଖ୍ୟା ୫୦,୦୦୦ ରୁ କମ୍ ହେବା।",
+      "ମାଢ଼ି, ନାକରୁ ରକ୍ତ ପଡ଼ିବା କିମ୍ବା କଳା ଝାଡ଼ା ହେବା।",
+      "ପେଟରେ ଅସହ୍ୟ ଯନ୍ତ୍ରଣା କିମ୍ବା ବାରମ୍ବାର ବାନ୍ତି ହେବା।"
+    ],
+    "recommended_specialist": "General Physician / Internal Medicine",
+    "emergency_sos": false
+  },
+  {
+    "id": "malaria",
+    "disease_name": "Malaria (ମ୍ୟାଲେରିଆ / मलेरिया)",
+    "category": "Vector-Borne",
+    "keywords": ["malaria", "shivering", "chills", "falciparum", "vivax", "ମ୍ୟାଲେରିଆ", "କମ୍ପ ଜ୍ୱର", "मलेरिया", "कंपकंपी"],
+    "overview_en": "Malaria is a life-threatening blood parasite infection transmitted by female Anopheles mosquitoes (common species: Plasmodium vivax and Plasmodium falciparum in Eastern/Central India).",
+    "overview_hi": "मलेरिया मादा एनोफिलीज मच्छर के काटने से होने वाला परजीवी संक्रमण है। इसमें कंपकंपी के साथ तेज बुखार आता है जो कुछ घंटों बाद पसीने के साथ उतरता है।",
+    "overview_or": "ମ୍ୟାଲେରିଆ ମାଇ ଅନୋଫିଲିସ୍ ମଶା କାମୁଡ଼ିବା ଦ୍ୱାରା ହେଉଥିବା ପରଜୀବୀ ଜନିତ ରୋଗ। ଏଥିରେ ପ୍ରବଳ କମ୍ପ ଦେଇ ଜ୍ୱର ଆସେ ଏବଂ ଝାଳ ଦେଇ ଛାଡ଼ିଥାଏ।",
+    "safe_home_care_en": [
+      "Get a rapid diagnostic test (RDT) or blood smear test immediately at the nearest PHC/lab.",
+      "Drink warm fluids, boiled water, and light easily digestible foods (khichdi, dalia).",
+      "Keep body cool with wet cloth sponging on forehead during high fever spikes."
+    ],
+    "safe_home_care_hi": [
+      "तुरंत नजदीकी प्राथमिक स्वास्थ्य केंद्र (PHC) या लैब में रक्त की जांच (RDT/Malaria Slide) कराएं।",
+      "उबला हुआ गुनगुना पानी, दलिया, मूंग दाल की खिचड़ी जैसे सुपाच्य भोजन लें।",
+      "तेज बुखार के समय माथे पर ठंडे पानी की पट्टी रखें।"
+    ],
+    "safe_home_care_or": [
+      "ତୁରନ୍ତ ନିକଟସ୍ଥ ସରକାରୀ ଡାକ୍ତରଖାନା (PHC) କିମ୍ବା ଲାବ୍‌ରେ ରକ୍ତ ପରୀକ୍ଷା (RDT) କରାନ୍ତୁ।",
+      "ଫୁଟା ଉଷୁମ ପାଣି, ଡାଳିଆ, ମୁଗ ଖେଚୁଡ଼ି ଭଳି ହାଲୁକା ଖାଦ୍ୟ ଖାଆନ୍ତୁ।",
+      "ପ୍ରବଳ ଜ୍ୱର ବେଳେ ମଥାରେ ପାଣି ପଟି ଦିଅନ୍ତୁ।"
+    ],
+    "red_flags_en": [
+      "Cerebral malaria signs: Confusion, delirium, seizures, or loss of consciousness.",
+      "Yellowing of eyes/skin (Jaundice) or severe breathing difficulty."
+    ],
+    "red_flags_hi": [
+      "मस्तिष्क मलेरिया के लक्षण: बेहोशी, अत्यधिक भ्रम या दौरे पड़ना।",
+      "आंखों में पीलापन (पीलिया) या पेशाब का रंग बहुत गहरा होना।"
+    ],
+    "red_flags_or": [
+      "ମୁଣ୍ଡକୁ ଜ୍ୱର ଚଢ଼ିବା, ଚେତା ହରାଇବା କିମ୍ବା ଅସଂଲଗ୍ନ କଥା କହିବା (Cerebral Malaria)।",
+      "ଆଖି ହଳଦିଆ ପଡ଼ିବା କିମ୍ବା ଶ୍ୱାସକ୍ରିୟାରେ କଷ୍ଟ ହେବା।"
+    ],
+    "recommended_specialist": "General Physician / Infectious Disease Specialist",
+    "emergency_sos": false
+  },
+  {
+    "id": "typhoid",
+    "disease_name": "Typhoid Fever (ଟାଇଫଏଡ୍ / टाइफाइड - मोतीझरा)",
+    "category": "Water-Borne",
+    "keywords": ["typhoid", "enteric", "widal", "contaminated water", "ଟାଇଫଏଡ୍", "ମିଆଦି ଜ୍ୱର", "टाइफाइड", "मोतीझरा"],
+    "overview_en": "Typhoid is a bacterial infection caused by Salmonella typhi, spreading through contaminated water and street food. Characterized by step-ladder rising fever, stomach pain, headache, and weakness.",
+    "overview_hi": "टाइफाइड साल्मोनेला टाइफी बैक्टीरिया से होने वाला संक्रामक बुखार है, जो दूषित पानी और खुले खाने से फैलता है। इसमें लगातार तेज बुखार, पेट दर्द और कमजोरी रहती है।",
+    "overview_or": "ଟାଇଫଏଡ୍ ଦୂଷିତ ପାଣି ଏବଂ ଖାଦ୍ୟ ମାଧ୍ୟମରେ ସାଲମୋନେଲା ବ୍ୟାକ୍ଟେରିଆ ଦ୍ୱାରା ବ୍ୟାପୁଥିବା ଏକ ମିଆଦି ଜ୍ୱର। ଏଥିରେ କ୍ରମାଗତ ତେଜ୍ ଜ୍ୱର, ପେଟ ଯନ୍ତ୍ରଣା ଏବଂ ଦୁର୍ବଳତା ଦେଖାଦିଏ।",
+    "safe_home_care_en": [
+      "Drink ONLY 100% boiled or purified water. Avoid street food, raw salads, and unpeeled fruits.",
+      "Consume soft, high-calorie, low-fiber foods: Boiled potatoes, curd rice, khichdi, porridge, bananas.",
+      "Complete the entire course of prescribed antibiotics even if fever subsides to prevent relapse."
+    ],
+    "safe_home_care_hi": [
+      "केवल उबला हुआ या फिल्टर पानी पिएं। बाहर का खाना, कटे फल और कच्चा सलाद बिल्कुल न खाएं।",
+      "नरम और हल्का खाना खाएं: दही-चावल, मूंग दाल की खिचड़ी, उबले आलू, दलिया और केला।",
+      "डॉक्टर द्वारा दी गई एंटीबायोटिक की दवा का पूरा कोर्स करें, बीच में न छोड़ें।"
+    ],
+    "safe_home_care_or": [
+      "କେବଳ ଫୁଟା ଛଣା ପାଣି ପିଅନ୍ତୁ। ବାହାର ଖୋଲା ଖାଦ୍ୟ ଓ କଟା ଫଳ ଖାଆନ୍ତୁ ନାହିଁ।",
+      "ହାଲୁକା ଏବଂ ନରମ ଖାଦ୍ୟ ଖାଆନ୍ତୁ: ଦହି ଭାତ, ମୁଗ ଖେଚୁଡ଼ି, ସିଝା ଆଳୁ, କଦଳୀ।",
+      "ଡାକ୍ତର ଦେଇଥିବା ଔଷଧର ସମ୍ପୂର୍ଣ୍ଣ କୋର୍ସ ଶେଷ କରନ୍ତୁ।"
+    ],
+    "red_flags_en": [
+      "Severe intestinal bleeding or sudden excruciating abdominal pain (possible perforation).",
+      "Persistent high fever exceeding 7 days without response."
+    ],
+    "red_flags_hi": [
+      "पेट में असहनीय दर्द या मल में खून आना।",
+      "7 दिनों से ज्यादा समय तक तेज बुखार न उतरना।"
+    ],
+    "red_flags_or": [
+      "ପେଟରେ ଅସହ୍ୟ ଯନ୍ତ୍ରଣା କିମ୍ବା ଝାଡ଼ାରେ ରକ୍ତ ପଡ଼ିବା।",
+      "୭ ଦିନରୁ ଅଧିକ ସମୟ ଧରି ଜ୍ୱର ନ କମିବା।"
+    ],
+    "recommended_specialist": "Gastroenterologist / General Physician",
+    "emergency_sos": false
+  },
+  {
+    "id": "heatstroke",
+    "disease_name": "Heatstroke & Heat Exhaustion (ଅଂଶୁଘାତ / लू और हीटस्ट्रोक)",
+    "category": "Environmental",
+    "keywords": ["heatstroke", "sunstroke", "loo", "heat wave", "ଅଂଶୁଘାତ", "ଖରା", "लू", "हीट स्ट्रोक"],
+    "overview_en": "A severe medical emergency caused by prolonged exposure to high ambient temperatures (common during Indian summer heatwaves: April–June). Core body temperature rises above 40°C (104°F).",
+    "overview_hi": "गर्मियों में तेज धूप और लू के संपर्क में आने से शरीर का तापमान 104°F से ऊपर चला जाता है। यह एक आपातकालीन स्थिति है।",
+    "overview_or": "ଗ୍ରୀଷ୍ମ ଋତୁରେ ପ୍ରବଳ ଖରା ଓ ତାତି ଯୋଗୁଁ ଶରୀରର ତାପମାତ୍ରା ଅତ୍ୟଧିକ ବୃଦ୍ଧି ପାଇବା (୧୦୪°F ରୁ ଅଧିକ)। ଏହା ଏକ ଜରୁରୀକାଳୀନ ସ୍ୱାସ୍ଥ୍ୟ ସମସ୍ୟା।",
+    "safe_home_care_en": [
+      "Immediately move patient to a cool, shaded, or air-conditioned room.",
+      "Apply ice packs or cold wet towels to armpits, groin, neck, and back.",
+      "If conscious, sip cool water, electrolyte solution, raw mango drink (Aam Panna), or Torani pani (Odia fermented rice water).",
+      "Fan aggressively while misting body with cool water."
+    ],
+    "safe_home_care_hi": [
+      "रोगी को तुरंत ठंडी, छायादार जगह पर ले जाएं और कपड़े ढीले करें।",
+      "गर्दन, बगल (armpits) और माथे पर ठंडे पानी की पट्टियां या बर्फ लगाएं।",
+      "होश में होने पर ओआरएस, आम पन्ना, नींबू पानी या छाछ पिलाएं।"
+    ],
+    "safe_home_care_or": [
+      "ରୋଗୀଙ୍କୁ ତୁରନ୍ତ ଛାଇ ବା ଥଣ୍ଡା ସ୍ଥାନକୁ ଆଣି ପଙ୍ଖା ତଳେ ଶୁଆଇ ଦିଅନ୍ତୁ।",
+      "ମୁଣ୍ଡ, ବେକ ଏବଂ କାଖରେ ଥଣ୍ଡା ପାଣି ପଟି ପକାନ୍ତୁ।",
+      "ଚେତା ଥିଲେ ତୋରାଣି ପାଣି, ଆମ୍ବ ପଣା, ଡାବ ପାଣି କିମ୍ବା ORS ପିଇବାକୁ ଦିଅନ୍ତୁ।"
+    ],
+    "red_flags_en": [
+      "Loss of consciousness, delirium, seizures, or hot DRY skin (no sweating).",
+      "Rapid bounding pulse and difficulty breathing."
+    ],
+    "red_flags_hi": [
+      "बेहोशी, अत्यधिक भ्रम, पसीना आना बंद हो जाना और त्वचा का सूखा व लाल होना।",
+      "दौरे पड़ना या सांस लेने में भारी तकलीफ।"
+    ],
+    "red_flags_or": [
+      "ଚେତା ହରାଇବା, ଝାଳ ବାହାରିବା ସମ୍ପୂର୍ଣ୍ଣ ବନ୍ଦ ହୋଇ ଶରୀର ନାଲି ଓ ତତଲା ପଡ଼ିବା।",
+      "ବାତ ମାରିବା କିମ୍ବା ନିଃଶ୍ୱାସ ନେବାରେ କଷ୍ଟ ହେବା।"
+    ],
+    "recommended_specialist": "Emergency Medicine / Critical Care",
+    "emergency_sos": true
+  }
+]

@@ -1,0 +1,119 @@
+[
+  {
+    "id": "diabetes_management",
+    "disease_name": "Type 2 Diabetes Diet & Care (ମଧୁମେହ / मधुमेह - शुगर)",
+    "category": "Chronic Metabolic",
+    "keywords": ["diabetes", "sugar", "glucose", "hba1c", "insulin", "ମଧୁମେହ", "ଡାଇବେଟିସ୍", "मधुमेह", "शुगर"],
+    "overview_en": "Type 2 Diabetes is a chronic metabolic condition where the body cannot effectively utilize insulin. Highly prevalent in Indian urban and rural populations due to genetic predisposition and carbohydrate-heavy diets.",
+    "overview_hi": "टाइप 2 डायबिटीज एक चयापचय रोग है जिसमें शरीर में इंसुलिन का सही उपयोग नहीं हो पाता। भारतीय खानपान में अत्यधिक कार्बोहाइड्रेट के कारण यह तेजी से बढ़ रहा है।",
+    "overview_or": "ମଧୁମେହ (ଡାଇବେଟିସ୍) ଏକ ଦୀର୍ଘସ୍ଥାୟୀ ରୋଗ ଯେଉଁଥିରେ ଶରୀରରେ ଇନସୁଲିନ୍ ଠିକ୍ ଭାବେ କାମ କରିପାରେ ନାହିଁ ଏବଂ ରକ୍ତରେ ଶର୍କରା ମାତ୍ରା ବୃଦ୍ଧି ପାଏ।",
+    "safe_home_care_en": [
+      "Switch to Indian complex grains: Millets (Ragi, Jowar, Bajra), oats, and brown rice instead of polished white rice and maida.",
+      "Include natural glycemic regulators: Bitter gourd (Karela juice), Fenugreek (Methi dana soaked overnight), and Jamun seed powder.",
+      "Engage in 30–45 minutes of brisk walking daily, especially 15 minutes after major meals.",
+      "Check fasting and post-prandial blood sugar weekly; track HbA1c every 3 months."
+    ],
+    "safe_home_care_hi": [
+      "सफेद चावल और मैदे की जगह मोटे अनाज (रागी, ज्वार, बाजरा, जौ) और छिलके वाली दालें खाएं।",
+      "घरेलू उपाय: रात को मेथी दाना भिगोकर सुबह पानी पिएं, करेले का रस और जामुन की गुठली का पाउडर लें।",
+      "रोजाना 30-40 मिनट तेज चाल से टहलें, विशेषकर रात के खाने के 15 मिनट बाद।",
+      "हर 3 महीने में HbA1c टेस्ट और नियमित रूप से फास्टिंग शुगर चेक करें।"
+    ],
+    "safe_home_care_or": [
+      "ଅରୁଆ ଭାତ ଏବଂ ମଇଦା ବଦଳରେ ମାଣ୍ଡିଆ, ଯଅ, ବାଜରା ଏବଂ କୋଳଥ ଡାଲି ଖାଆନ୍ତୁ।",
+      "ଘରୋଇ ଉପଚାର: ରାତିରେ ମେଥି ଭିଜାଇ ସକାଳେ ସେହି ପାଣି ପିଅନ୍ତୁ, କଲରା ରସ ଓ ଜାମୁକୋଳି ମଞ୍ଜି ଗୁଣ୍ଡ ବ୍ୟବହାର କରନ୍ତୁ।",
+      "ପ୍ରତିଦିନ ୩୦-୪୦ ମିନିଟ୍ ଚାଲନ୍ତୁ ଏବଂ ନିୟମିତ ବ୍ୟାୟାମ କରନ୍ତୁ।",
+      "ପ୍ରତି ୩ ମାସରେ HbA1c ପରୀକ୍ଷା କରାନ୍ତୁ।"
+    ],
+    "red_flags_en": [
+      "Fasting sugar > 250 mg/dL or random > 350 mg/dL with ketones (Diabetic Ketoacidosis).",
+      "Non-healing foot ulcers, numbness/tingling in toes (Diabetic Neuropathy), or sudden blurry vision."
+    ],
+    "red_flags_hi": [
+      "शुगर 300 से ऊपर जाना, सांस में फलों जैसी गंध आना या अत्यधिक प्यास व पेशाब लगना।",
+      "पैरों में घाव जो ठीक न हो रहा हो, तलवों में जलन/सुन्नपन या आंखों में धुंधलापन।"
+    ],
+    "red_flags_or": [
+      "ରକ୍ତରେ ଶର୍କରା ୩୦୦ ରୁ ଉର୍ଦ୍ଧ୍ୱ ହେବା କିମ୍ବା ଶ୍ୱାସକ୍ରିୟାରେ ଅସୁବିଧା ହେବା।",
+      "ପାଦରେ ଘାଆ ହୋଇ ନ ଶୁଖିବା, ଗୋଡ଼ ଝିମ୍ ଝିମ୍ ହେବା କିମ୍ବା ଦୃଷ୍ଟିଶକ୍ତି କମିବା।"
+    ],
+    "recommended_specialist": "Diabetologist / Endocrinologist",
+    "emergency_sos": false
+  },
+  {
+    "id": "hypertension",
+    "disease_name": "High Blood Pressure / Hypertension (ଉଚ୍ଚ ରକ୍ତଚାପ / उच्च रक्तचाप - बीपी)",
+    "category": "Cardiovascular",
+    "keywords": ["hypertension", "bp", "blood pressure", "headache", "ଉଚ୍ଚ ରକ୍ତଚାପ", "ବିପି", "उच्च रक्तचाप", "बीपी"],
+    "overview_en": "Hypertension is a chronic elevation of systemic arterial blood pressure (Systolic ≥ 140 mmHg or Diastolic ≥ 90 mmHg). Known as the 'silent killer' because it often presents with no overt early symptoms.",
+    "overview_hi": "हाई ब्लड प्रेशर (हाइपरटेंशन) में धमनियों में रक्त का दबाव 140/90 mmHg से अधिक हो जाता है। इसे 'साइलेंट किलर' कहा जाता है क्योंकि शुरुआती दौर में इसके लक्षण नहीं दिखते।",
+    "overview_or": "ଉଚ୍ଚ ରକ୍ତଚାପ (ହାଇ ବିପି) ଏକ ଗମ୍ଭୀର ହୃଦରୋଗ ସମସ୍ୟା ଯେଉଁଥିରେ ରକ୍ତଚାପ ୧୪୦/୯୦ mmHg ରୁ ଅଧିକ ରହିଥାଏ। ଏହାକୁ 'ନୀରବ ଘାତକ' ବୋଲି ମଧ୍ୟ କୁହାଯାଏ।",
+    "safe_home_care_en": [
+      "Strictly limit dietary sodium: Avoid processed snacks, papads, pickles (achar), and salted chutneys.",
+      "Follow Indian DASH diet: High potassium foods like bananas, tender coconut water, spinach, and garlic cloves in morning.",
+      "Practice 15 minutes of daily Anulom-Vilom and deep breathing exercises to activate the parasympathetic system.",
+      "Never abruptly stop taking prescribed antihypertensive tablets."
+    ],
+    "safe_home_care_hi": [
+      "नमक का सेवन कम करें: पापड़, अचार, नमकीन और पैकेज्ड फूड्स बिल्कुल बंद करें।",
+      "खानपान में पोटैशियम बढ़ाएं: केला, नारियल पानी, हरी पत्तेदार सब्जियां और सुबह खाली पेट 1-2 कली लहसुन।",
+      "प्रतिदिन 15 मिनट अनुलोम-विलोम और भ्रामरी प्राणायाम करें।",
+      "डॉक्टर द्वारा दी गई बीपी की दवा बिना पूछे कभी बंद न करें।"
+    ],
+    "safe_home_care_or": [
+      "ଲୁଣ ଖାଇବା କମାନ୍ତୁ: ପାମ୍ପଡ଼, ଆଚାର, ମିକ୍ସଚର ଏବଂ ଲୁଣିଆ ଖାଦ୍ୟ ଖାଆନ୍ତୁ ନାହିଁ।",
+      "ପୋଟାସିୟମ୍ ଯୁକ୍ତ ଖାଦ୍ୟ ଖାଆନ୍ତୁ: କଦଳୀ, ଡାବ ପାଣି, ଶାଗ ଏବଂ ସକାଳେ ରସୁଣ କୋଲା।",
+      "ପ୍ରତିଦିନ ପ୍ରାଣାୟାମ ଓ ଯୋଗ କରନ୍ତୁ।",
+      "ଡାକ୍ତର ଦେଇଥିବା ବିପି ଔଷଧ ନିଜ ଇଚ୍ଛାରେ କେବେ ବନ୍ଦ କରନ୍ତୁ ନାହିଁ।"
+    ],
+    "red_flags_en": [
+      "Hypertensive Crisis: BP > 180/120 mmHg with severe headache, nosebleed, chest tightness, or blurred vision."
+    ],
+    "red_flags_hi": [
+      "बीपी 180/120 से ऊपर पहुंचना, सिर के पिछले हिस्से में तेज दर्द, नाक से खून आना या सीने में भारीपन।"
+    ],
+    "red_flags_or": [
+      "ବିପି ୧୮୦/୧୨୦ ରୁ ଅଧିକ ହେବା, ପ୍ରବଳ ମୁଣ୍ଡ ବିନ୍ଧା, ନାକରୁ ରକ୍ତ ପଡ଼ିବା କିମ୍ବା ଛାତି ଜଳାପୋଡ଼ା।"
+    ],
+    "recommended_specialist": "Cardiologist / General Physician",
+    "emergency_sos": false
+  },
+  {
+    "id": "anemia",
+    "disease_name": "Anemia & Iron Deficiency (ରକ୍ତହୀନତା / एनीमिया - खून की कमी)",
+    "category": "Hematology",
+    "keywords": ["anemia", "hemoglobin", "fatigue", "iron", "paleness", "ରକ୍ତହୀନତା", "ହିମୋଗ୍ଲୋବିନ୍", "एनीमिया", "खून की कमी"],
+    "overview_en": "Anemia is a deficiency in healthy red blood cells or hemoglobin concentration (Hb < 12 g/dL in women, < 13 g/dL in men). Highly prevalent among Indian adolescent girls, pregnant women, and young children.",
+    "overview_hi": "एनीमिया शरीर में हीमोग्लोबिन या लाल रक्त कोशिकाओं की कमी को कहते हैं। यह भारत में महिलाओं और बच्चों में सबसे आम स्वास्थ्य समस्याओं में से एक है।",
+    "overview_or": "ରକ୍ତହୀନତା (ଏନିମିଆ) ଶରୀରରେ ହିମୋଗ୍ଲୋବିନ୍ ବା ଲୋହିତ ରକ୍ତକଣିକାର ଅଭାବ ଯୋଗୁଁ ହୁଏ। ଏହାଦ୍ୱାରା ଦୁର୍ବଳତା, ଶୀଘ୍ର ଥକିଯିବା ଏବଂ ମୁଣ୍ଡ ବୁଲାଇବା ଦେଖାଦିଏ।",
+    "safe_home_care_en": [
+      "Consume regional iron-rich foods: Drumstick leaves (Sajana saga), spinach (Palak), beetroot, jaggery (Gud), black chana (chickpeas), and raisins.",
+      "Pair iron foods with Vitamin C (lemon juice, amla/Indian gooseberry, oranges) to dramatically boost iron absorption.",
+      "Avoid drinking tea or coffee immediately after meals as tannins block iron absorption.",
+      "Under national Anemia Mukt Bharat guidelines, take weekly IFA (Iron & Folic Acid) supplements if prescribed."
+    ],
+    "safe_home_care_hi": [
+      "आयरन युक्त भारतीय आहार: गुड़, चना, पालक, मेथी, चुकंदर, अनार, खजूर और सहजन (सहजन की पत्तियां)।",
+      "आयरन के साथ विटामिन-सी (आंवला, नींबू, संतरा) लें, इससे शरीर में आयरन का अवशोषण बढ़ता है।",
+      "खाने के तुरंत बाद चाय या कॉफी न पिएं, क्योंकि यह आयरन के अवशोषण को रोकती है।",
+      "डॉक्टर की सलाह से आयरन-फोलिक एसिड की गोलियां लें।"
+    ],
+    "safe_home_care_or": [
+      "ଲୌହଯୁକ୍ତ ଖାଦ୍ୟ ଖାଆନ୍ତୁ: ସଜନା ଶାଗ, ପାଳଙ୍ଗ ଶାଗ, ବିଟ୍, ଗୁଡ଼, ଚଣା ଏବଂ ଖଜୁରୀ।",
+      "ଅଁଳା ଏବଂ ଲେମ୍ବୁ ରସ ନିୟମିତ ବ୍ୟବହାର କରନ୍ତୁ, ଯାହା ଶରୀରରେ ଆଇରନ୍ ଶୋଷଣରେ ସାହାଯ୍ୟ କରେ।",
+      "ଖାଇବା ପରେ ପରେ ଚାହା କିମ୍ବା କଫି ପିଅନ୍ତୁ ନାହିଁ।",
+      "ଆୟରନ୍ ବଟିକା (IFA) ଡାକ୍ତରଙ୍କ ପରାମର୍ଶ କ୍ରମେ ସେବନ କରନ୍ତୁ।"
+    ],
+    "red_flags_en": [
+      "Severe breathlessness on minimal exertion, rapid racing heartbeat (palpitations), fainting/syncope, or extreme pallor."
+    ],
+    "red_flags_hi": [
+      "थोड़ा सा चलने पर सांस फूलना, दिल की धड़कन बहुत तेज होना, चक्कर खाकर गिरना या अत्यधिक पीलापन।"
+    ],
+    "red_flags_or": [
+      "ଅଳ୍ପ ପରିଶ୍ରମରେ ଶ୍ୱାସ ଫୁଲିବା, ଛାତି ଧଡ଼ଧଡ଼ ହେବା କିମ୍ବା ମୁଣ୍ଡ ବୁଲାଇ ଚେତା ହରାଇବା।"
+    ],
+    "recommended_specialist": "Hematologist / General Physician",
+    "emergency_sos": false
+  }
+]

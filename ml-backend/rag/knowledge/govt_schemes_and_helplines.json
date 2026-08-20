@@ -1,0 +1,88 @@
+[
+  {
+    "id": "ayushman_bharat",
+    "disease_name": "Ayushman Bharat PM-JAY Scheme (ଆୟୁଷ୍ମାନ ଭାରତ ଯୋଜନା / आयुष्मान भारत योजना)",
+    "category": "Government Healthcare Scheme",
+    "keywords": ["ayushman", "pmjay", "cashless hospital", "health card", "ଆୟୁଷ୍ମାନ", "ଗୋପବନ୍ଧୁ", "आयुष्मान", "कार्ड"],
+    "overview_en": "Ayushman Bharat Pradhan Mantri Jan Arogya Yojana (PM-JAY) provides free, cashless health coverage up to ₹5 Lakhs per family per year for secondary and tertiary hospitalization across empanelled public and private hospitals in India.",
+    "overview_hi": "आयुष्मान भारत योजना (PM-JAY) के तहत पात्र परिवारों को सरकारी और सूचीबद्ध निजी अस्पतालों में प्रतिवर्ष ₹5 लाख तक का कैशलेस इलाज मिलता है।",
+    "overview_or": "ଆୟୁଷ୍ମାନ ଭାରତ ପ୍ରଧାନମନ୍ତ୍ରୀ ଜନ ଆରୋଗ୍ୟ ଯୋଜନାରେ ଯୋଗ୍ୟ ପରିବାରମାନଙ୍କୁ ପ୍ରତିବର୍ଷ ₹୫ ଲକ୍ଷ ପର୍ଯ୍ୟନ୍ତ ମାଗଣା ଚିକିତ୍ସା ସୁବିଧା ମିଳିଥାଏ।",
+    "safe_home_care_en": [
+      "Check your family's eligibility at nearest Common Service Centre (CSC), Ayushman Mitra at hospital, or visit 'beneficiary.nha.gov.in'.",
+      "Carry Aadhaar Card and Ration Card to the hospital Ayushman Helpdesk for instant paperless e-card generation."
+    ],
+    "safe_home_care_hi": [
+      "अपनी पात्रता चेक करने के लिए नजदीकी जन सेवा केंद्र (CSC) जाएं या अस्पताल में आयुष्मान मित्र से मिलें।",
+      "इलाज के समय आधार कार्ड और राशन कार्ड साथ ले जाएं।"
+    ],
+    "safe_home_care_or": [
+      "ନିଜର ନାମ ଯାଞ୍ଚ କରିବା ପାଇଁ ନିକଟସ୍ଥ ଜନସେବା କେନ୍ଦ୍ର (CSC) କିମ୍ବା ଡାକ୍ତରଖାନାରେ ଥିବା ଆୟୁଷ୍ମାନ ମିତ୍ରଙ୍କ ସହ ଯୋଗାଯୋଗ କରନ୍ତୁ।",
+      "ଡାକ୍ତରଖାନା ଯିବା ସମୟରେ ଆଧାର କାର୍ଡ ଓ ରାସନ କାର୍ଡ ସାଙ୍ଗରେ ନିଅନ୍ତୁ।"
+    ],
+    "red_flags_en": ["Toll-free National Helpline: 14555 for card issues or complaints."],
+    "red_flags_hi": ["हेल्पलाइन: 14555 पर कॉल करें।"],
+    "red_flags_or": ["ଟୋଲ୍-ଫ୍ରି ହେଲ୍ପଲାଇନ୍: ୧୪୫୫୫।"],
+    "recommended_specialist": "Hospital Helpdesk / Ayushman Mitra",
+    "emergency_sos": false
+  },
+  {
+    "id": "odisha_bsky",
+    "disease_name": "Odisha BSKY / Gopabandhu Jan Arogya Yojana (ବିଜୁ ସ୍ୱାସ୍ଥ୍ୟ କଲ୍ୟାଣ ଯୋଜନା - BSKY)",
+    "category": "Odisha State Healthcare",
+    "keywords": ["bsky", "odisha scheme", "biju swasthya", "gopabandhu", "ବିଏସକେୱାଇ", "ବିଜୁ ସ୍ୱାସ୍ଥ୍ୟ", "ଓଡ଼ିଶା"],
+    "overview_en": "Odisha's flagship health assurance initiative providing cashless secondary and tertiary clinical treatment up to ₹5 Lakhs per family (and ₹10 Lakhs for women members) across empanelled hospitals in Odisha and major metros across India.",
+    "overview_hi": "ओडिशा सरकार की स्वास्थ्य योजना जिसके तहत ओडिशा और देश के प्रमुख अस्पतालों में ₹5 लाख (महिलाओं के लिए ₹10 लाख) तक का कैशलेस इलाज मिलता है।",
+    "overview_or": "ଓଡ଼ିଶା ସରକାରଙ୍କ ବିଜୁ ସ୍ୱାସ୍ଥ୍ୟ କଲ୍ୟାଣ ଯୋଜନା (BSKY) ରାଜ୍ୟର ସମସ୍ତ ପରିବାରକୁ ବାର୍ଷିକ ₹୫ ଲକ୍ଷ ଏବଂ ମହିଳାମାନଙ୍କ ପାଇଁ ₹୧୦ ଲକ୍ଷ ପର୍ଯ୍ୟନ୍ତ ସମ୍ପୂର୍ଣ୍ଣ କ୍ୟାସଲେସ୍ ଚିକିତ୍ସା ଯୋଗାଇଦିଏ।",
+    "safe_home_care_en": [
+      "Present your BSKY Card / National Food Security Card (NFSA) at any BSKY-empanelled hospital Swasthya Mitra desk.",
+      "All diagnostics, surgical procedures, ICU, and bed charges are 100% cashless."
+    ],
+    "safe_home_care_hi": [
+      "अस्पताल के स्वास्थ्य मित्र काउंटर पर BSKY कार्ड या राशन कार्ड दिखाएं।",
+      "इलाज, दवा और आईसीयू का पूरा खर्च योजना के तहत मुफ्त होता है।"
+    ],
+    "safe_home_care_or": [
+      "ତାଲିକାଭୁକ୍ତ ଡାକ୍ତରଖାନାରେ ସ୍ୱାସ୍ଥ୍ୟ ମିତ୍ରଙ୍କୁ BSKY କାର୍ଡ କିମ୍ବା ରାସନ କାର୍ଡ ଦେଖାନ୍ତୁ।",
+      "ଔଷଧ, ଅସ୍ତ୍ରୋପଚାର, ଆଇସିୟୁ ସବୁ କିଛି ସମ୍ପୂର୍ଣ୍ଣ ମାଗଣା।"
+    ],
+    "red_flags_en": ["Odisha BSKY Helpline: 104 (24x7 Support)."],
+    "red_flags_hi": ["ओडिशा स्वास्थ्य हेल्पलाइन: 104 पर कॉल करें।"],
+    "red_flags_or": ["ଓଡ଼ିଶା ସ୍ୱାସ୍ଥ୍ୟ ହେଲ୍ପଲାଇନ୍: ୧୦୪।"],
+    "recommended_specialist": "Hospital Swasthya Mitra / Helpdesk",
+    "emergency_sos": false
+  },
+  {
+    "id": "emergency_helplines_india",
+    "disease_name": "Indian National Health Emergency Helplines (ଜରୁରୀକାଳୀନ ସ୍ୱାସ୍ଥ୍ୟ ସହାୟତା ନମ୍ବର / आपातकालीन स्वास्थ्य हेल्पलाइन)",
+    "category": "National Helplines",
+    "keywords": ["helpline", "ambulance", "108", "112", "104", "mental health", "ହେଲ୍ପଲାଇନ୍", "ଆମ୍ବୁଲାନ୍ସ", "हेल्पलाइन", "एम्बुलेंस"],
+    "overview_en": "Standard national emergency communication numbers across all states of India for medical, ambulance, teleconsultation, and mental health support.",
+    "overview_hi": "भारत के सभी राज्यों में आपातकालीन चिकित्सा, एम्बुलेंस और मानसिक स्वास्थ्य सहायता के लिए महत्वपूर्ण हेल्पलाइन नंबर।",
+    "overview_or": "ଭାରତ ସରକାର ଏବଂ ରାଜ୍ୟ ସରକାରଙ୍କ ଦ୍ୱାରା ପରିଚାଳିତ ଜରୁରୀକାଳୀନ ଆମ୍ବୁଲାନ୍ସ ଏବଂ ସ୍ୱାସ୍ଥ୍ୟ ପରାମର୍ଶ ନମ୍ବର।",
+    "safe_home_care_en": [
+      "🚑 108: Emergency Ambulance Service (Accidents, Cardiac, Trauma, Maternal Deliveries).",
+      "🚨 112: All-in-One National Unified Emergency Response.",
+      "📞 104: 24x7 Medical Teleconsultation & State Health Information.",
+      "🧠 14416 / 1800-891-4416: Tele-MANAS (Free National Mental Health & Stress Counseling Helpline).",
+      "🩺 1800-11-6666: Nikshay TB National Helpline."
+    ],
+    "safe_home_care_hi": [
+      "🚑 108: फ्री एम्बुलेंस सेवा (हार्ट अटैक, दुर्घटना, प्रसव)।",
+      "🚨 112: राष्ट्रीय एकीकृत आपातकालीन नंबर।",
+      "📞 104: 24 घंटे मुफ्त स्वास्थ्य परामर्श।",
+      "🧠 14416: टेली-मानस (मानसिक स्वास्थ्य एवं तनाव परामर्श हेल्पलाइन)।",
+      "🩺 1800-11-6666: निक्षय टीबी हेल्पलाइन।"
+    ],
+    "safe_home_care_or": [
+      "🚑 ୧୦୮: ମାଗଣା ଜରୁରୀକାଳୀନ ଆମ୍ବୁଲାନ୍ସ ସେବା (ହାର୍ଟ ଆଟାକ୍, ଦୁର୍ଘଟଣା, ପ୍ରସବ)।",
+      "🚨 ୧୧୨: ଜାତୀୟ ଜରୁରୀକାଳୀନ ନମ୍ବର।",
+      "📞 ୧୦୪: ୨୪ ଘଣ୍ଟିଆ ସ୍ୱାସ୍ଥ୍ୟ ପରାମର୍ଶ ସେବା।",
+      "🧠 ୧୪୪୧୬: ଟେଲି-ମାନସ (ମାନସିକ ଚାପ ଓ ପରାମର୍ଶ ସେବା)।"
+    ],
+    "red_flags_en": ["Dial 108 or 112 immediately in life-threatening scenarios."],
+    "red_flags_hi": ["गंभीर स्थिति में तुरंत 108 डायल करें।"],
+    "red_flags_or": ["ଗମ୍ଭୀର ପରିସ୍ଥିତିରେ ତୁରନ୍ତ ୧୦୮ କୁ କଲ୍ କରନ୍ତୁ।"],
+    "recommended_specialist": "Emergency Response Services",
+    "emergency_sos": true
+  }
+]

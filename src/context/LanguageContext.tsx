@@ -21,6 +21,7 @@ const translations: Record<Language, TranslationDict> = {
     'nav.history': 'ଇତିହାସ',
     'nav.report': 'ସାପ୍ତାହିକ ରିପୋର୍ଟ',
     'nav.landing': 'ମୁଖ୍ୟ ପୃଷ୍ଠା',
+    'nav.chat': 'AI ସ୍ୱାସ୍ଥ୍ୟ ସହାୟକ',
 
     // Common Buttons / Labels
     'btn.save': 'ସଂରକ୍ଷଣ କରନ୍ତୁ',
@@ -124,6 +125,7 @@ const translations: Record<Language, TranslationDict> = {
     'nav.history': 'इतिहास',
     'nav.report': 'साप्ताहिक रिपोर्ट',
     'nav.landing': 'मुख्य पृष्ठ',
+    'nav.chat': 'AI स्वास्थ्य सहायक',
 
     // Common Buttons / Labels
     'btn.save': 'सहेजें',
@@ -227,6 +229,7 @@ const translations: Record<Language, TranslationDict> = {
     'nav.history': 'History',
     'nav.report': 'Weekly Report',
     'nav.landing': 'Home',
+    'nav.chat': 'AI Health Assistant',
 
     // Common Buttons / Labels
     'btn.save': 'Save Entry',

@@ -1,0 +1,135 @@
+[
+  {
+    "id": "cardiac_emergency",
+    "disease_name": "Heart Attack / Acute Myocardial Infarction (ହୃଦଘାତ / दिल का दौरा - हार्ट अटैक)",
+    "category": "Emergency Cardiac",
+    "keywords": ["chest pain", "heart attack", "left arm pain", "sweating", "pressure", "ହୃଦଘାତ", "ଛାତି ବିନ୍ଧା", "हार्ट अटैक", "सीने में दर्द"],
+    "overview_en": "A medical emergency where blood flow to the heart muscle is blocked. Every minute of delay leads to permanent myocardial damage. Immediate action is critical.",
+    "overview_hi": "यह एक अत्यंत गंभीर आपातकाल है जिसमें हृदय की मांसपेशियों में रक्त प्रवाह रुक जाता है। इसमें सीने के बीचों-बीच भारी दबाव, पसीना और बाएं हाथ में दर्द होता है।",
+    "overview_or": "ହୃଦଘାତ (ହାର୍ଟ ଆଟାକ୍) ଏକ ମାରାତ୍ମକ ଜରୁରୀକାଳୀନ ଅବସ୍ଥା। ଏଥିରେ ଛାତିରେ ଅସହ୍ୟ ଚାପ, ବାମ ହାତକୁ ଯନ୍ତ୍ରଣା ବ୍ୟାପିବା ଏବଂ ପ୍ରଚୁର ଝାଳ ବାହାରିବା ଦେଖାଦିଏ।",
+    "safe_home_care_en": [
+      "CALL 108 OR 112 IMMEDIATELY for an emergency ambulance with life-support.",
+      "Keep the patient sitting down in a 'W' or semi-reclined position with back supported. Do NOT allow them to walk or drive.",
+      "Loosen tight clothing around neck and waist to ease breathing.",
+      "If patient is conscious and not allergic to Aspirin, chew one 300mg Disprin/Aspirin tablet with water (under telephonic doctor guidance).",
+      "If patient becomes unresponsive and stops breathing, begin hands-only CPR immediately (100–120 chest compressions per minute at center of chest)."
+    ],
+    "safe_home_care_hi": [
+      "तुरंत 108 या 112 एम्बुलेंस को कॉल करें। एक मिनट भी बर्बाद न करें।",
+      "मरीज को पीठ के सहारे अर्ध-बैठी अवस्था में रखें। चलने या खुद गाड़ी चलाने बिल्कुल न दें।",
+      "गर्दन और कमर के कपड़े ढीले करें ताकि सांस लेने में आसानी हो।",
+      "यदि मरीज होश में है और डॉक्टर की अनुमति मिले तो एस्पिरिन (300mg) चबाने को दें।",
+      "यदि मरीज बेहोश हो जाए और सांस न ले रहा हो, तो तुरंत सीपीआर (CPR - सीने के बीच में तेजी से दबाव) शुरू करें।"
+    ],
+    "safe_home_care_or": [
+      "ତୁରନ୍ତ ୧୦୮ କିମ୍ବା ୧୧୨ ଆମ୍ବୁଲାନ୍ସକୁ କଲ୍ କରନ୍ତୁ।",
+      "ରୋଗୀଙ୍କୁ ଶୁଆଇବା ବଦଳରେ ପିଠିକୁ ଟେକି ଆଉଜାଇ ବସାନ୍ତୁ। ରୋଗୀଙ୍କୁ ଚଲାବୁଲା କରିବାକୁ ଦିଅନ୍ତୁ ନାହିଁ।",
+      "ବେକ ଏବଂ ଅଣ୍ଟା ପାଖ ଲୁଗାପଟା ଢିଲା କରନ୍ତୁ।",
+      "ଯଦି ରୋଗୀ ଚେତା ହରାଇ ନିଃଶ୍ୱାସ ବନ୍ଦ କରନ୍ତି, ତେବେ ତୁରନ୍ତ ଛାତି ମଝିରେ CPR (ଛାତି ଚାପିବା) ଆରମ୍ଭ କରନ୍ତୁ।"
+    ],
+    "red_flags_en": [
+      "Crushing central chest heaviness lasting > 10 minutes.",
+      "Pain radiating to left arm, neck, jaw, or upper back.",
+      "Cold profuse sweating, shortness of breath, dizziness, or collapse."
+    ],
+    "red_flags_hi": [
+      "सीने में असहनीय दर्द जो 10 मिनट से अधिक रहे।",
+      "दर्द का बाएं हाथ, गर्दन, जबड़े या पीठ तक फैलना।",
+      "ठंडा पसीना आना, सांस फूलना और अचानक चक्कर खाकर गिरना।"
+    ],
+    "red_flags_or": [
+      "ଛାତି ମଝିରେ ଭୀଷଣ ଚାପ ଓ ଯନ୍ତ୍ରଣା ୧୦ ମିନିଟରୁ ଅଧିକ ରହିବା।",
+      "ଯନ୍ତ୍ରଣା ବାମ ହାତ, ବେକ, ମାଢ଼ି କିମ୍ବା ପିଠିକୁ ବ୍ୟାପିବା।",
+      "ପ୍ରଚୁର ଥଣ୍ଡା ଝାଳ ବୋହିବା, ଶ୍ୱାସକ୍ରିୟା ବନ୍ଦ ହେବା କିମ୍ବା ଚେତା ହରାଇବା।"
+    ],
+    "recommended_specialist": "Cardiologist / Emergency Medicine",
+    "emergency_sos": true
+  },
+  {
+    "id": "stroke_emergency",
+    "disease_name": "Brain Stroke / Paralysis Attack (ପକ୍ଷାଘାତ - ଷ୍ଟ୍ରୋକ୍ / ब्रेन स्ट्रोक - लकवा)",
+    "category": "Emergency Neurology",
+    "keywords": ["stroke", "paralysis", "face drooping", "slurred speech", "weakness", "ଷ୍ଟ୍ରୋକ୍", "ପକ୍ଷାଘାତ", "लकवा", "स्ट्रोक"],
+    "overview_en": "A neurological emergency where blood supply to a part of the brain is interrupted. Remember the FAST rule (Face, Arm, Speech, Time). Golden window for clot-busting is 4.5 hours.",
+    "overview_hi": "ब्रेन स्ट्रोक (लकवा) में दिमाग की नस में रुकावट या ब्लीडिंग हो जाती है। इसमें तुरंत इलाज मिलना जरूरी है। शुरुआती 4.5 घंटे (गोल्डन आवर) जीवनरक्षक होते हैं।",
+    "overview_or": "ଷ୍ଟ୍ରୋକ୍ (ପକ୍ଷାଘାତ) ମସ୍ତିଷ୍କକୁ ରକ୍ତ ସଞ୍ଚାଳନ ବନ୍ଦ ହେବା କାରଣରୁ ହୁଏ। ଏଥିରେ ଶରୀରର ଗୋଟିଏ ପାର୍ଶ୍ୱ ଅଚଳ ହୋଇଯାଏ। ତୁରନ୍ତ ଡାକ୍ତରଖାନା ନେବା ଅତ୍ୟନ୍ତ ଜରୁରୀ।",
+    "safe_home_care_en": [
+      "CALL 108 IMMEDIATELY and request transport to a stroke-ready hospital equipped with a CT scan.",
+      "Check F.A.S.T: Face drooping, Arm weakness, Slurred Speech, Time to call 108.",
+      "Note the EXACT TIME when symptoms were first noticed (crucial for thrombolytic medication eligibility).",
+      "Keep patient lying on their side (recovery position) to prevent choking. Do NOT give food, water, or oral medicines."
+    ],
+    "safe_home_care_hi": [
+      "तुरंत 108 एम्बुलेंस को कॉल करें और सीटी स्कैन की सुविधा वाले अस्पताल जाएं।",
+      "FAST नियम याद रखें: Face (चेहरा टेढ़ा होना), Arm (हाथ में कमजोरी), Speech (बोली लड़खड़ाना), Time (समय न गंवाएं)।",
+      "लक्षण कब शुरू हुए, उसका सटीक समय नोट करें।",
+      "मरीज को करवट के बल लिटाएं। मुंह में पानी, खाना या कोई दवा बिल्कुल न डालें।"
+    ],
+    "safe_home_care_or": [
+      "ତୁରନ୍ତ ୧୦୮ କୁ କଲ୍ କରନ୍ତୁ ଏବଂ CT Scan ଥିବା ଡାକ୍ତରଖାନାକୁ ନିଅନ୍ତୁ।",
+      "ମୁହଁ ବଙ୍କା ହେବା, ଗୋଟିଏ ପାଖ ହାତ-ଗୋଡ଼ ଅବଶ ହେବା, କଥା ଅସ୍ପଷ୍ଟ ହେବା ଏହାର ପ୍ରମୁଖ ଲକ୍ଷଣ।",
+      "ରୋଗୀଙ୍କୁ କଡ଼ ମାଡ଼ି ଶୁଆଇ ରଖନ୍ତୁ। ପାଟିରେ ପାଣି ବା ଖାଦ୍ୟ ଦିଅନ୍ତୁ ନାହିଁ।"
+    ],
+    "red_flags_en": [
+      "Sudden asymmetry in smile or facial drooping.",
+      "Inability to lift one arm or sudden weakness on one side of the body.",
+      "Sudden severe explosive headache or loss of balance."
+    ],
+    "red_flags_hi": [
+      "मुंह का अचानक टेढ़ा होना।",
+      "शरीर के एक तरफ का हाथ या पैर सुन्न व कमजोर होना।",
+      "अचानक भयानक सिरदर्द या देखने व बोलने में असमर्थता।"
+    ],
+    "red_flags_or": [
+      "ମୁହଁ ବଙ୍କା ହୋଇଯିବା।",
+      "ଗୋଟିଏ ପାଖ ହାତ ବା ଗୋଡ଼ ଉଠାଇ ନ ପାରିବା।",
+      "ଅସହ୍ୟ ମୁଣ୍ଡ ବିନ୍ଧା କିମ୍ବା କଥା କହିବାରେ ଅସମର୍ଥ ହେବା।"
+    ],
+    "recommended_specialist": "Neurologist / Emergency Critical Care",
+    "emergency_sos": true
+  },
+  {
+    "id": "snakebite_emergency",
+    "disease_name": "Snakebite Triage (ସାପ କାମୁଡ଼ା / सांप का काटना)",
+    "category": "Emergency Toxicology",
+    "keywords": ["snakebite", "snake", "krait", "cobra", "viper", "ସାପ କାମୁଡ଼ା", "ବିଷ", "सांप", "सर्पदंश"],
+    "overview_en": "Snakebite is a critical medical emergency in rural India (Big Four snakes: Russell's Viper, Saw-scaled Viper, Spectacled Cobra, Common Krait). Immediate Anti-Snake Venom (ASV) is the only proven antidote.",
+    "overview_hi": "सर्पदंश भारत के ग्रामीण क्षेत्रों में एक गंभीर आपातकाल है। कोबरा, करैत और वाइपर सबसे विषैले सांप हैं। केवल एंटी-स्नेक वेनम (ASV) ही इसका एकमात्र सही इलाज है।",
+    "overview_or": "ସାପ କାମୁଡ଼ା ଏକ ଗମ୍ଭୀର ଜରୁରୀକାଳୀନ ବିଷାକ୍ତ ସମସ୍ୟା। ନାଗ, ତମ୍ପ, ଚନ୍ଦ୍ରବୋଡ଼ା ଏବଂ କଳାଚିତି ପ୍ରମୁଖ ବିଷାକ୍ତ ସାପ। ଏହାର ଏକମାତ୍ର ଉପଚାର ହେଉଛି ଆଣ୍ଟି-ସ୍ନେକ୍ ଭେନମ୍ (ASV) ଇଞ୍ଜେକ୍ସନ୍।",
+    "safe_home_care_en": [
+      "CALL 108 IMMEDIATELY and rush to the nearest government Sub-Divisional Hospital (SDH) or District Hospital with ASV stock.",
+      "KEEP PATIENT CALM AND IMMOBILIZE THE BITTEN LIMB with a splint/cloth sling, exactly like a bone fracture.",
+      "DO NOT cut the wound, DO NOT suck the venom, and DO NOT apply a tight tourniquet (tight ropes cause gangrene and limb loss).",
+      "Remove tight rings, anklets, or bangles before swelling starts.",
+      "Do NOT visit quacks, tantriks, or use snake stones. Time wasted causes mortality."
+    ],
+    "safe_home_care_hi": [
+      "तुरंत 108 पर कॉल करें और सीधे नजदीकी सरकारी अस्पताल जाएं जहां ASV इंजेक्शन उपलब्ध हो।",
+      "मरीज को शांत रखें और जिस अंग पर सांप ने काटा है उसे बिल्कुल न हिलाएं (लकड़ी या कपड़े का सहारा दें)।",
+      "घाव पर चीरा न लगाएं, मुंह से जहर चूसने की कोशिश न करें और कसकर रस्सी न बांधें (गैंग्रीन हो सकता है)।",
+      "अंगूठी, पायल या चूड़ियां तुरंत उतार दें क्योंकि बाद में सूजन आएगी।",
+      "झाड़-फूंक या तांत्रिक के चक्कर में समय बर्बाद बिल्कुल न करें।"
+    ],
+    "safe_home_care_or": [
+      "ତୁରନ୍ତ ୧୦୮ କୁ କଲ୍ କରି ନିକଟସ୍ଥ ସରକାରୀ ଡାକ୍ତରଖାନାକୁ ନିଅନ୍ତୁ ଯେଉଁଠାରେ ASV ଇଞ୍ଜେକ୍ସନ୍ ଉପଲବ୍ଧ ଥାଏ।",
+      "ରୋଗୀଙ୍କୁ ଶାନ୍ତ ରଖନ୍ତୁ ଏବଂ କ୍ଷତ ସ୍ଥାନକୁ ଆଦୌ ହଲଚଲ କରନ୍ତୁ ନାହିଁ।",
+      "କ୍ଷତ ସ୍ଥାନକୁ କାଟନ୍ତୁ ନାହିଁ, ପାଟିରେ ବିଷ ଟାଣନ୍ତୁ ନାହିଁ କିମ୍ବା ଟାଣ କରି ଦଉଡ଼ି ବାନ୍ଧନ୍ତୁ ନାହିଁ।",
+      "ହାତର ମୁଦି, ଅଣ୍ଟାର ସୂତା, ଗୋଡ଼ର ଝୁଣ୍ଟିଆ ତୁରନ୍ତ କାଢ଼ି ଦିଅନ୍ତୁ।",
+      "ଗୁଣିଆ ବା ଝାଡ଼ଫୁଙ୍କ ପଛରେ ସମୟ ନଷ୍ଟ କରନ୍ତୁ ନାହିଁ।"
+    ],
+    "red_flags_en": [
+      "Neurotoxic signs: Drooping eyelids (ptosis), difficulty swallowing, or breathing paralysis.",
+      "Hemotoxic signs: Continuous oozing of blood from fang marks, swelling spreading up the limb, or blood in urine."
+    ],
+    "red_flags_hi": [
+      "पलकों का भारी होकर गिरना, बोलने और निगलने में तकलीफ या सांस रुकना।",
+      "काटे गए स्थान से लगातार खून बहना, सूजन तेजी से ऊपर बढ़ना।"
+    ],
+    "red_flags_or": [
+      "ଆଖି ପତା ଲାଗିଯିବା, ଢୋକ ଗିଳିବାରେ କଷ୍ଟ ହେବା କିମ୍ବା ନିଃଶ୍ୱାସ ବନ୍ଦ ହେବା।",
+      "ଦାନ୍ତ କ୍ଷତରୁ ଲଗାତାର ରକ୍ତ ବାହାରିବା ଏବଂ ଗୋଡ଼/ହାତ ଦ୍ରୁତ ଫୁଲିଯିବା।"
+    ],
+    "recommended_specialist": "Emergency Toxicologist / District Hospital Emergency",
+    "emergency_sos": true
+  }
+]

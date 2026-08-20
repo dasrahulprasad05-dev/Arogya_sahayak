@@ -57,6 +57,10 @@ const GenericPredictor = lazy(() => import('./pages/predictors/GenericPredictor'
 // CNN Scan Route
 const ScanPage = lazy(() => import('./pages/scan/ScanPage'));
 
+// AI Medical Assistant & RAG Chat
+const HealthChat = lazy(() => import('./pages/chat/HealthChat'));
+import FloatingChatButton from './components/chat/FloatingChatButton';
+
 // Doctor System
 const DoctorRegister = lazy(() => import('./pages/auth/DoctorRegister'));
 const DoctorLogin = lazy(() => import('./pages/auth/DoctorLogin'));
@@ -338,6 +342,13 @@ const App: React.FC = () => {
                         </BrowsableRoute>
                       } />
 
+                      {/* AI Multilingual Health Assistant & Chatbot */}
+                      <Route path="/chat" element={
+                        <BrowsableRoute>
+                          <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><HealthChat /></Suspense></RouteErrorBoundary>
+                        </BrowsableRoute>
+                      } />
+
                       {/* Shell views */}
                       <Route path="/profile" element={
                         <ProtectedRoute>
@@ -359,6 +370,7 @@ const App: React.FC = () => {
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                   </Suspense>
+                  <FloatingChatButton />
                 </BrowserRouter>
               </HealthDispatchProvider>
             </HealthReadProvider>
