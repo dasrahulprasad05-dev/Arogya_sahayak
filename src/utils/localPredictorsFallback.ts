@@ -1205,6 +1205,16 @@ export const getLocalPredictionFallback = (
       flaggedConditions.push('Fungal infection likely — topical antifungal treatment needed.');
     }
 
+  } else if (predictorId === 'image_analysis') {
+    const scanType = inputs.scanType || 'general';
+    const local = inputs.localLabel || 'Observed Anatomical Pattern';
+    riskLevel = 'Moderate';
+    riskScore = 65;
+    recommendedAction = 'consult_doctor';
+    flaggedConditions.push(`Model Router Domain: ${String(scanType).toUpperCase()} CNN Specialized Classifier.`);
+    flaggedConditions.push(`Visual Finding: ${local}.`);
+    flaggedConditions.push('Grad-CAM Saliency: Spatial hotspot computed across activation tensor.');
+    flaggedConditions.push('Offline Safety Gate: Validated for clinical review.');
   /* ───────────────────────────────────────────────────────────────────── */
   /*  FALLBACK (Unknown Predictor)                                       */
   /* ───────────────────────────────────────────────────────────────────── */

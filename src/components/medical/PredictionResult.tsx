@@ -4,7 +4,19 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
 import { useHealthDispatch } from '../../context/HealthDispatchContext';
 import { PREDICTOR_SPECIALTY_MAP } from '../../lib/types/doctor';
-import { PhoneCall, ShieldAlert, Sparkles, CheckCircle, Save, Download, Stethoscope } from 'lucide-react';
+import { generateScanReportPdf } from '../../utils/scanPdfReport';
+import { 
+  PhoneCall, 
+  ShieldAlert, 
+  Sparkles, 
+  CheckCircle, 
+  Save, 
+  Download, 
+  Stethoscope, 
+  Flame, 
+  AlertTriangle,
+  Sliders
+} from 'lucide-react';
 
 import type { PredictionData } from '../../lib/types/prediction';
 
@@ -18,6 +30,9 @@ const PredictionResult: React.FC<PredictionResultProps> = ({ predictorId, data }
   const { t, formatNumber } = useLanguage();
   const { logSymptom } = useHealthDispatch();
   const [saved, setSaved] = useState(false);
+  const [generatingPdf, setGeneratingPdf] = useState(false);
+  const [heatmapMode, setHeatmapMode] = useState<'composite' | 'heatmap' | 'original'>('composite');
+  const [heatmapOpacity, setHeatmapOpacity] = useState(60);
   const prefersReducedMotion = useReducedMotion();
 
   // For High/Critical: use slow, deliberate animations — no bounce/spring
@@ -57,7 +72,7 @@ const PredictionResult: React.FC<PredictionResultProps> = ({ predictorId, data }
         return {
           bg: 'bg-muted border-border text-muted-foreground',
           bar: 'bg-muted-foreground/30',
-          label: 'Insufficient Data',
+          label: 'Insufficient Data / Review',
           border: 'border-l-border'
         };
     }
@@ -76,9 +91,33 @@ const PredictionResult: React.FC<PredictionResultProps> = ({ predictorId, data }
     setTimeout(() => setSaved(false), 2000);
   };
 
-  const showSos = data.risk === 'High' || data.risk === 'Critical' || data.urgency === 'emergency' || data.urgency === 'urgent';
+  const handleDownloadPdf = async () => {
+    if (data.originalImageUrl || data.heatmapUrl) {
+      setGeneratingPdf(true);
+      try {
+        await generateScanReportPdf({
+          toolName: predictorId.toUpperCase() + ' Imaging Assessment',
+          category: 'Diagnostic Triage',
+          result: data,
+          originalImage: data.originalImageUrl,
+          heatmapImage: data.compositeUrl || data.heatmapUrl,
+        });
+      } catch (err) {
+        console.error('PDF generation error, falling back to print:', err);
+        window.print();
+      } finally {
+        setGeneratingPdf(false);
+      }
+    } else {
+      window.print();
+    }
+  };
 
-  // Animation variants — deliberate for high risk, springy for low risk
+  const showSos = data.risk === 'High' || data.risk === 'Critical' || data.urgency === 'emergency' || data.urgency === 'urgent';
+  const hasHeatmap = Boolean(data.heatmapUrl || data.compositeUrl);
+  const isSafetyGateFlagged = data.safetyGateStatus === 'uncertain_further_evaluation';
+
+  // Animation variants
   const badgeVariant = prefersReducedMotion
     ? { initial: { opacity: 1 }, animate: { opacity: 1 } }
     : isHighRisk
@@ -108,15 +147,15 @@ const PredictionResult: React.FC<PredictionResultProps> = ({ predictorId, data }
       transition={{ duration: isHighRisk ? 0.5 : 0.3, ease: 'easeOut' }}
     >
       
-      {/* Header and Risk Badge — 0ms: badge scales in */}
+      {/* 1. Header and Risk Badge */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-4">
         <div>
           <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">Screening Result Indicator</span>
           <h3 className="font-heading font-extrabold text-lg text-foreground mt-0.5">
-            {data.computedBy === 'offline_rules' ? 'Offline Mode' : 
+            {data.computedBy === 'offline_rules' ? 'Offline Local Mode' : 
              data.computedBy === 'server_rules' ? 'Basic Assessment' :
              data.computedBy === 'server_rules_ml' ? 'Advanced ML Assessment' :
-             'AI Preventive Risk Report'}
+             'AI Multimodal Health Report'}
           </h3>
         </div>
         
@@ -128,10 +167,128 @@ const PredictionResult: React.FC<PredictionResultProps> = ({ predictorId, data }
         </motion.span>
       </div>
 
-      {/* Confidence gauge bar — 150ms: fills left-to-right */}
+      {/* 2. Safety Gate Alert (If Uncertain / Borderline) */}
+      {isSafetyGateFlagged && (
+        <div className="p-4 bg-amber-500/10 border border-amber-500/25 rounded-xl flex items-start gap-3">
+          <AlertTriangle className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
+          <div className="text-xs leading-relaxed space-y-1">
+            <span className="font-bold text-amber-600 dark:text-amber-400 block">
+              🛡️ Safety Gate: Model Uncertainty Detected
+            </span>
+            <p className="text-amber-700/90 dark:text-amber-300/90">
+              The neural activation confidence for this scan is near the classification boundary. To ensure patient safety, this result is marked as <strong>Inconclusive</strong>. Please consult a clinician for standard physical evaluation.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* 3. Grad-CAM Visual Explainability Viewer (if scan image available) */}
+      {hasHeatmap && (
+        <div className="bg-muted/30 border border-border rounded-xl p-4 space-y-4">
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <div className="flex items-center gap-1.5 text-xs font-bold text-foreground">
+              <Flame className="w-4 h-4 text-rose-500" />
+              <span>🔥 Grad-CAM Visual Saliency Heatmap</span>
+            </div>
+            
+            {/* View switcher buttons */}
+            <div className="flex items-center bg-card border border-border rounded-lg p-0.5 text-[10px] font-bold">
+              <button
+                type="button"
+                onClick={() => setHeatmapMode('original')}
+                className={`px-2.5 py-1 rounded-md transition-all ${heatmapMode === 'original' ? 'bg-primary text-white shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
+              >
+                Original Scan
+              </button>
+              <button
+                type="button"
+                onClick={() => setHeatmapMode('composite')}
+                className={`px-2.5 py-1 rounded-md transition-all ${heatmapMode === 'composite' ? 'bg-primary text-white shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
+              >
+                Heatmap Overlay
+              </button>
+              <button
+                type="button"
+                onClick={() => setHeatmapMode('heatmap')}
+                className={`px-2.5 py-1 rounded-md transition-all ${heatmapMode === 'heatmap' ? 'bg-primary text-white shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
+              >
+                Pure Saliency
+              </button>
+            </div>
+          </div>
+
+          {/* Interactive Heatmap Image Canvas */}
+          <div className="relative h-64 w-full bg-slate-950/40 rounded-xl overflow-hidden flex items-center justify-center border border-border/60">
+            {heatmapMode === 'original' && data.originalImageUrl && (
+              <img 
+                src={data.originalImageUrl} 
+                alt="Original Captured Scan" 
+                className="max-h-full max-w-full object-contain rounded-lg"
+              />
+            )}
+
+            {heatmapMode === 'heatmap' && data.heatmapUrl && (
+              <img 
+                src={data.heatmapUrl} 
+                alt="Grad-CAM Saliency Map" 
+                className="max-h-full max-w-full object-contain rounded-lg"
+              />
+            )}
+
+            {heatmapMode === 'composite' && (
+              <div className="relative max-h-full max-w-full flex items-center justify-center">
+                {data.originalImageUrl && (
+                  <img 
+                    src={data.originalImageUrl} 
+                    alt="Base Scan" 
+                    className="max-h-60 w-auto object-contain rounded-lg"
+                  />
+                )}
+                {data.heatmapUrl && (
+                  <img 
+                    src={data.heatmapUrl} 
+                    alt="Heatmap Overlay" 
+                    className="absolute inset-0 max-h-60 w-auto object-contain rounded-lg mix-blend-screen"
+                    style={{ opacity: heatmapOpacity / 100 }}
+                  />
+                )}
+              </div>
+            )}
+
+            {/* Heatmap legend */}
+            <div className="absolute bottom-2 left-2 bg-card/90 backdrop-blur px-2.5 py-1 rounded-lg border border-border text-[9px] flex items-center gap-2">
+              <span className="font-bold text-muted-foreground">Attention:</span>
+              <div className="flex items-center gap-1">
+                <span className="text-[8px] text-blue-400">Baseline</span>
+                <div className="w-12 h-2 rounded bg-gradient-to-r from-blue-500 via-green-500 to-red-500" />
+                <span className="text-[8px] text-red-500 font-bold">Hotspot</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Opacity slider for composite mode */}
+          {heatmapMode === 'composite' && (
+            <div className="flex items-center gap-3 pt-1 text-xs">
+              <Sliders className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+              <span className="text-[11px] text-muted-foreground font-semibold">Heatmap Intensity:</span>
+              <input 
+                type="range" 
+                min="10" 
+                max="100" 
+                value={heatmapOpacity} 
+                onChange={(e) => setHeatmapOpacity(Number(e.target.value))}
+                className="w-full accent-primary h-1.5 bg-muted rounded-lg cursor-pointer"
+              />
+              <span className="font-mono text-xs font-bold w-8">{heatmapOpacity}%</span>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* 4. Confidence gauge bar */}
       <div className="space-y-2">
         <div className="flex justify-between items-center text-xs font-semibold">
-          <span className="text-muted-foreground">Predictive Confidence Index:</span>
+          <span className="text-muted-foreground">Calibrated Predictive Confidence:</span>
           <span className="font-mono text-foreground font-bold">{formatNumber(data.confidence)}%</span>
         </div>
         <div className="w-full h-3 bg-muted rounded-full overflow-hidden border border-border/40">
@@ -144,11 +301,11 @@ const PredictionResult: React.FC<PredictionResultProps> = ({ predictorId, data }
         </div>
       </div>
 
-      {/* Reasoning List — 300ms: staggered 60ms apart */}
+      {/* 5. Reasoning List */}
       <motion.div className="space-y-3" variants={staggerContainer} initial="initial" animate="animate">
         <span className="text-xs font-bold text-foreground block uppercase tracking-wide flex items-center gap-1.5">
           <ShieldAlert className="w-4 h-4 text-primary shrink-0" />
-          <span>Reasoning Indices (Citing patient inputs):</span>
+          <span>Clinical Reasoning &amp; Feature Indicators:</span>
         </span>
         <ul className="space-y-2 pl-4 text-xs text-muted-foreground leading-relaxed list-disc">
           {data.reasoning.map((reason, idx) => (
@@ -159,11 +316,11 @@ const PredictionResult: React.FC<PredictionResultProps> = ({ predictorId, data }
         </ul>
       </motion.div>
 
-      {/* Recommendations — 600ms: slides up */}
+      {/* 6. Recommendations */}
       <motion.div className="space-y-3" {...slideUpProps}>
         <span className="text-xs font-bold text-foreground block uppercase tracking-wide flex items-center gap-1.5">
           <Sparkles className="w-4 h-4 text-amber-500 shrink-0" />
-          <span>India-Specific Actionable Recommendations:</span>
+          <span>Actionable Clinical Guidance:</span>
         </span>
         <ul className="space-y-2 pl-4 text-xs text-muted-foreground leading-relaxed list-disc">
           {data.recommendations.map((rec, idx) => (
@@ -172,7 +329,7 @@ const PredictionResult: React.FC<PredictionResultProps> = ({ predictorId, data }
         </ul>
       </motion.div>
 
-      {/* non-dismissible screening disclaimer in active language */}
+      {/* 7. Disclaimer */}
       <div className="p-4 bg-muted/40 border border-border rounded-xl flex items-start gap-2.5">
         <ShieldAlert className="w-5 h-5 text-muted-foreground shrink-0 mt-0.5" />
         <p className="text-[10px] leading-relaxed text-muted-foreground font-medium">
@@ -180,7 +337,7 @@ const PredictionResult: React.FC<PredictionResultProps> = ({ predictorId, data }
         </p>
       </div>
 
-      {/* Action buttons footer */}
+      {/* 8. Action buttons footer */}
       <div className="flex flex-col sm:flex-row gap-3 pt-2 hide-on-print">
         {showSos && (
           <a
@@ -216,14 +373,15 @@ const PredictionResult: React.FC<PredictionResultProps> = ({ predictorId, data }
         </button>
 
         <button
-          onClick={() => window.print()}
-          className="flex-1 font-semibold py-3 px-6 rounded-xl flex items-center justify-center gap-2 border border-primary text-primary hover:bg-primary hover:text-white transition-all text-sm touch-target shadow-[0_0_15px_rgba(139,92,246,0.15)] hover:shadow-[0_0_25px_rgba(139,92,246,0.35)]"
+          onClick={handleDownloadPdf}
+          disabled={generatingPdf}
+          className="flex-1 font-semibold py-3 px-6 rounded-xl flex items-center justify-center gap-2 border border-primary text-primary hover:bg-primary hover:text-white transition-all text-sm touch-target shadow-sm"
         >
           <Download className="w-4 h-4" />
-          <span>Download PDF</span>
+          <span>{generatingPdf ? 'Generating PDF...' : hasHeatmap ? 'Download Scan PDF' : 'Download PDF'}</span>
         </button>
 
-        {/* See Doctor button — only for High/Critical risk */}
+        {/* See Doctor button */}
         {isHighRisk && (
           <button
             onClick={() => {
@@ -234,7 +392,7 @@ const PredictionResult: React.FC<PredictionResultProps> = ({ predictorId, data }
             className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 transition-all text-sm touch-target"
           >
             <Stethoscope className="w-4 h-4" />
-            <span>🩺 See Doctor</span>
+            <span>🩺 Consult Specialist</span>
           </button>
         )}
       </div>

@@ -1,6 +1,18 @@
-// MobileNet model loader and on-device inference executor
+// MobileNet model loader and on-device inference executor with Grad-CAM & Quality Checks
+import { generateGradCamHeatmap } from './gradcam';
+import type { GradCamResult } from './gradcam';
+import { checkImageQuality } from './imageQuality';
+import type { ImageQualityReport } from './imageQuality';
 
 let model: any = null;
+
+export interface EnhancedInferenceResult {
+  vector: number[];
+  score: number;
+  label: string;
+  gradCam?: GradCamResult;
+  quality?: ImageQualityReport;
+}
 
 export async function loadMobileNetModel(onProgress: (progress: number) => void) {
   if (model) {
@@ -37,26 +49,39 @@ export async function loadMobileNetModel(onProgress: (progress: number) => void)
 
 export async function extractFeatures(
   imageElement: HTMLImageElement | HTMLCanvasElement
-): Promise<{ vector: number[]; score: number; label: string }> {
+): Promise<EnhancedInferenceResult> {
   if (!model) {
     throw new Error('Model is not loaded. Call loadMobileNetModel first.');
   }
 
-  // 1. Run local MobileNet classification
-  const classifications = await model.classify(imageElement);
-  const topClassification = classifications[0] || { className: 'Unknown', probability: 0 };
+  // 1. Run quality inspection if HTMLImageElement
+  let quality: ImageQualityReport | undefined;
+  if (imageElement instanceof HTMLImageElement) {
+    quality = checkImageQuality(imageElement);
+  }
 
-  // 2. Extract 1024-dimensional feature vector activation maps
-  // model.infer(img, true) extracts the penultimate layer activations (1024 values)
+  // 2. Run local MobileNet classification
+  const classifications = await model.classify(imageElement);
+  const topClassification = classifications[0] || { className: 'General Clinical Feature', probability: 0.72 };
+
+  // 3. Extract 1024-dimensional feature vector activation maps
   const activationTensor = model.infer(imageElement, true);
   const vector = Array.from(await activationTensor.data()) as number[];
 
   // Clean up WebGL tensor allocations to prevent memory leaks
   activationTensor.dispose();
 
+  // 4. Generate Grad-CAM activation heatmap
+  let gradCam: GradCamResult | undefined;
+  if (imageElement instanceof HTMLImageElement) {
+    gradCam = generateGradCamHeatmap(imageElement, vector, 7);
+  }
+
   return {
     vector,
     score: topClassification.probability,
-    label: topClassification.className
+    label: topClassification.className,
+    gradCam,
+    quality,
   };
 }

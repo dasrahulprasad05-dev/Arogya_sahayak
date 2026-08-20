@@ -1,4 +1,4 @@
-import { ScanLine, Stethoscope, Brain, Eye, Scan } from 'lucide-react';
+import { ScanLine, Stethoscope, Brain, Eye, Scan, Bone } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 export const scanConfigs: Record<string, {
@@ -28,14 +28,23 @@ export const scanConfigs: Record<string, {
     gradientClass: 'from-sky-500 to-cyan-500',
     glowClass: 'shadow-[0_0_15px_rgba(14,165,233,0.3)]',
   },
-  mri: {
-    icon: Brain,
-    rgb: '139, 92, 246',
-    colorHex: '#8b5cf6',
-    textClass: 'text-violet-500 dark:text-violet-400',
-    bgClass: 'bg-violet-500/15',
-    gradientClass: 'from-violet-500 to-purple-500',
-    glowClass: 'shadow-[0_0_15px_rgba(139,92,246,0.3)]',
+  bone: {
+    icon: Bone,
+    rgb: '234, 88, 12',
+    colorHex: '#ea580c',
+    textClass: 'text-orange-500 dark:text-orange-400',
+    bgClass: 'bg-orange-500/15',
+    gradientClass: 'from-orange-500 to-amber-500',
+    glowClass: 'shadow-[0_0_15px_rgba(234,88,12,0.3)]',
+  },
+  oral: {
+    icon: Scan,
+    rgb: '16, 185, 129',
+    colorHex: '#10b981',
+    textClass: 'text-emerald-500 dark:text-emerald-400',
+    bgClass: 'bg-emerald-500/15',
+    gradientClass: 'from-emerald-500 to-teal-500',
+    glowClass: 'shadow-[0_0_15px_rgba(16,185,129,0.3)]',
   },
   retina: {
     icon: Eye,
@@ -46,13 +55,13 @@ export const scanConfigs: Record<string, {
     gradientClass: 'from-amber-500 to-orange-500',
     glowClass: 'shadow-[0_0_15px_rgba(245,158,11,0.3)]',
   },
-  oral: {
-    icon: Scan,
-    rgb: '16, 185, 129',
-    colorHex: '#10b981',
-    textClass: 'text-emerald-500 dark:text-emerald-400',
-    bgClass: 'bg-emerald-500/15',
-    gradientClass: 'from-emerald-500 to-teal-500',
-    glowClass: 'shadow-[0_0_15px_rgba(16,185,129,0.3)]',
+  mri: {
+    icon: Brain,
+    rgb: '139, 92, 246',
+    colorHex: '#8b5cf6',
+    textClass: 'text-violet-500 dark:text-violet-400',
+    bgClass: 'bg-violet-500/15',
+    gradientClass: 'from-violet-500 to-purple-500',
+    glowClass: 'shadow-[0_0_15px_rgba(139,92,246,0.3)]',
   },
 };
