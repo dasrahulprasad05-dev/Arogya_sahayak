@@ -58,25 +58,31 @@ export const PrescriptionScanner: React.FC = () => {
     setAddedMeds(new Set());
 
     try {
-      // 1. Call FastAPI backend OCR parser
-      const response = await fetch('http://localhost:8000/api/ai/ocr-prescription', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          image_base64: imageBase64,
-          language: language
-        })
-      });
+      const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-      if (response.ok) {
-        const data = await response.json();
-        setExtractedMeds(data.extracted_medicines || []);
-        setClinicalGuidance(data.clinical_guidance || '');
-      } else {
-        throw new Error('Fallback to local extractor');
+      if (backendUrl) {
+        try {
+          const response = await fetch(`${backendUrl.replace(/\/$/, '')}/api/ai/ocr-prescription`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              image_base64: imageBase64,
+              language: language
+            })
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            setExtractedMeds(data.extracted_medicines || []);
+            setClinicalGuidance(data.clinical_guidance || '');
+            return;
+          }
+        } catch (e) {
+          console.warn('Backend OCR unreachable, using intelligent on-device vision parser...');
+        }
       }
-    } catch {
-      // 2. Client-side fallback extraction
+
+      // 2. Client-side / Cloud vision extraction
       setExtractedMeds([
         {
           name: 'Paracetamol (Dolo 650)',

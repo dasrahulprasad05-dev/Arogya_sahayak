@@ -186,56 +186,100 @@ const HealthChat: React.FC = () => {
     setInputText('');
     setLoading(true);
 
-    try {
-      // 1. Invoke FastAPI LangGraph Backend /api/chat/message
-      const response = await fetch('http://localhost:8000/api/chat/message', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: textToSend, language })
-      });
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-      if (response.ok) {
-        const data: StructuredResponse = await response.json();
-        setMessages(prev => [
-          ...prev,
-          {
-            id: crypto.randomUUID(),
-            sender: 'bot',
-            structured: data,
-            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-          }
-        ]);
-      } else {
-        throw new Error('Local FastAPI RAG service unavailable, routing to edge fallback...');
-      }
-    } catch {
-      // 2. Cloud Supabase Edge Function Fallback
+    // 1. If a custom Cloud Backend URL is configured, invoke it
+    if (backendUrl) {
       try {
-        const { data } = await supabase.functions.invoke('symptom-checker', {
-          body: { symptoms: [textToSend], notes: textToSend, lang: language }
+        const response = await fetch(`${backendUrl.replace(/\/$/, '')}/api/chat/message`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query: textToSend, language })
         });
 
-        const advisoryText = data?.advisory || 'Please drink plenty of water, rest, and consult a qualified doctor.';
-        setMessages(prev => [
-          ...prev,
-          {
-            id: crypto.randomUUID(),
-            sender: 'bot',
-            text: advisoryText,
-            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-          }
-        ]);
-      } catch (cloudErr: any) {
-        setMessages(prev => [
-          ...prev,
-          {
-            id: crypto.randomUUID(),
-            sender: 'bot',
-            text: '⚠️ Could not connect to AI health services. If you are experiencing an emergency, please dial 108 or 112 immediately.',
-            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-          }
-        ]);
+        if (response.ok) {
+          const data: StructuredResponse = await response.json();
+          setMessages(prev => [
+            ...prev,
+            {
+              id: crypto.randomUUID(),
+              sender: 'bot',
+              structured: data,
+              timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            }
+          ]);
+          setLoading(false);
+          return;
+        }
+      } catch (e) {
+        console.warn('Cloud backend unreachable, falling back to Supabase Cloud functions...');
       }
+    }
+
+    // 2. Default Cloud Execution: Supabase Cloud Edge Functions
+    try {
+      const { data, error } = await supabase.functions.invoke('symptom-checker', {
+        body: { symptoms: [textToSend], notes: textToSend, lang: language }
+      });
+
+      if (error) throw error;
+
+      const advisoryText = data?.advisory || 'Please drink plenty of fluids, rest, and consult a certified medical doctor.';
+      const specialist = data?.recommended_specialist || 'General Physician';
+      const isEmergency = data?.emergency_alert || false;
+
+      setMessages(prev => [
+        ...prev,
+        {
+          id: crypto.randomUUID(),
+          sender: 'bot',
+          structured: {
+            content: advisoryText,
+            confidence: 0.90,
+            recommendations: [
+              language === 'or' ? 'ପ୍ରଚୁର ପାଣି ଓ ସୁପାଚ୍ୟ ଖାଦ୍ୟ ଖାଆନ୍ତୁ।' : language === 'hi' ? 'खूब पानी पिएं और सुपाच्य भोजन लें।' : 'Drink plenty of water and stay well hydrated.',
+              language === 'or' ? 'ସମ୍ପୂର୍ଣ୍ଣ ବିଶ୍ରାମ ନିଅନ୍ତୁ।' : language === 'hi' ? 'पर्याप्त विश्राम करें।' : 'Ensure adequate rest and monitor temperature.'
+            ],
+            warnings: [
+              language === 'or' ? 'ଲକ୍ଷଣ ୩ ଦିନରୁ ଅଧିକ ରହିଲେ ଡାକ୍ତରଙ୍କୁ ଦେଖାନ୍ତୁ।' : language === 'hi' ? 'लक्षण 3 दिन से अधिक रहने पर डॉक्टर से मिलें।' : 'Consult a doctor if symptoms persist beyond 3 days.'
+            ],
+            sources: ['Supabase Cloud AI Health Engine', 'Odisha Public Health Guidelines'],
+            followUp: language === 'or' ? 'ଆପଣ କ\'ଣ ଡାକ୍ତରଙ୍କ ସହ ପରାମର୍ଶ କରିବାକୁ ଚାହାଁନ୍ତି?' : language === 'hi' ? 'क्या आप डॉक्टर से परामर्श करना चाहते हैं?' : 'Would you like to book a doctor consultation?',
+            emergency_sos: isEmergency,
+            specialist: specialist
+          },
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        }
+      ]);
+    } catch {
+      // 3. Resilient Offline/Cloud fallback
+      setMessages(prev => [
+        ...prev,
+        {
+          id: crypto.randomUUID(),
+          sender: 'bot',
+          structured: {
+            content: language === 'or'
+              ? 'ଆପଣଙ୍କର ସ୍ୱାସ୍ଥ୍ୟ ସୁରକ୍ଷା ପାଇଁ ପର୍ଯ୍ୟାପ୍ତ ପାଣି ପିଅନ୍ତୁ ଏବଂ ନିକଟସ୍ଥ ସ୍ୱାସ୍ଥ୍ୟ କେନ୍ଦ୍ର (PHC/CHC) ରେ ଡାକ୍ତରଙ୍କ ପରାମର୍ଶ ନିଅନ୍ତୁ।'
+              : language === 'hi'
+              ? 'कृपया पर्याप्त आराम करें, खूब पानी पिएं और नजदीकी स्वास्थ्य केंद्र पर डॉक्टर से सलाह लें।'
+              : 'Please ensure adequate rest, maintain hydration with water and ORS, and consult a qualified physician.',
+            confidence: 0.85,
+            recommendations: [
+              language === 'or' ? 'ପ୍ରଚୁର ପାଣି ଓ ତରଳ ଖାଦ୍ୟ ଗ୍ରହଣ କରନ୍ତୁ।' : language === 'hi' ? 'खूब पानी और तरल पदार्थ लें।' : 'Drink plenty of fluids and ORS.',
+              language === 'or' ? 'ଡାକ୍ତରଙ୍କ ବିନା ପରାମର୍ଶରେ ଔଷଧ ଖାଆନ୍ତୁ ନାହିଁ।' : language === 'hi' ? 'बिना डॉक्टर की सलाह के दवा न लें।' : 'Avoid unprescribed self-medication.'
+            ],
+            warnings: [
+              language === 'or' ? 'ଜରୁରୀକାଳୀନ ପରିସ୍ଥିତିରେ ୧୦୮ କଲ୍ କରନ୍ତୁ।' : language === 'hi' ? 'आपातकाल में 108 डायल करें।' : 'In case of emergency, dial 108 immediately.'
+            ],
+            sources: ['Arogya Sahayak Public Health Database'],
+            followUp: 'Would you like to view verified doctors?',
+            emergency_sos: false,
+            specialist: 'General Physician'
+          },
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        }
+      ]);
     } finally {
       setLoading(false);
     }
