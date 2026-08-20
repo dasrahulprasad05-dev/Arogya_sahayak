@@ -61,7 +61,7 @@ Structure: (1) Possible causes (2) Warning signs (3) Recommended action (4) When
               "Authorization": `Bearer ${GEMINI_API_KEY}`
             },
             body: JSON.stringify({
-              model: "llama-3.1-8b-instant",
+              model: "openai/gpt-oss-20b",
               messages: [
                 { role: "system", content: systemPrompt },
                 { role: "user", content: `Patient Vitals/Symptoms:\n${userMessage}` }
@@ -70,18 +70,16 @@ Structure: (1) Possible causes (2) Warning signs (3) Recommended action (4) When
           }
         );
 
-        if (!response.ok) {
-          throw new Error("Groq API call failed");
+        if (response.ok) {
+          const data = await response.json();
+          advisory = data.choices?.[0]?.message?.content || "";
         }
-
-        const data = await response.json();
-        advisory = data.choices?.[0]?.message?.content || "";
       } catch (err) {
         console.error("Groq request error:", err);
       }
     }
 
-    // 2. If Gemini API fails or is unconfigured, return localized static clinical triage recommendations
+    // 2. If Gemini/Groq API fails or is unconfigured, return localized clinical triage recommendations
     if (!advisory) {
       console.log("Using static fallback triage database...");
       if (lang === 'or') {
