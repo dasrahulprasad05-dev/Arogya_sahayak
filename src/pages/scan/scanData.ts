@@ -1,4 +1,20 @@
-import { ScanLine, Stethoscope, Brain, Eye, Scan, Bone } from 'lucide-react';
+import {
+  ScanLine,
+  Stethoscope,
+  Brain,
+  Eye,
+  Scan,
+  Bone,
+  Microscope,
+  Activity,
+  ShieldAlert,
+  EyeOff,
+  HeartPulse,
+  Sun,
+  Dna,
+  Sparkles,
+  Smile
+} from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 export const scanConfigs: Record<string, {
@@ -10,6 +26,7 @@ export const scanConfigs: Record<string, {
   gradientClass: string;
   glowClass: string;
 }> = {
+  // ── Core Clinical Scanners ──
   skin: {
     icon: ScanLine,
     rgb: '244, 63, 94',
@@ -63,5 +80,97 @@ export const scanConfigs: Record<string, {
     bgClass: 'bg-violet-500/15',
     gradientClass: 'from-violet-500 to-purple-500',
     glowClass: 'shadow-[0_0_15px_rgba(139,92,246,0.3)]',
+  },
+
+  // ── 10 India-Specific Scanners ──
+  tb_sputum: {
+    icon: Microscope,
+    rgb: '249, 115, 22',
+    colorHex: '#f97316',
+    textClass: 'text-orange-500 dark:text-orange-400',
+    bgClass: 'bg-orange-500/15',
+    gradientClass: 'from-orange-500 to-amber-600',
+    glowClass: 'shadow-[0_0_15px_rgba(249,115,22,0.3)]',
+  },
+  malaria_smear: {
+    icon: Activity,
+    rgb: '239, 68, 68',
+    colorHex: '#ef4444',
+    textClass: 'text-red-500 dark:text-red-400',
+    bgClass: 'bg-red-500/15',
+    gradientClass: 'from-red-500 to-rose-600',
+    glowClass: 'shadow-[0_0_15px_rgba(239,68,68,0.3)]',
+  },
+  cervical_via: {
+    icon: ShieldAlert,
+    rgb: '217, 70, 239',
+    colorHex: '#d946ef',
+    textClass: 'text-fuchsia-500 dark:text-fuchsia-400',
+    bgClass: 'bg-fuchsia-500/15',
+    gradientClass: 'from-fuchsia-500 to-pink-600',
+    glowClass: 'shadow-[0_0_15px_rgba(217,70,239,0.3)]',
+  },
+  anemia_eye: {
+    icon: Eye,
+    rgb: '244, 63, 94',
+    colorHex: '#f43f5e',
+    textClass: 'text-rose-500 dark:text-rose-400',
+    bgClass: 'bg-rose-500/15',
+    gradientClass: 'from-rose-500 to-red-500',
+    glowClass: 'shadow-[0_0_15px_rgba(244,63,94,0.3)]',
+  },
+  cataract_eye: {
+    icon: EyeOff,
+    rgb: '6, 182, 212',
+    colorHex: '#06b6d4',
+    textClass: 'text-cyan-500 dark:text-cyan-400',
+    bgClass: 'bg-cyan-500/15',
+    gradientClass: 'from-cyan-500 to-sky-600',
+    glowClass: 'shadow-[0_0_15px_rgba(6,182,212,0.3)]',
+  },
+  diabetic_foot: {
+    icon: HeartPulse,
+    rgb: '234, 179, 8',
+    colorHex: '#eab308',
+    textClass: 'text-yellow-500 dark:text-yellow-400',
+    bgClass: 'bg-yellow-500/15',
+    gradientClass: 'from-yellow-500 to-amber-600',
+    glowClass: 'shadow-[0_0_15px_rgba(234,179,8,0.3)]',
+  },
+  neonatal_jaundice: {
+    icon: Sun,
+    rgb: '245, 158, 11',
+    colorHex: '#f59e0b',
+    textClass: 'text-amber-500 dark:text-amber-400',
+    bgClass: 'bg-amber-500/15',
+    gradientClass: 'from-amber-500 to-yellow-600',
+    glowClass: 'shadow-[0_0_15px_rgba(245,158,11,0.3)]',
+  },
+  sickle_cell: {
+    icon: Dna,
+    rgb: '168, 85, 247',
+    colorHex: '#a855f7',
+    textClass: 'text-purple-500 dark:text-purple-400',
+    bgClass: 'bg-purple-500/15',
+    gradientClass: 'from-purple-500 to-violet-600',
+    glowClass: 'shadow-[0_0_15px_rgba(168,85,247,0.3)]',
+  },
+  fungal_tinea: {
+    icon: Sparkles,
+    rgb: '20, 184, 166',
+    colorHex: '#14b8a6',
+    textClass: 'text-teal-500 dark:text-teal-400',
+    bgClass: 'bg-teal-500/15',
+    gradientClass: 'from-teal-500 to-emerald-600',
+    glowClass: 'shadow-[0_0_15px_rgba(20,184,166,0.3)]',
+  },
+  dental_fluorosis: {
+    icon: Smile,
+    rgb: '59, 130, 246',
+    colorHex: '#3b82f6',
+    textClass: 'text-blue-500 dark:text-blue-400',
+    bgClass: 'bg-blue-500/15',
+    gradientClass: 'from-blue-500 to-indigo-600',
+    glowClass: 'shadow-[0_0_15px_rgba(59,130,246,0.3)]',
   },
 };

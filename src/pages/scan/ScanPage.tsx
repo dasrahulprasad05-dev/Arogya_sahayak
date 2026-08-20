@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
@@ -18,7 +18,9 @@ import {
   ShieldAlert,
   RefreshCw,
   Scan,
-  FileText
+  FileText,
+  Search,
+  Layers
 } from 'lucide-react';
 
 const DEFAULT_SCAN_CFG = {
@@ -30,6 +32,18 @@ const DEFAULT_SCAN_CFG = {
   glowClass: 'shadow-[0_0_15px_rgba(139,92,246,0.3)]',
 };
 
+type CategoryFilter = 'all' | 'infectious' | 'maternal_child' | 'dermatology' | 'ophthalmology' | 'radiology_neurology' | 'dental';
+
+const CATEGORIES: { id: CategoryFilter; label: string; count?: number }[] = [
+  { id: 'all', label: 'All Scanners' },
+  { id: 'infectious', label: 'Infectious & Endemic' },
+  { id: 'maternal_child', label: 'Maternal & Blood' },
+  { id: 'dermatology', label: 'Dermatology & Ulcers' },
+  { id: 'ophthalmology', label: 'Eye & Vision' },
+  { id: 'radiology_neurology', label: 'Radiology & Organs' },
+  { id: 'dental', label: 'Dental & Oral' },
+];
+
 const ScanPage: React.FC = () => {
   const { t } = useLanguage();
   const navigate = useNavigate();
@@ -40,6 +54,38 @@ const ScanPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<PredictionData | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [activeCategory, setActiveCategory] = useState<CategoryFilter>('all');
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Filter tools based on category and search query
+  const filteredTools = useMemo(() => {
+    return Object.values(scanToolsConfig).filter((tool) => {
+      // Category match
+      let matchesCategory = true;
+      if (activeCategory === 'infectious') {
+        matchesCategory = tool.category === 'infectious';
+      } else if (activeCategory === 'maternal_child') {
+        matchesCategory = tool.category === 'gynecology' || tool.category === 'hematology' || tool.category === 'pediatrics';
+      } else if (activeCategory === 'dermatology') {
+        matchesCategory = tool.category === 'dermatology';
+      } else if (activeCategory === 'ophthalmology') {
+        matchesCategory = tool.category === 'ophthalmology';
+      } else if (activeCategory === 'radiology_neurology') {
+        matchesCategory = tool.category === 'radiology' || tool.category === 'neurology';
+      } else if (activeCategory === 'dental') {
+        matchesCategory = tool.category === 'dental';
+      }
+
+      // Search match
+      const query = searchQuery.toLowerCase().trim();
+      const matchesSearch = !query || 
+        tool.name.toLowerCase().includes(query) || 
+        tool.description.toLowerCase().includes(query) ||
+        tool.labels.some(l => l.toLowerCase().includes(query));
+
+      return matchesCategory && matchesSearch;
+    });
+  }, [activeCategory, searchQuery]);
 
   const handleScanComplete = async (cnnResult: { 
     vector: number[]; 
@@ -149,7 +195,7 @@ const ScanPage: React.FC = () => {
   const ActiveIcon = activeCfg?.icon ?? null;
 
   return (
-    <div className="space-y-8 max-w-5xl mx-auto relative overflow-hidden pb-12">
+    <div className="space-y-6 sm:space-y-8 max-w-6xl mx-auto relative overflow-hidden pb-12">
 
       {/* ── Ambient blobs ─────────────────────────── */}
       <div className="absolute top-[-10%] left-[-15%] w-[450px] h-[450px] bg-rose-500/[0.03] dark:bg-rose-500/10 rounded-full blur-[100px] pointer-events-none -z-10 animate-mesh-move" />
@@ -171,22 +217,21 @@ const ScanPage: React.FC = () => {
       >
         <ShieldAlert className="w-6 h-6 text-amber-500 shrink-0 mt-0.5" />
         <div>
-          <p className="text-sm font-bold text-amber-600 dark:text-amber-400">
-            ⚠️ This is NOT a medical diagnosis tool
+          <p className="text-sm font-bold text-amber-600 dark:text-amber-400 flex items-center gap-2">
+            <span>⚠️ Clinical Triage &amp; Experimental Image Quality Tool</span>
+            <span className="text-[10px] bg-amber-500/20 px-2 py-0.5 rounded-full font-extrabold uppercase">16 Models + OCR</span>
           </p>
           <p className="text-xs text-amber-600/80 dark:text-amber-400/80 leading-relaxed mt-1">
-            This scanner uses a general-purpose MobileNetV2 model (trained on everyday objects, not
-            medical images). Results are{' '}
-            <strong>experimental image quality assessments</strong>, not clinical diagnoses. Always
-            consult a qualified healthcare professional. If you notice concerning symptoms, please
-            visit your nearest Primary Health Centre (PHC).
+            This scanner suite runs on-device CNN feature extraction with Grad-CAM saliency heatmaps. Results provide{' '}
+            <strong>preliminary screening observations</strong>, not clinical diagnoses. Always
+            consult a qualified physician or Primary Health Centre (PHC) specialist for definitive diagnosis.
           </p>
         </div>
       </motion.div>
 
       {/* ── Animated header ───────────────────────── */}
       <motion.div layout className="flex items-center gap-4">
-        {/* Back button — springs in when a tool is selected */}
+        {/* Back button */}
         <AnimatePresence mode="popLayout">
           {selectedTool && (
             <motion.button
@@ -208,7 +253,7 @@ const ScanPage: React.FC = () => {
 
         <div className="space-y-1 flex-1 min-w-0">
           <div className="flex items-center gap-3 flex-wrap">
-            {/* Active tool icon — springs in */}
+            {/* Active tool icon */}
             <AnimatePresence mode="wait">
               {selectedTool && ActiveIcon && (
                 <motion.div
@@ -223,7 +268,7 @@ const ScanPage: React.FC = () => {
               )}
             </AnimatePresence>
 
-            {/* Title cross-fade */}
+            {/* Title */}
             <AnimatePresence mode="wait">
               <motion.h1
                 key={selectedTool ? selectedTool.id : '__menu__'}
@@ -231,22 +276,22 @@ const ScanPage: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -6 }}
                 transition={{ duration: 0.28, ease: 'easeOut' }}
-                className="text-3xl md:text-4xl font-extrabold font-heading tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-rose-500 via-violet-500 to-cyan-500 bg-[length:200%_auto]"
+                className="text-2xl sm:text-3xl md:text-4xl font-extrabold font-heading tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-rose-500 via-violet-500 to-cyan-500 bg-[length:200%_auto]"
                 style={{ animation: 'gradient-shift 6s ease infinite' }}
               >
-                {selectedTool ? selectedTool.name : t('nav.scanners')}
+                {selectedTool ? selectedTool.name : 'AI Medical Image Scanners'}
               </motion.h1>
             </AnimatePresence>
 
-            <span className="text-[9px] font-bold px-2 py-0.5 bg-amber-500/15 text-amber-600 dark:text-amber-400 rounded-full border border-amber-500/30 uppercase tracking-wider hidden sm:inline-block shrink-0">
-              Experimental Preview
+            <span className="text-[9px] font-bold px-2.5 py-1 bg-primary/15 text-primary rounded-full border border-primary/30 uppercase tracking-wider hidden sm:inline-block shrink-0">
+              🇮🇳 India Focus Edition
             </span>
           </div>
 
-          <p className="text-muted-foreground text-sm max-w-2xl leading-relaxed">
+          <p className="text-muted-foreground text-xs sm:text-sm max-w-2xl leading-relaxed">
             {selectedTool
-              ? 'Upload an image for on-device feature extraction. Results provide general guidance only — this is NOT a diagnosis. Please consult a doctor for clinical interpretation.'
-              : 'Experimental image triage tools running entirely on-device. These provide general observations only and cannot replace a trained medical professional.'}
+              ? 'Upload an image for on-device feature extraction. Results provide preliminary guidance with Grad-CAM heatmaps. Consult a doctor for clinical confirmation.'
+              : 'Explore 16 India-specific on-device CNN triage models & Vision OCR. Runs in real-time in your browser.'}
           </p>
         </div>
       </motion.div>
@@ -254,43 +299,86 @@ const ScanPage: React.FC = () => {
       {/* ── Main content — animated menu ↔ scanner ── */}
       <AnimatePresence mode="wait">
         {!selectedTool ? (
-          /* Tool Selection Grid */
-          <motion.div
-            key="menu-grid"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.97 }}
-            transition={{ duration: 0.3, ease: 'easeOut' }}
-            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5"
-          >
-            {/* Prescription & Medicine OCR Card */}
-            <FeatureCard
-              icon={FileText}
-              title="Prescription & Medicine OCR"
-              description="Snap prescription slips or tablet strips to extract dosages and set reminder alarms"
-              rgb="16, 185, 129"
-              index={0}
-              footerLabel="Open OCR Scanner"
-              badge="New • Vision AI"
-              onClick={() => navigate('/scan/prescription')}
-            />
-            {Object.values(scanToolsConfig).map((tool, index) => {
-              const cfg = scanConfigs[tool.id] ?? DEFAULT_SCAN_CFG;
-              return (
-                <FeatureCard
-                  key={tool.id}
-                  icon={cfg.icon}
-                  title={tool.name}
-                  description={tool.description}
-                  rgb={cfg.rgb}
-                  index={index}
-                  footerLabel="Open Scanner"
-                  badge="Experimental • On-Device"
-                  onClick={() => setSelectedTool(tool)}
+          <div className="space-y-5">
+            {/* Search & Category Filter Controls */}
+            <div className="flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
+              {/* Search Bar */}
+              <div className="relative flex-1 max-w-md">
+                <Search className="w-4 h-4 text-muted-foreground absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search scanners by disease, organ, or condition..."
+                  className="w-full bg-card/60 backdrop-blur-md border border-border rounded-xl pl-9 pr-4 py-2 text-xs text-foreground placeholder:text-muted-foreground outline-none focus:border-primary transition-all"
                 />
-              );
-            })}
-          </motion.div>
+              </div>
+
+              {/* Counter badge */}
+              <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground shrink-0">
+                <Layers className="w-3.5 h-3.5 text-primary" />
+                <span>Showing {filteredTools.length + 1} scanners</span>
+              </div>
+            </div>
+
+            {/* Category Filter Pills */}
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-none">
+              {CATEGORIES.map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={() => setActiveCategory(cat.id)}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all outline-none ${
+                    activeCategory === cat.id
+                      ? 'bg-primary text-white shadow-md shadow-primary/20 scale-[1.02]'
+                      : 'bg-card/60 hover:bg-muted text-muted-foreground hover:text-foreground border border-border'
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Tool Selection Grid */}
+            <motion.div
+              key="menu-grid"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.97 }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5"
+            >
+              {/* Prescription & Medicine OCR Card */}
+              {activeCategory === 'all' && !searchQuery && (
+                <FeatureCard
+                  icon={FileText}
+                  title="Prescription & Medicine OCR"
+                  description="Snap prescription slips or tablet strips to extract dosages and set reminder alarms"
+                  rgb="16, 185, 129"
+                  index={0}
+                  footerLabel="Open OCR Scanner"
+                  badge="Vision OCR • Active"
+                  onClick={() => navigate('/scan/prescription')}
+                />
+              )}
+
+              {filteredTools.map((tool, index) => {
+                const cfg = scanConfigs[tool.id] ?? DEFAULT_SCAN_CFG;
+                return (
+                  <FeatureCard
+                    key={tool.id}
+                    icon={cfg.icon}
+                    title={tool.name}
+                    description={tool.description}
+                    rgb={cfg.rgb}
+                    index={index + 1}
+                    footerLabel="Launch Scanner"
+                    badge="On-Device • Grad-CAM"
+                    onClick={() => setSelectedTool(tool)}
+                  />
+                );
+              })}
+            </motion.div>
+          </div>
         ) : (
           /* Active Scanner Panel */
           <motion.div
