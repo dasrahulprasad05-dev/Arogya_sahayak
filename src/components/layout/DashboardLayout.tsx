@@ -89,8 +89,8 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
         className="hidden md:flex flex-col bg-white dark:bg-card border-r border-slate-200 dark:border-border relative overflow-hidden"
       >
         <div className="p-4 border-b border-slate-200 dark:border-border flex items-center justify-between">
-          <div className="flex items-center gap-2 overflow-hidden whitespace-nowrap">
-            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-white font-bold shrink-0">AS</div>
+          <div className="flex items-center gap-2.5 overflow-hidden whitespace-nowrap">
+            <img src="/logo.png" alt="Arogya Sahayak Logo" className="w-8 h-8 object-contain shrink-0 drop-shadow-sm" />
             <AnimatePresence>
               {!sidebarCollapsed && (
                 <motion.span initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -8 }} transition={{ duration: 0.15 }} className="font-heading font-bold text-lg text-primary">
@@ -186,7 +186,10 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
         <header className="sticky top-0 bg-background/80 backdrop-blur-md border-b border-border z-30 px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3 md:gap-0">
             <button onClick={() => setMobileMenuOpen(true)} className="p-2 -ml-2 hover:bg-muted rounded-md md:hidden touch-target" aria-label="Open Mobile Menu"><Menu className="w-5 h-5" /></button>
-            <h1 className="md:hidden font-heading font-bold text-lg text-primary">{t('app.name')}</h1>
+            <div className="flex items-center gap-2 md:hidden">
+              <img src="/logo.png" alt="Arogya Sahayak Logo" className="w-7 h-7 object-contain drop-shadow-sm" />
+              <h1 className="font-heading font-bold text-lg text-primary">{t('app.name')}</h1>
+            </div>
           </div>
 
           <div className="flex items-center gap-4">

@@ -12,7 +12,7 @@ import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
 import {
-  Activity, ArrowRight, Sun, Moon, Globe, Check, Lock, HeartPulse, Phone, Mail
+  ArrowRight, Sun, Moon, Globe, Check, Lock, HeartPulse, Phone, Mail
 } from 'lucide-react';
 
 const GithubIcon = ({ className }: { className?: string }) => (
@@ -168,16 +168,16 @@ const LandingPage: React.FC = () => {
         className="sticky top-0 z-50 w-full bg-white/70 dark:bg-[#030310]/70 backdrop-blur-xl border-b border-slate-200/80 dark:border-slate-800/40"
       >
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2.5 group">
-            <motion.div
-              whileHover={{ scale: 1.12, rotate: 8 }}
-              whileTap={{ scale: 0.9 }}
+          <Link to="/" className="flex items-center gap-3 group">
+            <motion.img
+              src="/logo.png"
+              alt="Arogya Sahayak"
+              whileHover={{ scale: 1.08 }}
+              whileTap={{ scale: 0.94 }}
               transition={{ type: 'spring', stiffness: 400, damping: 15 }}
-              className="p-2 bg-gradient-to-br from-purple-500/10 to-cyan-500/10 text-primary rounded-xl border border-purple-500/10"
-            >
-              <Activity className="w-5 h-5" />
-            </motion.div>
-            <span className="font-heading font-extrabold text-lg bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              className="w-10 h-10 object-contain drop-shadow-md"
+            />
+            <span className="font-heading font-extrabold text-xl bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
               {t('app.name')}
             </span>
           </Link>
@@ -513,11 +513,9 @@ const LandingPage: React.FC = () => {
       <footer className="mt-auto border-t border-slate-200 dark:border-slate-900 bg-white/50 dark:bg-slate-950/60 py-12 px-6 backdrop-blur-xl z-10">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="flex flex-col items-center md:items-start text-center md:text-left gap-2">
-            <div className="flex items-center gap-2">
-              <div className="p-2 bg-gradient-to-br from-purple-500/10 to-cyan-500/10 text-primary rounded-xl border border-purple-500/10">
-                <Activity className="w-5 h-5" />
-              </div>
-              <span className="font-heading font-black text-lg text-primary">{t('app.name')}</span>
+            <div className="flex items-center gap-3">
+              <img src="/logo.png" alt="Arogya Sahayak" className="w-10 h-10 object-contain drop-shadow-md" />
+              <span className="font-heading font-black text-xl text-primary">{t('app.name')}</span>
             </div>
             <p className="text-[11px] text-slate-400 font-bold uppercase tracking-wider">{t('app.tagline')}</p>
           </div>

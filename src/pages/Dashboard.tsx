@@ -114,16 +114,12 @@ const Dashboard: React.FC = () => {
             className="lg:col-span-4 bg-[#0d1424]/90 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-4 sm:p-5 flex flex-col justify-between shadow-xl"
           >
             <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-cyan-500 to-primary p-0.5 shadow-lg shadow-cyan-500/20">
-                <div className="w-full h-full bg-[#0d1424] rounded-[10px] flex items-center justify-center">
-                  <span className="font-heading font-extrabold text-cyan-400 text-xl">A</span>
-                </div>
-              </div>
+              <img src="/logo.png" alt="Arogya Sahayak" className="w-12 h-12 object-contain drop-shadow-md" />
               <div>
                 <h2 className="font-heading font-bold text-white text-base tracking-tight flex items-center gap-1.5">
                   Arogya Sahayak
                 </h2>
-                <p className="text-slate-400 text-xs">Your Personal Health Assistant</p>
+                <p className="text-slate-400 text-xs">Smart • Safe • Supportive</p>
               </div>
             </div>
 
