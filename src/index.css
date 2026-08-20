@@ -895,3 +895,36 @@ select option {
   --tw-ring-shadow: 0 0 #0000 !important;
 }
 
+/* Document Scanner Laser Bar Animation */
+@keyframes laser-scan {
+  0% {
+    top: 10%;
+    opacity: 0.8;
+  }
+  50% {
+    top: 85%;
+    opacity: 1;
+  }
+  100% {
+    top: 10%;
+    opacity: 0.8;
+  }
+}
+
+.animate-laser-scan {
+  animation: laser-scan 2.5s ease-in-out infinite;
+}
+
+/* ECG Line Flow Pulse */
+@keyframes ecg-dash {
+  to {
+    stroke-dashoffset: -100;
+  }
+}
+
+.animate-ecg-line {
+  stroke-dasharray: 8, 4;
+  animation: ecg-dash 3s linear infinite;
+}
+
+
