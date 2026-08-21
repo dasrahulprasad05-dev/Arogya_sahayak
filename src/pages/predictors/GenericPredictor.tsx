@@ -6,9 +6,8 @@ import { genericSchemas } from '../../lib/validators/genericSchemas';
 import { supabase } from '../../integrations/supabase/client';
 import { useHealthDispatch } from '../../context/HealthDispatchContext';
 import { getLocalPredictionFallback } from '../../utils/localPredictorsFallback';
-import { showToast } from '../../utils/toast';
 import type { PredictionData } from '../../lib/types/prediction';
-import { templateRenderer } from '../../utils/templateRenderer';
+import { enhancePredictionWithAI } from '../../services/predictionNarrativeService';
 import { useRequireAuth } from '../../hooks/useRequireAuth';
 import LoginPromptModal from '../../components/auth/LoginPromptModal';
 import PredictionResult from '../../components/medical/PredictionResult';
@@ -196,18 +195,17 @@ const GenericPredictor: React.FC = () => {
       
       let finalResult = data;
       if (data.llm_failed && data.facts) {
-        finalResult = templateRenderer(data.facts);
+        finalResult = await enhancePredictionWithAI(config.id, data.facts, parsedData);
       }
       
       setResult(finalResult);
       logPrediction(config.id, parsedData, finalResult);
     } catch (err: any) {
-      console.error(err);
+      console.warn('Edge function fallback to client-side prediction engine', err);
       const offlineFacts = getLocalPredictionFallback(config.id, parsedData);
-      const fallbackResult = templateRenderer(offlineFacts);
+      const fallbackResult = await enhancePredictionWithAI(config.id, offlineFacts, parsedData);
       setResult(fallbackResult);
       logPrediction(config.id, parsedData, fallbackResult);
-      showToast("Edge function unavailable. Using offline local risk assessment.", "warning");
     } finally {
       setLoading(false);
     }
