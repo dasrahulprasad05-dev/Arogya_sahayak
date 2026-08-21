@@ -393,9 +393,15 @@ CRITICAL INSTRUCTION: Analyze the patient's specific health concern and return a
 Language required: ${languageName}.
 All text in 'content', 'recommendations', 'warnings', and 'followUp' MUST be naturally written in ${languageName}.
 
+CRITICAL FORMATTING REQUIREMENT: In 'content', NEVER output a long continuous paragraph. You MUST write 3 to 4 crisp, pointwise bullet items separated by newlines (each starting with a bullet symbol '•'). 
+Example:
+• Likely Causes: [Brief explanation of potential triggers]
+• Clinical Mechanism: [Briefly what happens in the body]
+• What You Should Do: [Clear, immediate guidance]
+
 JSON Schema:
 {
-  "content": "Detailed, sympathetic, 2-3 paragraph clinical overview of causes, mechanism, and immediate guidance in ${languageName}",
+  "content": "• Likely Causes: [point 1]\n• What is happening: [point 2]\n• What you should do: [point 3] in ${languageName}",
   "confidence": 0.92,
   "recommendations": ["Actionable safe home remedy 1", "Actionable safe home remedy 2", "Actionable safe home remedy 3"],
   "warnings": ["Specific red flag symptom 1", "Specific red flag symptom 2"],

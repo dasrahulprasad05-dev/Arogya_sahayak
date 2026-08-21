@@ -520,11 +520,63 @@ const HealthChat: React.FC = () => {
                         </div>
                       </div>
 
-                      {/* Primary Clinical Advice */}
-                      <div className="space-y-1">
-                        <p className="text-xs sm:text-sm text-foreground/90 font-medium leading-relaxed">
-                          {msg.structured.content}
-                        </p>
+                      {/* Primary Clinical Advice (Pointwise Formatting) */}
+                      <div className="space-y-2">
+                        {(() => {
+                          const raw = msg.structured.content || '';
+                          // Split by newlines, bullets, or periods followed by capital letters/spaces
+                          let points: string[] = [];
+                          
+                          if (raw.includes('\n') || raw.includes('•') || raw.includes('- ')) {
+                            points = raw
+                              .split(/\n+|(?=•\s*)/)
+                              .map(s => s.replace(/^[•\-\*\d\.\s]+/, '').trim())
+                              .filter(s => s.length > 3);
+                          } else {
+                            // If it is a continuous paragraph, split by sentence endings
+                            points = raw
+                              .split(/(?<=[.!?।])\s+/)
+                              .map(s => s.trim())
+                              .filter(s => s.length > 5);
+                          }
+
+                          if (points.length > 1) {
+                            return (
+                              <div className="space-y-2 pt-1">
+                                {points.map((pt, i) => {
+                                  // Check if point has a colon title (e.g. "Likely Causes: ...")
+                                  const colonIndex = pt.indexOf(':');
+                                  if (colonIndex > 0 && colonIndex < 35) {
+                                    const title = pt.slice(0, colonIndex + 1);
+                                    const body = pt.slice(colonIndex + 1);
+                                    return (
+                                      <div key={i} className="flex items-start gap-2.5 text-xs sm:text-sm text-foreground/90 font-medium leading-relaxed bg-slate-50/50 dark:bg-slate-900/40 border border-border/50 rounded-xl p-2.5">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
+                                        <span>
+                                          <strong className="text-foreground font-extrabold">{title}</strong>
+                                          <span className="text-foreground/80">{body}</span>
+                                        </span>
+                                      </div>
+                                    );
+                                  }
+
+                                  return (
+                                    <div key={i} className="flex items-start gap-2.5 text-xs sm:text-sm text-foreground/90 font-medium leading-relaxed bg-slate-50/50 dark:bg-slate-900/40 border border-border/50 rounded-xl p-2.5">
+                                      <span className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
+                                      <span>{pt}</span>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            );
+                          }
+
+                          return (
+                            <p className="text-xs sm:text-sm text-foreground/90 font-medium leading-relaxed">
+                              {raw}
+                            </p>
+                          );
+                        })()}
                       </div>
 
                       {/* Safe Home Care Recommendations */}
