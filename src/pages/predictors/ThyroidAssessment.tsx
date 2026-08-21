@@ -118,7 +118,6 @@ const ThyroidAssessment: React.FC = () => {
       let finalResult = data;
       if (data.llm_failed && data.facts) {
         finalResult = templateRenderer(data.facts);
-        showToast("AI Narrative generation failed. Displaying Basic Assessment.", "warning");
       }
       setResult(finalResult);
       logPrediction('thyroid', validationResult.data, finalResult);
