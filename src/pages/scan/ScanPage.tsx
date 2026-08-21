@@ -20,7 +20,9 @@ import {
   Scan,
   FileText,
   Search,
-  Layers
+  Layers,
+  Camera,
+  Mic
 } from 'lucide-react';
 
 const DEFAULT_SCAN_CFG = {
@@ -360,18 +362,40 @@ const ScanPage: React.FC = () => {
               transition={{ duration: 0.3, ease: 'easeOut' }}
               className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5"
             >
-              {/* Prescription & Medicine OCR Card */}
+              {/* Top Innovation Biosensors */}
               {activeCategory === 'all' && !searchQuery && (
-                <FeatureCard
-                  icon={FileText}
-                  title="Prescription & Medicine OCR"
-                  description="Snap prescription slips or tablet strips to extract dosages and set reminder alarms"
-                  rgb="16, 185, 129"
-                  index={0}
-                  footerLabel="Open OCR Scanner"
-                  badge="Vision OCR • Active"
-                  onClick={() => navigate('/scan/prescription')}
-                />
+                <>
+                  <FeatureCard
+                    icon={Camera}
+                    title="Contactless Camera Vitals (rPPG)"
+                    description="Measure real-time Heart Rate (BPM), Respiration Rate & Stress Index via facial camera optical pulse"
+                    rgb="244, 63, 94"
+                    index={0}
+                    footerLabel="Start Camera Vitals"
+                    badge="rPPG Biosensor • Live"
+                    onClick={() => navigate('/scan/vitals')}
+                  />
+                  <FeatureCard
+                    icon={Mic}
+                    title="AI Audio Cough & Wheeze Analyzer"
+                    description="Screen microphone audio spectrogram for asthma wheezing, bronchitis phlegm, or dry throat tickle"
+                    rgb="99, 102, 241"
+                    index={1}
+                    footerLabel="Analyze Audio Cough"
+                    badge="Acoustic ML • Audio"
+                    onClick={() => navigate('/scan/audio-cough')}
+                  />
+                  <FeatureCard
+                    icon={FileText}
+                    title="Prescription & Medicine OCR"
+                    description="Snap prescription slips or tablet strips to extract dosages and set reminder alarms"
+                    rgb="16, 185, 129"
+                    index={2}
+                    footerLabel="Open OCR Scanner"
+                    badge="Vision OCR • Active"
+                    onClick={() => navigate('/scan/prescription')}
+                  />
+                </>
               )}
 
               {filteredTools.map((tool, index) => {

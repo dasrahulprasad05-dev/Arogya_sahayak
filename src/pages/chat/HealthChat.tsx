@@ -414,6 +414,15 @@ const HealthChat: React.FC = () => {
             </div>
 
             <button
+              onClick={() => navigate('/bot-connect')}
+              title="Voice & WhatsApp/Telegram Bot Hub"
+              className="px-3 py-2 bg-white/20 hover:bg-white/30 active:scale-95 backdrop-blur-md border border-white/30 text-white rounded-xl transition-all shadow-sm flex items-center gap-1.5 text-xs font-bold"
+            >
+              <PhoneCall className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Voice &amp; Bots</span>
+            </button>
+
+            <button
               onClick={handleExportPdf}
               title="Download Consultation PDF"
               className="p-2.5 bg-white/15 hover:bg-white/25 active:scale-95 backdrop-blur-md border border-white/25 text-white rounded-xl transition-all shadow-sm outline-none focus:outline-none"

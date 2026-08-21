@@ -9,6 +9,22 @@ export interface HealthTool {
 
 export const healthTools: HealthTool[] = [
   {
+    id: 'healthtwin',
+    nameKey: 'Digital Health Twin & Biological Age',
+    path: '/health-twin',
+    colorClass: 'text-purple-600 dark:text-purple-400',
+    bgClass: 'bg-purple-50 dark:bg-purple-950/20 border-purple-200 dark:border-purple-900/40',
+    category: 'tracker'
+  },
+  {
+    id: 'janaushadhi',
+    nameKey: 'PM Jan Aushadhi Generic Switcher',
+    path: '/jan-aushadhi',
+    colorClass: 'text-emerald-600 dark:text-emerald-400',
+    bgClass: 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-900/40',
+    category: 'tracker'
+  },
+  {
     id: 'symptom',
     nameKey: 'tracker.symptom.title',
     path: '/trackers/symptom',

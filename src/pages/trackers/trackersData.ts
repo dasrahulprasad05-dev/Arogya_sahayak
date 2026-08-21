@@ -1,10 +1,12 @@
 import { 
   Activity, Droplet, Moon, Smile, Thermometer, Brain, Pill, Heart, Wind, 
-  Utensils, Dumbbell, ShieldAlert, Syringe
+  Utensils, Dumbbell, ShieldAlert, Syringe, Dna
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 export const trackerConfigs: Record<string, { icon: LucideIcon; rgb: string; textClass: string; bgClass: string; desc: string }> = {
+  healthtwin: { icon: Dna, rgb: '168, 85, 247', textClass: 'text-purple-500 dark:text-purple-400', bgClass: 'bg-purple-500/15', desc: 'Simulate biological age and interactive organ resilience' },
+  janaushadhi: { icon: Pill, rgb: '16, 185, 129', textClass: 'text-emerald-500 dark:text-emerald-400', bgClass: 'bg-emerald-500/15', desc: 'Find 85% cheaper generic alternatives & calculate family savings' },
   symptom: { icon: Activity, rgb: '6, 182, 212', textClass: 'text-cyan-500 dark:text-cyan-400', bgClass: 'bg-cyan-500/15', desc: 'Triage health symptoms and check recommendations' },
   water: { icon: Droplet, rgb: '59, 130, 246', textClass: 'text-blue-500 dark:text-blue-400', bgClass: 'bg-blue-500/15', desc: 'Track daily hydration goals' },
   sleep: { icon: Moon, rgb: '99, 102, 241', textClass: 'text-indigo-500 dark:text-indigo-400', bgClass: 'bg-indigo-500/15', desc: 'Log sleep duration and quality' },
