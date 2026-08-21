@@ -177,13 +177,13 @@ const AudioCoughAnalyzer: React.FC = () => {
     let remedies: string[] = [];
     let redFlags: string[] = [];
 
-    if (avgEnergy < 8 && maxPeak < 25) {
+    if (avgEnergy < 12 && maxPeak < 30) {
       type = 'Normal / Clear';
       severity = 'Mild';
-      confidence = 92;
-      summary = 'Acoustic breathing profile shows clear lung sounds with no significant bronchospasm or phlegm rattle.';
-      remedies = ['Maintain routine hydration (2.5L/day)', 'Daily deep breathing exercises', 'Steam inhalation if dusty environment'];
-      redFlags = ['Persistent nocturnal cough', 'Sudden onset chest tightness'];
+      confidence = 96;
+      summary = 'No coughing bursts detected during the 8-second recording. Ambient breath audio indicates open, clear airway without wheeze or rattling congestion.';
+      remedies = ['Maintain routine hydration (2.5L/day)', 'Airway sounds are normal and clear'];
+      redFlags = ['If you were trying to cough and felt throat blockage, re-record closer to your microphone'];
     } else if (maxPeak > 55 && avgEnergy < 35) {
       type = 'Dry Cough';
       severity = maxPeak > 75 ? 'Moderate' : 'Mild';
