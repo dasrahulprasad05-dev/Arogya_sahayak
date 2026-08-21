@@ -58,14 +58,14 @@ const Dashboard: React.FC = () => {
 
   // Predictor Matrix Config
   const PREDICTORS = [
-    { id: 'diabetes', title: 'Diabetes Risk', value: '80%', trend: 'up', path: '/predictors/diabetes', color: 'from-cyan-500/20 to-blue-500/20', text: 'text-cyan-400', border: 'border-cyan-500/30' },
-    { id: 'ecg', title: 'Hypertension', value: '70%', trend: 'up', path: '/predictors/ecg', color: 'from-indigo-500/20 to-violet-500/20', text: 'text-indigo-400', border: 'border-indigo-500/30' },
-    { id: 'heart', title: 'Heart Health', value: '91%', trend: 'down', path: '/predictors/heart-attack', color: 'from-rose-500/20 to-red-500/20', text: 'text-rose-400', border: 'border-rose-500/30' },
-    { id: 'liver', title: 'Liver Function', value: '83%', trend: 'up', path: '/predictors/liver', color: 'from-amber-500/20 to-orange-500/20', text: 'text-amber-400', border: 'border-amber-500/30' },
-    { id: 'kidney', title: 'Kidney Health', value: '88%', trend: 'up', path: '/predictors/kidney', color: 'from-teal-500/20 to-emerald-500/20', text: 'text-teal-400', border: 'border-teal-500/30' },
-    { id: 'thyroid', title: 'Thyroid / Mood', value: '76%', trend: 'down', path: '/predictors/thyroid', color: 'from-purple-500/20 to-fuchsia-500/20', text: 'text-purple-400', border: 'border-purple-500/30' },
-    { id: 'anemia', title: 'Anemia Screen', value: '85%', trend: 'up', path: '/predictors/anemia', color: 'from-emerald-500/20 to-teal-500/20', text: 'text-emerald-400', border: 'border-emerald-500/30' },
-    { id: 'cancer', title: 'Cancer Screener', value: '94%', trend: 'down', path: '/predictors/cancer', color: 'from-pink-500/20 to-rose-500/20', text: 'text-pink-400', border: 'border-pink-500/30' },
+    { id: 'diabetes', title: 'Diabetes Risk', value: '80%', trend: 'up', path: '/predictors/diabetes', color: 'from-cyan-500/10 to-blue-500/10 dark:from-cyan-500/20 dark:to-blue-500/20', text: 'text-cyan-600 dark:text-cyan-400', border: 'border-cyan-500/30' },
+    { id: 'ecg', title: 'Hypertension', value: '70%', trend: 'up', path: '/predictors/ecg', color: 'from-indigo-500/10 to-violet-500/10 dark:from-indigo-500/20 dark:to-violet-500/20', text: 'text-indigo-600 dark:text-indigo-400', border: 'border-indigo-500/30' },
+    { id: 'heart', title: 'Heart Health', value: '91%', trend: 'down', path: '/predictors/heart-attack', color: 'from-rose-500/10 to-red-500/10 dark:from-rose-500/20 dark:to-red-500/20', text: 'text-rose-600 dark:text-rose-400', border: 'border-rose-500/30' },
+    { id: 'liver', title: 'Liver Function', value: '83%', trend: 'up', path: '/predictors/liver', color: 'from-amber-500/10 to-orange-500/10 dark:from-amber-500/20 dark:to-orange-500/20', text: 'text-amber-600 dark:text-amber-400', border: 'border-amber-500/30' },
+    { id: 'kidney', title: 'Kidney Health', value: '88%', trend: 'up', path: '/predictors/kidney', color: 'from-teal-500/10 to-emerald-500/10 dark:from-teal-500/20 dark:to-emerald-500/20', text: 'text-teal-600 dark:text-teal-400', border: 'border-teal-500/30' },
+    { id: 'thyroid', title: 'Thyroid / Mood', value: '76%', trend: 'down', path: '/predictors/thyroid', color: 'from-purple-500/10 to-fuchsia-500/10 dark:from-purple-500/20 dark:to-fuchsia-500/20', text: 'text-purple-600 dark:text-purple-400', border: 'border-purple-500/30' },
+    { id: 'anemia', title: 'Anemia Screen', value: '85%', trend: 'up', path: '/predictors/anemia', color: 'from-emerald-500/10 to-teal-500/10 dark:from-emerald-500/20 dark:to-teal-500/20', text: 'text-emerald-600 dark:text-emerald-400', border: 'border-emerald-500/30' },
+    { id: 'cancer', title: 'Cancer Screener', value: '94%', trend: 'down', path: '/predictors/cancer', color: 'from-pink-500/10 to-rose-500/10 dark:from-pink-500/20 dark:to-rose-500/20', text: 'text-pink-600 dark:text-pink-400', border: 'border-pink-500/30' },
   ];
 
   const MOODS = [
@@ -91,13 +91,13 @@ const Dashboard: React.FC = () => {
   const displayScore = healthScore || 88;
 
   return (
-    <div className="min-h-screen bg-[#070b14] text-slate-100 p-3 sm:p-5 md:p-6 font-body selection:bg-primary/30">
+    <div className="min-h-screen bg-slate-50/60 dark:bg-[#070b14] text-slate-800 dark:text-slate-100 p-3 sm:p-5 md:p-6 font-body selection:bg-primary/30 transition-colors duration-200">
       
       {/* ── Ambient Background Glows ─────────────────── */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
-        <div className="absolute top-1/3 right-10 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-10 left-10 w-80 h-80 bg-violet-600/10 rounded-full blur-3xl" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 dark:bg-primary/10 rounded-full blur-3xl" />
+        <div className="absolute top-1/3 right-10 w-96 h-96 bg-cyan-500/5 dark:bg-cyan-500/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-10 left-10 w-80 h-80 bg-violet-600/5 dark:bg-violet-600/10 rounded-full blur-3xl" />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto space-y-4 sm:space-y-6">
@@ -111,33 +111,33 @@ const Dashboard: React.FC = () => {
           <motion.div 
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="lg:col-span-4 bg-[#0d1424]/90 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-4 sm:p-5 flex flex-col justify-between shadow-xl"
+            className="lg:col-span-4 bg-white/90 dark:bg-[#0d1424]/90 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-4 sm:p-5 flex flex-col justify-between shadow-sm dark:shadow-xl transition-colors"
           >
             <div className="flex items-center gap-3">
               <img src="/logo.png" alt="Arogya Sahayak" className="w-12 h-12 object-contain drop-shadow-md" />
               <div>
-                <h2 className="font-heading font-bold text-white text-base tracking-tight flex items-center gap-1.5">
+                <h2 className="font-heading font-bold text-slate-900 dark:text-white text-base tracking-tight flex items-center gap-1.5">
                   Arogya Sahayak
                 </h2>
-                <p className="text-slate-400 text-xs">Smart • Safe • Supportive</p>
+                <p className="text-slate-500 dark:text-slate-400 text-xs">Smart • Safe • Supportive</p>
               </div>
             </div>
 
-            <div className="mt-4 pt-3 border-t border-slate-800/60 flex items-center gap-3">
+            <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/60 flex items-center gap-3">
               <div className="relative">
                 <img 
                   src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=120&auto=format&fit=crop&q=80" 
                   alt="Patient Avatar" 
                   className="w-10 h-10 rounded-full object-cover border-2 border-primary/40"
                 />
-                <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-400 rounded-full border-2 border-[#0d1424]" />
+                <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 dark:bg-emerald-400 rounded-full border-2 border-white dark:border-[#0d1424]" />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-1.5">
-                  <span className="font-heading font-bold text-sm text-slate-100 truncate">{greeting}</span>
-                  <UserCheck className="w-4 h-4 text-cyan-400 shrink-0" />
+                  <span className="font-heading font-bold text-sm text-slate-900 dark:text-slate-100 truncate">{greeting}</span>
+                  <UserCheck className="w-4 h-4 text-cyan-600 dark:text-cyan-400 shrink-0" />
                 </div>
-                <span className="text-[11px] text-slate-400 font-mono">Patient ID: AS-2026</span>
+                <span className="text-[11px] text-slate-500 dark:text-slate-400 font-mono">Patient ID: AS-2026</span>
               </div>
             </div>
           </motion.div>
@@ -147,14 +147,14 @@ const Dashboard: React.FC = () => {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.05 }}
-            className="lg:col-span-3 bg-[#0d1424]/90 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-4 flex flex-col justify-between shadow-xl"
+            className="lg:col-span-3 bg-white/90 dark:bg-[#0d1424]/90 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-4 flex flex-col justify-between shadow-sm dark:shadow-xl transition-colors"
           >
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Multi-Language Selector</span>
-              <span className="text-[10px] text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded-full font-medium">Active</span>
+              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Multi-Language Selector</span>
+              <span className="text-[10px] text-cyan-700 dark:text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded-full font-medium">Active</span>
             </div>
             
-            <div className="grid grid-cols-3 gap-1.5 bg-[#070b14]/80 p-1.5 rounded-xl border border-slate-800 mt-3">
+            <div className="grid grid-cols-3 gap-1.5 bg-slate-100/90 dark:bg-[#070b14]/80 p-1.5 rounded-xl border border-slate-200/80 dark:border-slate-800 mt-3">
               {languages.map((l) => (
                 <button
                   key={l.code}
@@ -162,7 +162,7 @@ const Dashboard: React.FC = () => {
                   className={`py-2 px-1 text-xs font-bold rounded-lg transition-all text-center outline-none ${
                     language === l.code
                       ? 'bg-gradient-to-r from-primary to-violet-600 text-white shadow-md shadow-primary/20 scale-[1.02]'
-                      : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white/80 dark:hover:bg-slate-800/50'
                   }`}
                 >
                   {l.name}
@@ -176,11 +176,11 @@ const Dashboard: React.FC = () => {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="lg:col-span-2 bg-[#0d1424]/90 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-4 flex flex-col justify-between shadow-xl"
+            className="lg:col-span-2 bg-white/90 dark:bg-[#0d1424]/90 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-4 flex flex-col justify-between shadow-sm dark:shadow-xl transition-colors"
           >
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">7-Day Trend</span>
-              <TrendingUp className="w-3.5 h-3.5 text-cyan-400" />
+              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">7-Day Trend</span>
+              <TrendingUp className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
             </div>
 
             {/* Glowing SVG Sparkline */}
@@ -188,9 +188,9 @@ const Dashboard: React.FC = () => {
               <svg viewBox="0 0 100 35" className="w-full h-full overflow-visible">
                 <defs>
                   <linearGradient id="trendGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#38bdf8" />
+                    <stop offset="0%" stopColor="#0ea5e9" />
                     <stop offset="50%" stopColor="#818cf8" />
-                    <stop offset="100%" stopColor="#34d399" />
+                    <stop offset="100%" stopColor="#10b981" />
                   </linearGradient>
                 </defs>
                 <path
@@ -201,8 +201,8 @@ const Dashboard: React.FC = () => {
                   strokeLinecap="round"
                   className="animate-ecg-line"
                 />
-                <circle cx="100" cy="5" r="4" fill="#34d399" className="animate-ping opacity-75" />
-                <circle cx="100" cy="5" r="3" fill="#34d399" />
+                <circle cx="100" cy="5" r="4" fill="#10b981" className="animate-ping opacity-75" />
+                <circle cx="100" cy="5" r="3" fill="#10b981" />
               </svg>
             </div>
           </motion.div>
@@ -215,11 +215,11 @@ const Dashboard: React.FC = () => {
             className="lg:col-span-3 flex flex-col gap-3"
           >
             {/* Circular Health Score Card */}
-            <div className="flex-1 bg-[#0d1424]/90 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-3.5 flex items-center justify-between shadow-xl relative overflow-hidden">
+            <div className="flex-1 bg-white/90 dark:bg-[#0d1424]/90 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-3.5 flex items-center justify-between shadow-sm dark:shadow-xl relative overflow-hidden transition-colors">
               <div className="space-y-1">
-                <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider block">Health Score</span>
-                <span className="text-xs font-extrabold text-emerald-400 tracking-wider flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">Health Score</span>
+                <span className="text-xs font-extrabold text-emerald-600 dark:text-emerald-400 tracking-wider flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse" />
                   EXCELLENT
                 </span>
               </div>
@@ -228,14 +228,14 @@ const Dashboard: React.FC = () => {
               <div className="relative w-16 h-16 flex items-center justify-center shrink-0">
                 <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
                   <path
-                    className="text-slate-800"
+                    className="text-slate-200 dark:text-slate-800"
                     strokeWidth="3.5"
                     stroke="currentColor"
                     fill="none"
                     d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                   />
                   <path
-                    className="text-emerald-400"
+                    className="text-emerald-500 dark:text-emerald-400"
                     strokeDasharray={`${displayScore}, 100`}
                     strokeWidth="3.5"
                     strokeLinecap="round"
@@ -244,7 +244,7 @@ const Dashboard: React.FC = () => {
                     d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                   />
                 </svg>
-                <span className="absolute font-heading font-extrabold text-xl text-white">
+                <span className="absolute font-heading font-extrabold text-xl text-slate-900 dark:text-white">
                   {displayScore}
                 </span>
               </div>
@@ -278,51 +278,51 @@ const Dashboard: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
             onClick={() => navigate('/chat')}
-            className="lg:col-span-5 bg-gradient-to-br from-violet-950/70 via-[#0d1424] to-[#070b14] border border-violet-500/40 hover:border-violet-400/70 rounded-2xl p-5 sm:p-6 shadow-2xl shadow-violet-950/40 relative overflow-hidden group cursor-pointer flex flex-col justify-between"
+            className="lg:col-span-5 bg-gradient-to-br from-violet-50 via-white to-purple-50/30 dark:from-violet-950/70 dark:via-[#0d1424] dark:to-[#070b14] border border-violet-200 dark:border-violet-500/40 hover:border-violet-400 dark:hover:border-violet-400/70 rounded-2xl p-5 sm:p-6 shadow-md dark:shadow-2xl dark:shadow-violet-950/40 relative overflow-hidden group cursor-pointer flex flex-col justify-between transition-colors"
           >
             {/* Glowing Orbs */}
-            <div className="absolute -top-10 -right-10 w-40 h-40 bg-fuchsia-500/15 rounded-full blur-2xl group-hover:bg-fuchsia-500/25 transition-all" />
-            <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-violet-600/15 rounded-full blur-2xl group-hover:bg-violet-600/25 transition-all" />
+            <div className="absolute -top-10 -right-10 w-40 h-40 bg-fuchsia-500/10 dark:bg-fuchsia-500/15 rounded-full blur-2xl group-hover:bg-fuchsia-500/20 transition-all" />
+            <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-violet-600/10 dark:bg-violet-600/15 rounded-full blur-2xl group-hover:bg-violet-600/20 transition-all" />
 
             <div className="relative z-10 space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-9 h-9 rounded-xl bg-violet-500/20 border border-violet-500/30 flex items-center justify-center text-violet-300">
+                  <div className="w-9 h-9 rounded-xl bg-violet-500/15 border border-violet-500/30 flex items-center justify-center text-violet-600 dark:text-violet-300">
                     <Bot className="w-5 h-5" />
                   </div>
-                  <h3 className="font-heading font-extrabold text-base text-white">
+                  <h3 className="font-heading font-extrabold text-base text-slate-900 dark:text-white">
                     AI Clinical Triage Assistant
                   </h3>
                 </div>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-300 border border-violet-500/30 flex items-center gap-1">
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-violet-500/15 text-violet-700 dark:text-violet-300 border border-violet-500/30 flex items-center gap-1">
                   <Zap className="w-2.5 h-2.5" /> 24/7 Live
                 </span>
               </div>
 
-              <p className="text-xs sm:text-sm text-slate-300/90 leading-relaxed font-normal">
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300/90 leading-relaxed font-normal">
                 Describe clinical symptoms, get instant triage analysis, home care remedies, and verified specialist recommendations.
               </p>
 
               {/* 3-Step Workflow Badges */}
               <div className="grid grid-cols-3 gap-2 pt-2">
-                <div className="bg-white/5 border border-white/10 rounded-xl p-2.5 text-center group-hover:border-violet-400/40 transition-colors">
-                  <Stethoscope className="w-4 h-4 text-violet-400 mx-auto mb-1" />
-                  <span className="text-[11px] font-bold text-slate-200 block">Symptoms</span>
+                <div className="bg-white/80 dark:bg-white/5 border border-violet-100 dark:border-white/10 rounded-xl p-2.5 text-center group-hover:border-violet-400/40 transition-colors shadow-xs">
+                  <Stethoscope className="w-4 h-4 text-violet-600 dark:text-violet-400 mx-auto mb-1" />
+                  <span className="text-[11px] font-bold text-slate-700 dark:text-slate-200 block">Symptoms</span>
                 </div>
-                <div className="bg-white/5 border border-white/10 rounded-xl p-2.5 text-center group-hover:border-violet-400/40 transition-colors">
-                  <Activity className="w-4 h-4 text-cyan-400 mx-auto mb-1" />
-                  <span className="text-[11px] font-bold text-slate-200 block">Analysis</span>
+                <div className="bg-white/80 dark:bg-white/5 border border-violet-100 dark:border-white/10 rounded-xl p-2.5 text-center group-hover:border-violet-400/40 transition-colors shadow-xs">
+                  <Activity className="w-4 h-4 text-cyan-600 dark:text-cyan-400 mx-auto mb-1" />
+                  <span className="text-[11px] font-bold text-slate-700 dark:text-slate-200 block">Analysis</span>
                 </div>
-                <div className="bg-white/5 border border-white/10 rounded-xl p-2.5 text-center group-hover:border-violet-400/40 transition-colors">
-                  <FileText className="w-4 h-4 text-emerald-400 mx-auto mb-1" />
-                  <span className="text-[11px] font-bold text-slate-200 block">Guidance</span>
+                <div className="bg-white/80 dark:bg-white/5 border border-violet-100 dark:border-white/10 rounded-xl p-2.5 text-center group-hover:border-violet-400/40 transition-colors shadow-xs">
+                  <FileText className="w-4 h-4 text-emerald-600 dark:text-emerald-400 mx-auto mb-1" />
+                  <span className="text-[11px] font-bold text-slate-700 dark:text-slate-200 block">Guidance</span>
                 </div>
               </div>
             </div>
 
-            <div className="relative z-10 pt-4 mt-4 border-t border-violet-500/20 flex items-center justify-between text-xs font-bold text-violet-300 group-hover:text-white transition-colors">
+            <div className="relative z-10 pt-4 mt-4 border-t border-violet-200 dark:border-violet-500/20 flex items-center justify-between text-xs font-bold text-violet-700 dark:text-violet-300 group-hover:text-violet-900 dark:group-hover:text-white transition-colors">
               <span className="flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
+                <Sparkles className="w-3.5 h-3.5 text-amber-500 dark:text-amber-300 animate-pulse" />
                 Start AI Medical Consultation
               </span>
               <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -334,18 +334,18 @@ const Dashboard: React.FC = () => {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.25 }}
-            className="lg:col-span-7 bg-[#0d1424]/90 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-5 shadow-xl flex flex-col justify-between"
+            className="lg:col-span-7 bg-white/90 dark:bg-[#0d1424]/90 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-5 shadow-sm dark:shadow-xl flex flex-col justify-between transition-colors"
           >
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800/60">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800/60">
               <div className="flex items-center gap-2">
-                <Activity className="w-4 h-4 text-cyan-400" />
-                <h3 className="font-heading font-extrabold text-sm text-white uppercase tracking-wider">
+                <Activity className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
+                <h3 className="font-heading font-extrabold text-sm text-slate-900 dark:text-white uppercase tracking-wider">
                   AI Predictors Matrix
                 </h3>
               </div>
               <button 
                 onClick={() => navigate('/predictors')} 
-                className="text-[11px] font-bold text-cyan-400 hover:text-cyan-300 flex items-center gap-1 transition-colors outline-none"
+                className="text-[11px] font-bold text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300 flex items-center gap-1 transition-colors outline-none"
               >
                 <span>View All 8 Models</span>
                 <ChevronRight className="w-3.5 h-3.5" />
@@ -360,15 +360,15 @@ const Dashboard: React.FC = () => {
                   whileHover={{ scale: 1.03, y: -2 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => navigate(p.path)}
-                  className={`bg-gradient-to-br ${p.color} border ${p.border} rounded-xl p-3 cursor-pointer transition-all hover:shadow-lg flex flex-col justify-between`}
+                  className={`bg-gradient-to-br ${p.color} border ${p.border} rounded-xl p-3 cursor-pointer transition-all hover:shadow-md flex flex-col justify-between`}
                 >
-                  <span className="text-[11px] font-semibold text-slate-300 truncate">{p.title}</span>
+                  <span className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 truncate">{p.title}</span>
                   <div className="flex items-baseline justify-between mt-2">
-                    <span className="font-heading font-extrabold text-lg text-white">{p.value}</span>
+                    <span className="font-heading font-extrabold text-lg text-slate-900 dark:text-white">{p.value}</span>
                     {p.trend === 'up' ? (
                       <ArrowUpRight className={`w-4 h-4 ${p.text}`} />
                     ) : (
-                      <ArrowDownRight className="w-4 h-4 text-emerald-400" />
+                      <ArrowDownRight className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                     )}
                   </div>
                 </motion.div>
@@ -389,28 +389,28 @@ const Dashboard: React.FC = () => {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="lg:col-span-3 bg-[#0d1424]/90 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-4 sm:p-5 flex flex-col justify-between shadow-xl space-y-4"
+            className="lg:col-span-3 bg-white/90 dark:bg-[#0d1424]/90 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-4 sm:p-5 flex flex-col justify-between shadow-sm dark:shadow-xl space-y-4 transition-colors"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Heart className="w-4 h-4 text-rose-400" />
-                <h3 className="font-heading font-extrabold text-sm text-white">Real-Time Trackers</h3>
+                <Heart className="w-4 h-4 text-rose-500 dark:text-rose-400" />
+                <h3 className="font-heading font-extrabold text-sm text-slate-900 dark:text-white">Real-Time Trackers</h3>
               </div>
               <button 
                 onClick={() => navigate('/trackers')} 
-                className="text-[11px] font-bold text-cyan-400 hover:text-cyan-300 outline-none"
+                className="text-[11px] font-bold text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300 outline-none"
               >
                 Hub &rarr;
               </button>
             </div>
 
             {/* Heart Rate + Live Wave */}
-            <div className="bg-[#070b14]/80 border border-slate-800 rounded-xl p-3">
+            <div className="bg-slate-50/90 dark:bg-[#070b14]/80 border border-slate-200/80 dark:border-slate-800 rounded-xl p-3">
               <div className="flex items-center justify-between text-xs">
-                <span className="text-slate-400 flex items-center gap-1.5">
+                <span className="text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
                   <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500/20" /> Heart Rate
                 </span>
-                <span className="font-heading font-extrabold text-rose-400">72 bpm</span>
+                <span className="font-heading font-extrabold text-rose-600 dark:text-rose-400">72 bpm</span>
               </div>
               <div className="h-8 w-full mt-1.5 flex items-center">
                 <svg viewBox="0 0 100 20" className="w-full h-full overflow-visible">
@@ -427,35 +427,35 @@ const Dashboard: React.FC = () => {
             </div>
 
             {/* Water Hydration Quick-Log */}
-            <div className="bg-[#070b14]/80 border border-slate-800 rounded-xl p-3 flex items-center justify-between">
+            <div className="bg-slate-50/90 dark:bg-[#070b14]/80 border border-slate-200/80 dark:border-slate-800 rounded-xl p-3 flex items-center justify-between">
               <div className="space-y-0.5">
-                <span className="text-slate-400 text-xs flex items-center gap-1.5">
-                  <Droplet className="w-3.5 h-3.5 text-cyan-400" /> Water Hydration
+                <span className="text-slate-500 dark:text-slate-400 text-xs flex items-center gap-1.5">
+                  <Droplet className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" /> Water Hydration
                 </span>
-                <span className="font-heading font-extrabold text-cyan-300 text-sm">
+                <span className="font-heading font-extrabold text-cyan-700 dark:text-cyan-300 text-sm">
                   {todaySnapshot.water || 5}/8 glasses
                 </span>
               </div>
               <button
                 onClick={handleWaterClick}
-                className="px-3 py-1.5 bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/40 rounded-lg text-xs font-bold transition-all active:scale-95 outline-none"
+                className="px-3 py-1.5 bg-cyan-500/15 hover:bg-cyan-500/25 dark:bg-cyan-500/20 dark:hover:bg-cyan-500/30 text-cyan-700 dark:text-cyan-300 border border-cyan-500/30 dark:border-cyan-500/40 rounded-lg text-xs font-bold transition-all active:scale-95 outline-none"
               >
                 {waterFlash ? '✓ Added!' : '+1 Glass'}
               </button>
             </div>
 
             {/* Mood Journal Quick Tap */}
-            <div className="bg-[#070b14]/80 border border-slate-800 rounded-xl p-3 space-y-2">
-              <div className="flex items-center justify-between text-xs text-slate-400">
+            <div className="bg-slate-50/90 dark:bg-[#070b14]/80 border border-slate-200/80 dark:border-slate-800 rounded-xl p-3 space-y-2">
+              <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
                 <span>Mood Journal</span>
-                <span className="text-emerald-400 font-bold">{moodFlash ? `✓ ${moodFlash}` : 'Tap to Log'}</span>
+                <span className="text-emerald-600 dark:text-emerald-400 font-bold">{moodFlash ? `✓ ${moodFlash}` : 'Tap to Log'}</span>
               </div>
               <div className="flex items-center justify-between">
                 {MOODS.map((m) => (
                   <button
                     key={m.value}
                     onClick={() => handleMoodClick(m.value)}
-                    className="text-lg hover:scale-125 active:scale-95 transition-transform p-1 rounded-lg hover:bg-slate-800 outline-none"
+                    className="text-lg hover:scale-125 active:scale-95 transition-transform p-1 rounded-lg hover:bg-slate-200/70 dark:hover:bg-slate-800 outline-none"
                     title={m.label}
                   >
                     {m.emoji}
@@ -470,12 +470,12 @@ const Dashboard: React.FC = () => {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.35 }}
-            className="lg:col-span-3 bg-[#0d1424]/90 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-4 sm:p-5 flex flex-col justify-between shadow-xl space-y-3"
+            className="lg:col-span-3 bg-white/90 dark:bg-[#0d1424]/90 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-4 sm:p-5 flex flex-col justify-between shadow-sm dark:shadow-xl space-y-3 transition-colors"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Stethoscope className="w-4 h-4 text-primary" />
-                <h3 className="font-heading font-extrabold text-sm text-white">Find & Book Doctors</h3>
+                <h3 className="font-heading font-extrabold text-sm text-slate-900 dark:text-white">Find & Book Doctors</h3>
               </div>
               <button 
                 onClick={() => navigate('/doctors')} 
@@ -486,13 +486,13 @@ const Dashboard: React.FC = () => {
             </div>
 
             {/* Tabs */}
-            <div className="grid grid-cols-2 gap-1.5 bg-[#070b14]/80 p-1 rounded-xl border border-slate-800">
+            <div className="grid grid-cols-2 gap-1.5 bg-slate-100/90 dark:bg-[#070b14]/80 p-1 rounded-xl border border-slate-200/80 dark:border-slate-800">
               <button
                 onClick={() => setActiveDoctorTab('video')}
                 className={`py-1.5 text-xs font-bold rounded-lg flex items-center justify-center gap-1.5 transition-all outline-none ${
                   activeDoctorTab === 'video'
                     ? 'bg-primary text-white shadow-sm'
-                    : 'text-slate-400 hover:text-white'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 <Video className="w-3.5 h-3.5" />
@@ -503,7 +503,7 @@ const Dashboard: React.FC = () => {
                 className={`py-1.5 text-xs font-bold rounded-lg flex items-center justify-center gap-1.5 transition-all outline-none ${
                   activeDoctorTab === 'clinic'
                     ? 'bg-primary text-white shadow-sm'
-                    : 'text-slate-400 hover:text-white'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 <Building2 className="w-3.5 h-3.5" />
@@ -513,18 +513,18 @@ const Dashboard: React.FC = () => {
 
             {/* Search filter input */}
             <div className="relative">
-              <Search className="w-3.5 h-3.5 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 value={doctorSearch}
                 onChange={(e) => setDoctorSearch(e.target.value)}
                 placeholder="Search specialty, name, city..."
-                className="w-full bg-[#070b14]/80 border border-slate-800 rounded-xl pl-8 pr-3 py-2 text-xs text-white placeholder:text-slate-500 outline-none focus:border-primary/60"
+                className="w-full bg-slate-50/90 dark:bg-[#070b14]/80 border border-slate-200/80 dark:border-slate-800 rounded-xl pl-8 pr-3 py-2 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 outline-none focus:border-primary/60"
               />
             </div>
 
             {/* Doctor Preview Mini-Card */}
-            <div className="bg-[#070b14]/80 border border-slate-800 rounded-xl p-2.5 flex items-center justify-between">
+            <div className="bg-slate-50/90 dark:bg-[#070b14]/80 border border-slate-200/80 dark:border-slate-800 rounded-xl p-2.5 flex items-center justify-between">
               <div className="flex items-center gap-2.5">
                 <img
                   src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=100&auto=format&fit=crop&q=80"
@@ -532,8 +532,8 @@ const Dashboard: React.FC = () => {
                   className="w-9 h-9 rounded-full object-cover border border-cyan-500/40"
                 />
                 <div>
-                  <h4 className="text-xs font-bold text-slate-100">Dr. Priya Sharma</h4>
-                  <p className="text-[10px] text-slate-400">Cardiology Specialist &bull; 4.9 &#9733;</p>
+                  <h4 className="text-xs font-bold text-slate-900 dark:text-slate-100">Dr. Priya Sharma</h4>
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400">Cardiology Specialist &bull; 4.9 &#9733;</p>
                 </div>
               </div>
               <button
@@ -551,23 +551,23 @@ const Dashboard: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
             onClick={() => navigate('/scan/prescription')}
-            className="lg:col-span-3 bg-[#0d1424]/90 backdrop-blur-xl border border-slate-800/80 hover:border-cyan-500/40 rounded-2xl p-4 sm:p-5 flex flex-col justify-between shadow-xl cursor-pointer group transition-all"
+            className="lg:col-span-3 bg-white/90 dark:bg-[#0d1424]/90 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800/80 hover:border-cyan-500/40 rounded-2xl p-4 sm:p-5 flex flex-col justify-between shadow-sm dark:shadow-xl cursor-pointer group transition-all"
           >
             <div className="flex items-center gap-2">
-              <Scan className="w-4 h-4 text-cyan-400" />
-              <h3 className="font-heading font-extrabold text-sm text-white">
+              <Scan className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
+              <h3 className="font-heading font-extrabold text-sm text-slate-900 dark:text-white">
                 Prescription Scanner
               </h3>
             </div>
 
             {/* Document with Laser Scan Animation */}
-            <div className="relative my-3 w-full h-24 bg-[#070b14]/80 border border-slate-800 rounded-xl flex items-center justify-center overflow-hidden">
+            <div className="relative my-3 w-full h-24 bg-slate-50/90 dark:bg-[#070b14]/80 border border-slate-200/80 dark:border-slate-800 rounded-xl flex items-center justify-center overflow-hidden">
               {/* Document Mock */}
-              <div className="w-16 h-20 bg-white/10 border border-white/20 rounded-md p-1.5 space-y-1">
-                <div className="w-6 h-1.5 bg-cyan-400/60 rounded" />
-                <div className="w-12 h-1 bg-slate-500/40 rounded" />
-                <div className="w-10 h-1 bg-slate-500/40 rounded" />
-                <div className="w-8 h-1 bg-slate-500/40 rounded" />
+              <div className="w-16 h-20 bg-white dark:bg-white/10 border border-slate-200 dark:border-white/20 rounded-md p-1.5 space-y-1 shadow-xs">
+                <div className="w-6 h-1.5 bg-cyan-500/60 rounded" />
+                <div className="w-12 h-1 bg-slate-300 dark:bg-slate-500/40 rounded" />
+                <div className="w-10 h-1 bg-slate-300 dark:bg-slate-500/40 rounded" />
+                <div className="w-8 h-1 bg-slate-300 dark:bg-slate-500/40 rounded" />
               </div>
 
               {/* Animated Laser Scanning Line */}
@@ -575,8 +575,8 @@ const Dashboard: React.FC = () => {
             </div>
 
             <div>
-              <span className="text-xs font-bold text-white block">Instant OCR Analysis</span>
-              <p className="text-[11px] text-slate-400 mt-0.5">Digitize paper prescriptions and lab reports in seconds.</p>
+              <span className="text-xs font-bold text-slate-900 dark:text-white block">Instant OCR Analysis</span>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Digitize paper prescriptions and lab reports in seconds.</p>
             </div>
           </motion.div>
 
@@ -585,27 +585,27 @@ const Dashboard: React.FC = () => {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.45 }}
-            className="lg:col-span-3 bg-[#0d1424]/90 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-4 sm:p-5 flex flex-col justify-between shadow-xl space-y-3"
+            className="lg:col-span-3 bg-white/90 dark:bg-[#0d1424]/90 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-4 sm:p-5 flex flex-col justify-between shadow-sm dark:shadow-xl space-y-3 transition-colors"
           >
             <div className="flex items-center gap-2">
-              <Shield className="w-4 h-4 text-emerald-400" />
-              <h3 className="font-heading font-extrabold text-sm text-white">Government Schemes</h3>
+              <Shield className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              <h3 className="font-heading font-extrabold text-sm text-slate-900 dark:text-white">Government Schemes</h3>
             </div>
 
             {/* Ayushman Bharat PM-JAY Tile */}
             <div 
               onClick={() => setSelectedScheme('ayushman')}
-              className="bg-[#070b14]/80 hover:bg-slate-800/60 border border-slate-800 rounded-xl p-2.5 flex items-center justify-between cursor-pointer transition-all group"
+              className="bg-slate-50/90 dark:bg-[#070b14]/80 hover:bg-slate-100 dark:hover:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800 rounded-xl p-2.5 flex items-center justify-between cursor-pointer transition-all group"
             >
               <div className="space-y-0.5">
-                <span className="text-xs font-bold text-slate-100 flex items-center gap-1.5">
+                <span className="text-xs font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
                   Ayushman Bharat (PM-JAY)
                 </span>
-                <span className="text-[10px] text-emerald-400 block font-medium group-hover:underline">
+                <span className="text-[10px] text-emerald-600 dark:text-emerald-400 block font-medium group-hover:underline">
                   Free ₹5 Lakh Coverage &rarr;
                 </span>
               </div>
-              <span className="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-extrabold text-[10px] border border-emerald-500/30">
+              <span className="w-6 h-6 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-extrabold text-[10px] border border-emerald-500/30">
                 IN
               </span>
             </div>
@@ -613,17 +613,17 @@ const Dashboard: React.FC = () => {
             {/* BSKY Odisha Tile */}
             <div 
               onClick={() => setSelectedScheme('bsky')}
-              className="bg-[#070b14]/80 hover:bg-slate-800/60 border border-slate-800 rounded-xl p-2.5 flex items-center justify-between cursor-pointer transition-all group"
+              className="bg-slate-50/90 dark:bg-[#070b14]/80 hover:bg-slate-100 dark:hover:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800 rounded-xl p-2.5 flex items-center justify-between cursor-pointer transition-all group"
             >
               <div className="space-y-0.5">
-                <span className="text-xs font-bold text-slate-100 flex items-center gap-1.5">
+                <span className="text-xs font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
                   BSKY (Odisha Health)
                 </span>
-                <span className="text-[10px] text-cyan-400 block font-medium group-hover:underline">
+                <span className="text-[10px] text-cyan-600 dark:text-cyan-400 block font-medium group-hover:underline">
                   Cashless Hospital Card &rarr;
                 </span>
               </div>
-              <span className="w-6 h-6 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-extrabold text-[10px] border border-cyan-500/30">
+              <span className="w-6 h-6 rounded-full bg-cyan-500/15 text-cyan-600 dark:text-cyan-400 flex items-center justify-center font-extrabold text-[10px] border border-cyan-500/30">
                 OD
               </span>
             </div>
@@ -638,27 +638,27 @@ const Dashboard: React.FC = () => {
       ════════════════════════════════════════════════ */}
       <AnimatePresence>
         {showSosModal && (
-          <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-4">
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-[#0d1424] border-2 border-rose-500/60 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4"
+              className="bg-white dark:bg-[#0d1424] border-2 border-rose-500/60 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4"
             >
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-rose-400">
+                <div className="flex items-center gap-2 text-rose-600 dark:text-rose-400">
                   <AlertTriangle className="w-6 h-6" />
                   <h3 className="font-heading font-extrabold text-lg">Emergency 108 SOS</h3>
                 </div>
                 <button 
                   onClick={() => setShowSosModal(false)}
-                  className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 outline-none"
+                  className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 outline-none"
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
-              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                 If you or someone around you is experiencing severe symptoms (chest pain, breathing difficulty, severe trauma), connect to official emergency responders immediately:
               </p>
 
@@ -673,7 +673,7 @@ const Dashboard: React.FC = () => {
 
                 <a
                   href="tel:112"
-                  className="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 text-xs"
+                  className="w-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 text-xs"
                 >
                   <PhoneCall className="w-3.5 h-3.5" />
                   <span>National Emergency Helpline (112)</span>
@@ -689,47 +689,47 @@ const Dashboard: React.FC = () => {
       ════════════════════════════════════════════════ */}
       <AnimatePresence>
         {selectedScheme && (
-          <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-4">
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-[#0d1424] border border-slate-700 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4"
+              className="bg-white dark:bg-[#0d1424] border border-slate-200 dark:border-slate-700 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4"
             >
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-emerald-400">
+                <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
                   <Shield className="w-5 h-5" />
-                  <h3 className="font-heading font-extrabold text-base text-white">
+                  <h3 className="font-heading font-extrabold text-base text-slate-900 dark:text-white">
                     {selectedScheme === 'ayushman' ? 'Ayushman Bharat PM-JAY' : 'Biju Swasthya Kalyan Yojana (BSKY)'}
                   </h3>
                 </div>
                 <button 
                   onClick={() => setSelectedScheme(null)}
-                  className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 outline-none"
+                  className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 outline-none"
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
               {selectedScheme === 'ayushman' ? (
-                <div className="space-y-3 text-xs text-slate-300">
+                <div className="space-y-3 text-xs text-slate-600 dark:text-slate-300">
                   <p>
                     <strong>Ayushman Bharat Pradhan Mantri Jan Arogya Yojana (PM-JAY)</strong> provides cashless health coverage of up to <strong>₹5,00,000 per family per year</strong> for secondary and tertiary care hospitalization across India.
                   </p>
-                  <div className="bg-[#070b14] p-3 rounded-xl border border-slate-800 space-y-1.5">
-                    <span className="font-bold text-white block">Key Benefits:</span>
+                  <div className="bg-slate-50 dark:bg-[#070b14] p-3 rounded-xl border border-slate-200 dark:border-slate-800 space-y-1.5">
+                    <span className="font-bold text-slate-900 dark:text-white block">Key Benefits:</span>
                     <p>&bull; 100% cashless treatment at empanelled public and private hospitals nationwide.</p>
                     <p>&bull; Pre-existing conditions covered from day one.</p>
                     <p>&bull; National Toll-Free Helpline: <strong>14555</strong></p>
                   </div>
                 </div>
               ) : (
-                <div className="space-y-3 text-xs text-slate-300">
+                <div className="space-y-3 text-xs text-slate-600 dark:text-slate-300">
                   <p>
                     <strong>BSKY (Biju Swasthya Kalyan Yojana)</strong> is the flagship universal healthcare program in Odisha providing cashless treatment up to <strong>₹5 Lakh per family (₹10 Lakh for women members)</strong>.
                   </p>
-                  <div className="bg-[#070b14] p-3 rounded-xl border border-slate-800 space-y-1.5">
-                    <span className="font-bold text-white block">Key Benefits:</span>
+                  <div className="bg-slate-50 dark:bg-[#070b14] p-3 rounded-xl border border-slate-200 dark:border-slate-800 space-y-1.5">
+                    <span className="font-bold text-slate-900 dark:text-white block">Key Benefits:</span>
                     <p>&bull; Cashless care in premier hospitals across Odisha and premier tier-1 hospitals in India.</p>
                     <p>&bull; Smart health card cashless admission without paperwork.</p>
                     <p>&bull; State Toll-Free Helpline: <strong>104 / 155369</strong></p>
