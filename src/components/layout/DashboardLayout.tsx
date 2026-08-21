@@ -9,7 +9,7 @@ import { useHealthRead } from '../../context/HealthReadContext';
 import { triggerSync } from '../../utils/syncQueue';
 import { useFamily } from '../../context/FamilyContext';
 import { 
-  Home, Activity, BrainCircuit, Camera, User, Sun, Moon, Wifi, WifiOff, RefreshCw, LogOut, LogIn, ChevronLeft, ChevronRight, Menu, Stethoscope, Ticket, Bot, Users
+  Home, Activity, BrainCircuit, Camera, User, Sun, Moon, Wifi, WifiOff, RefreshCw, LogOut, LogIn, ChevronLeft, ChevronRight, Menu, Stethoscope, Ticket, Bot, Users, Pill, Dna
 } from 'lucide-react';
 
 const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -68,6 +68,8 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
     { name: t('nav.dashboard'), path: '/dashboard', icon: Home },
     { name: t('nav.chat'), path: '/chat', icon: Bot },
     { name: t('nav.trackers'), path: '/trackers', icon: Activity },
+    { name: 'Health Twin', path: '/health-twin', icon: Dna },
+    { name: 'Jan Aushadhi', path: '/jan-aushadhi', icon: Pill },
     { name: t('nav.predictors'), path: '/predictors', icon: BrainCircuit },
     { name: 'Doctors', path: '/doctors', icon: Stethoscope },
     { name: 'My Bookings', path: '/booking-history', icon: Ticket },

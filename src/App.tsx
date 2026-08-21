@@ -58,9 +58,16 @@ const GenericPredictor = lazy(() => import('./pages/predictors/GenericPredictor'
 // CNN Scan & OCR Routes
 const ScanPage = lazy(() => import('./pages/scan/ScanPage'));
 const PrescriptionScanner = lazy(() => import('./pages/scan/PrescriptionScanner'));
+const VitalsCameraScanner = lazy(() => import('./pages/scan/VitalsCameraScanner'));
+const AudioCoughAnalyzer = lazy(() => import('./pages/scan/AudioCoughAnalyzer'));
+
+// Advanced Zero-Cost Wellness & Economy Modules
+const JanAushadhiSwitcher = lazy(() => import('./pages/trackers/JanAushadhiSwitcher'));
+const DigitalHealthTwin = lazy(() => import('./pages/trackers/DigitalHealthTwin'));
 
 // AI Medical Assistant & RAG Chat
 const HealthChat = lazy(() => import('./pages/chat/HealthChat'));
+const BotConnectPage = lazy(() => import('./pages/chat/BotConnectPage'));
 import FloatingChatButton from './components/chat/FloatingChatButton';
 
 // Doctor System
@@ -349,11 +356,38 @@ const App: React.FC = () => {
                           <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><PrescriptionScanner /></Suspense></RouteErrorBoundary>
                         </BrowsableRoute>
                       } />
+                      <Route path="/scan/vitals" element={
+                        <BrowsableRoute>
+                          <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><VitalsCameraScanner /></Suspense></RouteErrorBoundary>
+                        </BrowsableRoute>
+                      } />
+                      <Route path="/scan/audio-cough" element={
+                        <BrowsableRoute>
+                          <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><AudioCoughAnalyzer /></Suspense></RouteErrorBoundary>
+                        </BrowsableRoute>
+                      } />
+
+                      {/* Advanced Health Twin & Jan Aushadhi Generic Switcher */}
+                      <Route path="/jan-aushadhi" element={
+                        <BrowsableRoute>
+                          <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><JanAushadhiSwitcher /></Suspense></RouteErrorBoundary>
+                        </BrowsableRoute>
+                      } />
+                      <Route path="/health-twin" element={
+                        <BrowsableRoute>
+                          <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><DigitalHealthTwin /></Suspense></RouteErrorBoundary>
+                        </BrowsableRoute>
+                      } />
 
                       {/* AI Multilingual Health Assistant & Chatbot */}
                       <Route path="/chat" element={
                         <BrowsableRoute>
                           <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><HealthChat /></Suspense></RouteErrorBoundary>
+                        </BrowsableRoute>
+                      } />
+                      <Route path="/bot-connect" element={
+                        <BrowsableRoute>
+                          <RouteErrorBoundary><Suspense fallback={<PageSkeleton />}><BotConnectPage /></Suspense></RouteErrorBoundary>
                         </BrowsableRoute>
                       } />
 

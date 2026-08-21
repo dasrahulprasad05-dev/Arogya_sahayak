@@ -27,7 +27,11 @@ import {
   ChevronRight,
   Zap,
   TrendingUp,
-  AlertTriangle
+  AlertTriangle,
+  Pill,
+  Dna,
+  Camera,
+  Mic
 } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
@@ -626,6 +630,126 @@ const Dashboard: React.FC = () => {
               <span className="w-6 h-6 rounded-full bg-cyan-500/15 text-cyan-600 dark:text-cyan-400 flex items-center justify-center font-extrabold text-[10px] border border-cyan-500/30">
                 OD
               </span>
+            </div>
+          </motion.div>
+
+        </div>
+
+
+        {/* ═══════════════════════════════════════════════
+            ZERO-COST NEXT-GEN INNOVATIONS SHOWCASE ROW
+        ════════════════════════════════════════════════ */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+          
+          {/* Card A: Contactless Camera Vitals (rPPG) */}
+          <motion.div
+            whileHover={{ y: -3, scale: 1.01 }}
+            onClick={() => navigate('/scan/vitals')}
+            className="bg-gradient-to-br from-rose-500/10 via-card to-red-500/5 border border-rose-500/30 hover:border-rose-500/60 rounded-2xl p-4 sm:p-5 shadow-sm cursor-pointer flex flex-col justify-between group transition-all"
+          >
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="w-9 h-9 rounded-xl bg-rose-500/20 text-rose-600 dark:text-rose-400 flex items-center justify-center">
+                  <Camera className="w-5 h-5" />
+                </div>
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-600 dark:text-rose-400">
+                  rPPG Vision
+                </span>
+              </div>
+              <h4 className="font-heading font-extrabold text-sm text-foreground group-hover:text-rose-600 dark:group-hover:text-rose-400 transition-colors">
+                Contactless Camera Vitals
+              </h4>
+              <p className="text-[11px] text-muted-foreground leading-relaxed">
+                Scan pulse, breathing rate, and stress directly via your webcam in 25 seconds.
+              </p>
+            </div>
+            <div className="pt-3 mt-3 border-t border-border/60 flex items-center justify-between text-xs font-bold text-rose-600 dark:text-rose-400">
+              <span>Start Camera Scan</span>
+              <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </motion.div>
+
+          {/* Card B: AI Audio Cough Analyzer */}
+          <motion.div
+            whileHover={{ y: -3, scale: 1.01 }}
+            onClick={() => navigate('/scan/audio-cough')}
+            className="bg-gradient-to-br from-indigo-500/10 via-card to-violet-500/5 border border-indigo-500/30 hover:border-indigo-500/60 rounded-2xl p-4 sm:p-5 shadow-sm cursor-pointer flex flex-col justify-between group transition-all"
+          >
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="w-9 h-9 rounded-xl bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
+                  <Mic className="w-5 h-5" />
+                </div>
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-600 dark:text-indigo-400">
+                  Acoustic ML
+                </span>
+              </div>
+              <h4 className="font-heading font-extrabold text-sm text-foreground group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                Audio Cough & Wheeze Analyzer
+              </h4>
+              <p className="text-[11px] text-muted-foreground leading-relaxed">
+                Microphone spectrogram screening for asthma, dry tickle, or chest phlegm.
+              </p>
+            </div>
+            <div className="pt-3 mt-3 border-t border-border/60 flex items-center justify-between text-xs font-bold text-indigo-600 dark:text-indigo-400">
+              <span>Listen & Classify</span>
+              <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </motion.div>
+
+          {/* Card C: Jan Aushadhi Generic Switcher */}
+          <motion.div
+            whileHover={{ y: -3, scale: 1.01 }}
+            onClick={() => navigate('/jan-aushadhi')}
+            className="bg-gradient-to-br from-emerald-500/10 via-card to-teal-500/5 border border-emerald-500/30 hover:border-emerald-500/60 rounded-2xl p-4 sm:p-5 shadow-sm cursor-pointer flex flex-col justify-between group transition-all"
+          >
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                  <Pill className="w-5 h-5" />
+                </div>
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
+                  Save 85%
+                </span>
+              </div>
+              <h4 className="font-heading font-extrabold text-sm text-foreground group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                Jan Aushadhi Switcher
+              </h4>
+              <p className="text-[11px] text-muted-foreground leading-relaxed">
+                Compare brand prices with government generic salts & calculate family savings.
+              </p>
+            </div>
+            <div className="pt-3 mt-3 border-t border-border/60 flex items-center justify-between text-xs font-bold text-emerald-600 dark:text-emerald-400">
+              <span>Compare Medicines</span>
+              <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </motion.div>
+
+          {/* Card D: Digital Health Twin & Biological Age */}
+          <motion.div
+            whileHover={{ y: -3, scale: 1.01 }}
+            onClick={() => navigate('/health-twin')}
+            className="bg-gradient-to-br from-purple-500/10 via-card to-fuchsia-500/5 border border-purple-500/30 hover:border-purple-500/60 rounded-2xl p-4 sm:p-5 shadow-sm cursor-pointer flex flex-col justify-between group transition-all"
+          >
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="w-9 h-9 rounded-xl bg-purple-500/20 text-purple-600 dark:text-purple-400 flex items-center justify-center">
+                  <Dna className="w-5 h-5" />
+                </div>
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-purple-500/15 text-purple-600 dark:text-purple-400">
+                  Longevity Twin
+                </span>
+              </div>
+              <h4 className="font-heading font-extrabold text-sm text-foreground group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
+                Digital Health Twin
+              </h4>
+              <p className="text-[11px] text-muted-foreground leading-relaxed">
+                Interactive cellular biological age simulator with organ health resilience map.
+              </p>
+            </div>
+            <div className="pt-3 mt-3 border-t border-border/60 flex items-center justify-between text-xs font-bold text-purple-600 dark:text-purple-400">
+              <span>Explore Body Twin</span>
+              <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </div>
           </motion.div>
 
