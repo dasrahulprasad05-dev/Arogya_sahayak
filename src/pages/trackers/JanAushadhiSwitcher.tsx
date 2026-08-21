@@ -159,6 +159,72 @@ const MEDICINE_DATABASE: MedicineItem[] = [
     dosage: '75mg',
     packSize: '14 Tablets',
     usage: 'Blood thinner to prevent blood clots and secondary heart attacks.'
+  },
+  {
+    id: '13',
+    brandName: 'Cyra-D / Cyra DSR / Razo-D',
+    genericSalt: 'Rabeprazole (20mg) + Domperidone (30mg SR)',
+    category: 'Gastro / Acidity',
+    brandedPrice: 155,
+    genericPrice: 26,
+    dosage: '20mg/30mg',
+    packSize: '10 Capsules',
+    usage: 'Acid reflux, severe gastric burning, peptic ulcers, and dyspepsia nausea.'
+  },
+  {
+    id: '14',
+    brandName: 'Allegra 120mg',
+    genericSalt: 'Fexofenadine Hydrochloride (120mg)',
+    category: 'Allergy & Asthma',
+    brandedPrice: 195,
+    genericPrice: 32,
+    dosage: '120mg',
+    packSize: '10 Tablets',
+    usage: 'Non-drowsy allergy relief for running nose, hives, pollen & dust allergies.'
+  },
+  {
+    id: '15',
+    brandName: 'Becosules / Neurobion Forte',
+    genericSalt: 'B-Complex Vitamins (B1, B2, B6, B12, Niacinamide, Vitamin C)',
+    category: 'Bone & Joints',
+    brandedPrice: 65,
+    genericPrice: 12,
+    dosage: 'Standard',
+    packSize: '20 Capsules',
+    usage: 'Mouth ulcers, peripheral nerve weakness, tingling, and daily vitality.'
+  },
+  {
+    id: '16',
+    brandName: 'Ascoril-LS / Alex Cough',
+    genericSalt: 'Levosalbutamol (1mg) + Ambroxol (30mg) + Guaiphenesin (50mg)',
+    category: 'Allergy & Asthma',
+    brandedPrice: 135,
+    genericPrice: 28,
+    dosage: '100ml Syrup',
+    packSize: '1 Bottle',
+    usage: 'Productive chest cough, mucus clearance, and bronchial breathing relief.'
+  },
+  {
+    id: '17',
+    brandName: 'Voveran 50 / Reactin 50',
+    genericSalt: 'Diclofenac Sodium (50mg)',
+    category: 'Pain & Swelling',
+    brandedPrice: 95,
+    genericPrice: 14,
+    dosage: '50mg',
+    packSize: '10 Tablets',
+    usage: 'Acute muscular pain, backache, arthritis flare-ups, and post-injury relief.'
+  },
+  {
+    id: '18',
+    brandName: 'Januvia 100 / Zita 100',
+    genericSalt: 'Sitagliptin Phosphate (100mg)',
+    category: 'Diabetes',
+    brandedPrice: 380,
+    genericPrice: 65,
+    dosage: '100mg',
+    packSize: '15 Tablets',
+    usage: 'DPP-4 inhibitor for advanced glycemic control in Type-2 Diabetes.'
   }
 ];
 
