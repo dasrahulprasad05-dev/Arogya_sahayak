@@ -12,221 +12,11 @@ import {
   FileText,
   ArrowLeft,
   Info,
-  Download
+  Download,
+  Layers
 } from 'lucide-react';
-
-interface MedicineItem {
-  id: string;
-  brandName: string;
-  genericSalt: string;
-  category: string;
-  brandedPrice: number; // in INR
-  genericPrice: number; // in INR
-  dosage: string;
-  packSize: string;
-  usage: string;
-}
-
-const MEDICINE_DATABASE: MedicineItem[] = [
-  {
-    id: '1',
-    brandName: 'Augmentin 625 Duo',
-    genericSalt: 'Amoxicillin (500mg) + Clavulanic Acid (125mg)',
-    category: 'Antibiotic',
-    brandedPrice: 220,
-    genericPrice: 45,
-    dosage: '625mg',
-    packSize: '10 Tablets',
-    usage: 'Bacterial infections of throat, lungs, ear, and skin.'
-  },
-  {
-    id: '2',
-    brandName: 'Pan-D / Pantocid DSR',
-    genericSalt: 'Pantoprazole (40mg) + Domperidone (30mg SR)',
-    category: 'Gastro / Acidity',
-    brandedPrice: 195,
-    genericPrice: 32,
-    dosage: '40mg/30mg',
-    packSize: '10 Capsules',
-    usage: 'GERD, severe acid reflux, gastric heartburn.'
-  },
-  {
-    id: '3',
-    brandName: 'Glycomet-GP 2',
-    genericSalt: 'Glimepiride (2mg) + Metformin (500mg SR)',
-    category: 'Diabetes',
-    brandedPrice: 175,
-    genericPrice: 24,
-    dosage: '2mg/500mg',
-    packSize: '15 Tablets',
-    usage: 'Type-2 Diabetes blood sugar regulation.'
-  },
-  {
-    id: '4',
-    brandName: 'Telma 40 / Telmikind 40',
-    genericSalt: 'Telmisartan (40mg)',
-    category: 'Blood Pressure',
-    brandedPrice: 140,
-    genericPrice: 18,
-    dosage: '40mg',
-    packSize: '15 Tablets',
-    usage: 'Hypertension (High Blood Pressure) and cardiovascular protection.'
-  },
-  {
-    id: '5',
-    brandName: 'Atorva 10 / Lipitor 10',
-    genericSalt: 'Atorvastatin (10mg)',
-    category: 'Cholesterol / Heart',
-    brandedPrice: 160,
-    genericPrice: 20,
-    dosage: '10mg',
-    packSize: '15 Tablets',
-    usage: 'Lowers LDL bad cholesterol and reduces stroke/heart attack risks.'
-  },
-  {
-    id: '6',
-    brandName: 'Shelcal 500',
-    genericSalt: 'Calcium Carbonate (500mg) + Vitamin D3 (250 IU)',
-    category: 'Bone & Joints',
-    brandedPrice: 130,
-    genericPrice: 22,
-    dosage: '500mg',
-    packSize: '15 Tablets',
-    usage: 'Bone density support, osteoporosis prevention, calcium deficiency.'
-  },
-  {
-    id: '7',
-    brandName: 'Zerodol-SP',
-    genericSalt: 'Aceclofenac (100mg) + Paracetamol (325mg) + Serratiopeptidase (15mg)',
-    category: 'Pain & Swelling',
-    brandedPrice: 125,
-    genericPrice: 28,
-    dosage: 'Triple combo',
-    packSize: '10 Tablets',
-    usage: 'Severe joint pain, dental inflammation, post-surgical swelling.'
-  },
-  {
-    id: '8',
-    brandName: 'Dolo 650 / Calpol 650',
-    genericSalt: 'Paracetamol (650mg)',
-    category: 'Fever & Pain',
-    brandedPrice: 35,
-    genericPrice: 8,
-    dosage: '650mg',
-    packSize: '15 Tablets',
-    usage: 'Fever reducer and mild to moderate pain reliever.'
-  },
-  {
-    id: '9',
-    brandName: 'Montek-LC / Montair-LC',
-    genericSalt: 'Montelukast (10mg) + Levocetirizine (5mg)',
-    category: 'Allergy & Asthma',
-    brandedPrice: 210,
-    genericPrice: 36,
-    dosage: '10mg/5mg',
-    packSize: '10 Tablets',
-    usage: 'Allergic rhinitis, chronic sneezing, nocturnal asthma prevention.'
-  },
-  {
-    id: '10',
-    brandName: 'Eltroxin 50mcg / Thyronorm 50',
-    genericSalt: 'Thyroxine Sodium (50mcg)',
-    category: 'Thyroid',
-    brandedPrice: 165,
-    genericPrice: 38,
-    dosage: '50mcg',
-    packSize: '100 Tablets',
-    usage: 'Hypothyroidism hormone replacement therapy.'
-  },
-  {
-    id: '11',
-    brandName: 'Azithral 500',
-    genericSalt: 'Azithromycin (500mg)',
-    category: 'Antibiotic',
-    brandedPrice: 135,
-    genericPrice: 34,
-    dosage: '500mg',
-    packSize: '5 Tablets',
-    usage: 'Chest infections, pneumonia, tonsillitis, and typhoid.'
-  },
-  {
-    id: '12',
-    brandName: 'Ecosprin 75',
-    genericSalt: 'Aspirin Gastro-resistant (75mg)',
-    category: 'Cardiology',
-    brandedPrice: 60,
-    genericPrice: 9,
-    dosage: '75mg',
-    packSize: '14 Tablets',
-    usage: 'Blood thinner to prevent blood clots and secondary heart attacks.'
-  },
-  {
-    id: '13',
-    brandName: 'Cyra-D / Cyra DSR / Razo-D',
-    genericSalt: 'Rabeprazole (20mg) + Domperidone (30mg SR)',
-    category: 'Gastro / Acidity',
-    brandedPrice: 155,
-    genericPrice: 26,
-    dosage: '20mg/30mg',
-    packSize: '10 Capsules',
-    usage: 'Acid reflux, severe gastric burning, peptic ulcers, and dyspepsia nausea.'
-  },
-  {
-    id: '14',
-    brandName: 'Allegra 120mg',
-    genericSalt: 'Fexofenadine Hydrochloride (120mg)',
-    category: 'Allergy & Asthma',
-    brandedPrice: 195,
-    genericPrice: 32,
-    dosage: '120mg',
-    packSize: '10 Tablets',
-    usage: 'Non-drowsy allergy relief for running nose, hives, pollen & dust allergies.'
-  },
-  {
-    id: '15',
-    brandName: 'Becosules / Neurobion Forte',
-    genericSalt: 'B-Complex Vitamins (B1, B2, B6, B12, Niacinamide, Vitamin C)',
-    category: 'Bone & Joints',
-    brandedPrice: 65,
-    genericPrice: 12,
-    dosage: 'Standard',
-    packSize: '20 Capsules',
-    usage: 'Mouth ulcers, peripheral nerve weakness, tingling, and daily vitality.'
-  },
-  {
-    id: '16',
-    brandName: 'Ascoril-LS / Alex Cough',
-    genericSalt: 'Levosalbutamol (1mg) + Ambroxol (30mg) + Guaiphenesin (50mg)',
-    category: 'Allergy & Asthma',
-    brandedPrice: 135,
-    genericPrice: 28,
-    dosage: '100ml Syrup',
-    packSize: '1 Bottle',
-    usage: 'Productive chest cough, mucus clearance, and bronchial breathing relief.'
-  },
-  {
-    id: '17',
-    brandName: 'Voveran 50 / Reactin 50',
-    genericSalt: 'Diclofenac Sodium (50mg)',
-    category: 'Pain & Swelling',
-    brandedPrice: 95,
-    genericPrice: 14,
-    dosage: '50mg',
-    packSize: '10 Tablets',
-    usage: 'Acute muscular pain, backache, arthritis flare-ups, and post-injury relief.'
-  },
-  {
-    id: '18',
-    brandName: 'Januvia 100 / Zita 100',
-    genericSalt: 'Sitagliptin Phosphate (100mg)',
-    category: 'Diabetes',
-    brandedPrice: 380,
-    genericPrice: 65,
-    dosage: '100mg',
-    packSize: '15 Tablets',
-    usage: 'DPP-4 inhibitor for advanced glycemic control in Type-2 Diabetes.'
-  }
-];
+import { JAN_AUSHADHI_DATABASE } from '../../data/janAushadhiDatabase';
+import type { MedicineItem } from '../../data/janAushadhiDatabase';
 
 const JanAushadhiSwitcher: React.FC = () => {
   const navigate = useNavigate();
@@ -236,14 +26,17 @@ const JanAushadhiSwitcher: React.FC = () => {
   const [basket, setBasket] = useState<MedicineItem[]>([]);
   const [showDoctorSlip, setShowDoctorSlip] = useState(false);
 
-  const categories = ['All', 'Antibiotic', 'Diabetes', 'Blood Pressure', 'Gastro / Acidity', 'Pain & Swelling', 'Bone & Joints', 'Allergy & Asthma'];
+  const categories = ['All', 'Antibiotic', 'Gastro / Acidity', 'Blood Pressure', 'Diabetes', 'Pain & Swelling', 'Bone & Joints', 'Allergy & Asthma', 'Cholesterol / Heart', 'Thyroid', 'Cardiology'];
 
   const filteredMedicines = useMemo(() => {
-    return MEDICINE_DATABASE.filter(m => {
+    return JAN_AUSHADHI_DATABASE.filter(m => {
+      const q = searchQuery.toLowerCase().trim();
       const matchesSearch =
-        m.brandName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        m.genericSalt.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        m.usage.toLowerCase().includes(searchQuery.toLowerCase());
+        !q ||
+        m.brandName.toLowerCase().includes(q) ||
+        m.genericSalt.toLowerCase().includes(q) ||
+        m.usage.toLowerCase().includes(q) ||
+        m.category.toLowerCase().includes(q);
 
       const matchesCat = selectedCategory === 'All' || m.category === selectedCategory;
       return matchesSearch && matchesCat;
@@ -304,15 +97,21 @@ const JanAushadhiSwitcher: React.FC = () => {
         <div className="lg:col-span-8 space-y-4">
           {/* Search bar & Category filters */}
           <div className="bg-card border border-border rounded-2xl p-4 shadow-sm space-y-3">
-            <div className="relative">
-              <Search className="w-4 h-4 text-muted-foreground absolute left-3.5 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search branded drug (e.g. Augmentin, Pan-D, Glycomet) or generic salt..."
-                className="w-full bg-slate-50 dark:bg-slate-900/60 border border-border rounded-xl pl-10 pr-4 py-2.5 text-xs text-foreground placeholder:text-muted-foreground outline-none focus:border-primary/60"
-              />
+            <div className="flex flex-col sm:flex-row gap-2 items-stretch sm:items-center">
+              <div className="relative flex-1">
+                <Search className="w-4 h-4 text-muted-foreground absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search 500+ Indian branded medicines (e.g. Augmentin, Cyra-D, Pan-D, Glycomet, Telma, Allegra)..."
+                  className="w-full bg-slate-50 dark:bg-slate-900/60 border border-border rounded-xl pl-10 pr-4 py-2.5 text-xs text-foreground placeholder:text-muted-foreground outline-none focus:border-primary/60"
+                />
+              </div>
+              <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-mono font-bold bg-muted/60 px-3 py-2 rounded-xl shrink-0">
+                <Layers className="w-3.5 h-3.5 text-emerald-500" />
+                <span>{filteredMedicines.length} Medicines</span>
+              </div>
             </div>
 
             {/* Category pills */}
