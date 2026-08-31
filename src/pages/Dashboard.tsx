@@ -129,11 +129,9 @@ const Dashboard: React.FC = () => {
 
             <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/60 flex items-center gap-3">
               <div className="relative">
-                <img 
-                  src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=120&auto=format&fit=crop&q=80" 
-                  alt="Patient Avatar" 
-                  className="w-10 h-10 rounded-full object-cover border-2 border-primary/40"
-                />
+                <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-primary to-violet-600 flex items-center justify-center text-white font-heading font-extrabold text-sm shadow-md border-2 border-primary/40">
+                  {greeting.split(' ').map((n: string) => n[0]).slice(0, 2).join('').toUpperCase()}
+                </div>
                 <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 dark:bg-emerald-400 rounded-full border-2 border-white dark:border-[#0d1424]" />
               </div>
               <div className="flex-1 min-w-0">
