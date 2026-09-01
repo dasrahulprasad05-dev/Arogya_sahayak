@@ -10,6 +10,7 @@ import { showToast } from '../../utils/toast';
 import PredictionResult from '../../components/medical/PredictionResult';
 import type { PredictionData } from '../../lib/types/prediction';
 import { templateRenderer } from '../../utils/templateRenderer';
+import { enhancePredictionWithAI } from '../../services/predictionNarrativeService';
 import { useRequireAuth } from '../../hooks/useRequireAuth';
 import LoginPromptModal from '../../components/auth/LoginPromptModal';
 import { 
@@ -124,7 +125,7 @@ const ThyroidAssessment: React.FC = () => {
     } catch (err: any) {
       console.error(err);
       const offlineFacts = getLocalPredictionFallback('thyroid', validationResult.data);
-      const fallbackResult = templateRenderer(offlineFacts);
+      const fallbackResult = await enhancePredictionWithAI('thyroid', offlineFacts, validationResult.data);
       setResult(fallbackResult);
       logPrediction('thyroid', validationResult.data, fallbackResult);
       showToast("Edge function unavailable. Using offline local risk assessment.", "warning");

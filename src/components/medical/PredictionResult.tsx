@@ -155,8 +155,22 @@ const PredictionResult: React.FC<PredictionResultProps> = ({ predictorId, data }
             {data.computedBy === 'offline_rules' ? 'Offline Local Mode' : 
              data.computedBy === 'server_rules' ? 'Basic Assessment' :
              data.computedBy === 'server_rules_ml' ? 'Advanced ML Assessment' :
+             data.computedBy === 'llm_narrative' ? 'AI-Enhanced Clinical Report' :
              'AI Multimodal Health Report'}
           </h3>
+          <span className={`inline-flex items-center gap-1 mt-1.5 px-2 py-0.5 rounded-md text-[9px] font-bold uppercase tracking-wider ${
+            data.computedBy === 'llm_narrative' 
+              ? 'bg-violet-500/10 text-violet-600 dark:text-violet-400 border border-violet-500/20'
+              : data.computedBy === 'offline_rules'
+              ? 'bg-slate-500/10 text-slate-500 dark:text-slate-400 border border-slate-500/20'
+              : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20'
+          }`}>
+            <Sparkles className="w-2.5 h-2.5" />
+            {data.computedBy === 'llm_narrative' ? 'AI-Powered Analysis'
+              : data.computedBy === 'offline_rules' ? 'Rule-Based (Offline)'
+              : data.computedBy === 'server_rules_ml' ? 'Server ML Engine'
+              : 'Cloud Analysis'}
+          </span>
         </div>
         
         <motion.span
@@ -330,11 +344,20 @@ const PredictionResult: React.FC<PredictionResultProps> = ({ predictorId, data }
       </motion.div>
 
       {/* 7. Disclaimer */}
-      <div className="p-4 bg-muted/40 border border-border rounded-xl flex items-start gap-2.5">
-        <ShieldAlert className="w-5 h-5 text-muted-foreground shrink-0 mt-0.5" />
-        <p className="text-[10px] leading-relaxed text-muted-foreground font-medium">
-          <strong className="text-foreground">DISCLAIMER:</strong> {data.disclaimer || t('disclaimer.text')}
-        </p>
+      <div className="p-4 bg-muted/40 border border-border rounded-xl space-y-2.5">
+        <div className="flex items-start gap-2.5">
+          <ShieldAlert className="w-5 h-5 text-muted-foreground shrink-0 mt-0.5" />
+          <p className="text-[10px] leading-relaxed text-muted-foreground font-medium">
+            <strong className="text-foreground">DISCLAIMER:</strong> {data.disclaimer || t('disclaimer.text')}
+          </p>
+        </div>
+        {data.computedBy === 'offline_rules' && (
+          <p className="text-[9px] leading-relaxed text-muted-foreground/70 pl-7">
+            ℹ️ <strong>Why Offline Mode?</strong> The cloud AI service was unavailable. Results were computed locally using evidence-based clinical rule engines (ADA, AHA/ACC, KDIGO, ATA, WHO). 
+            These rules analyze your specific input values to produce personalized risk scores and flagged conditions. 
+            For AI-powered natural language analysis, ensure internet connectivity and a valid API key.
+          </p>
+        )}
       </div>
 
       {/* 8. Action buttons footer */}

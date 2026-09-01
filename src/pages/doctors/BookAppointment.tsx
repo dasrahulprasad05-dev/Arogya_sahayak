@@ -62,11 +62,13 @@ const BookAppointment: React.FC = () => {
     fetch();
   }, [doctorId]);
 
-  // Get available slots for selected date
+  // Get available slots for selected date (timezone-safe)
   const availableSlots = useMemo(() => {
     if (!appointmentDate) return [];
-    const date = new Date(appointmentDate);
-    const dayOfWeek = date.getDay();
+    // Parse YYYY-MM-DD as local date to avoid UTC midnight → wrong day in IST
+    const parts = appointmentDate.split('-');
+    const localDate = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+    const dayOfWeek = localDate.getDay();
     return timeSlots.filter(s => s.day_of_week === dayOfWeek);
   }, [appointmentDate, timeSlots]);
 
@@ -309,6 +311,50 @@ const BookAppointment: React.FC = () => {
         <div className="bg-card border border-border rounded-xl p-5 space-y-4">
           <h3 className="text-sm font-semibold flex items-center gap-2"><Calendar className="w-4 h-4 text-primary" /> Select Date & Time Slot</h3>
 
+          {/* Show which days doctor is available */}
+          {timeSlots.length > 0 && (
+            <div className="space-y-1.5">
+              <p className="text-[11px] text-muted-foreground font-medium">Dr. {doctor.full_name} is available on:</p>
+              <div className="flex flex-wrap gap-1.5">
+                {[...new Set(timeSlots.map(s => s.day_of_week))].sort().map(day => (
+                  <span key={day} className="inline-flex items-center gap-1 px-2.5 py-1 bg-primary/10 text-primary text-xs font-semibold rounded-lg border border-primary/20">
+                    <Clock className="w-3 h-3" />
+                    {DAY_NAMES[day]}
+                  </span>
+                ))}
+              </div>
+              {/* Suggest next available date */}
+              {(() => {
+                const availableDays = [...new Set(timeSlots.map(s => s.day_of_week))];
+                const today = new Date();
+                for (let i = 1; i <= 30; i++) {
+                  const d = new Date(today);
+                  d.setDate(d.getDate() + i);
+                  if (availableDays.includes(d.getDay())) {
+                    const yyyy = d.getFullYear();
+                    const mm = String(d.getMonth() + 1).padStart(2, '0');
+                    const dd = String(d.getDate()).padStart(2, '0');
+                    const nextDateStr = `${yyyy}-${mm}-${dd}`;
+                    return (
+                      <button
+                        type="button"
+                        onClick={() => { setAppointmentDate(nextDateStr); setSelectedSlotId(''); }}
+                        className="text-[11px] text-primary hover:underline font-medium mt-1"
+                      >
+                        → Next available: {DAY_NAMES[d.getDay()]}, {dd}/{mm}/{yyyy} (click to select)
+                      </button>
+                    );
+                  }
+                }
+                return null;
+              })()}
+            </div>
+          )}
+
+          {timeSlots.length === 0 && (
+            <p className="text-sm text-amber-500 bg-amber-500/10 p-3 rounded-lg">This doctor has not set any availability schedule yet. Please check back later.</p>
+          )}
+
           <div>
             <label className="block text-xs font-medium mb-1">Appointment Date</label>
             <div className="relative">
@@ -321,28 +367,46 @@ const BookAppointment: React.FC = () => {
             </div>
           </div>
 
-          {appointmentDate && (
-            <div>
-              <label className="block text-xs font-medium mb-2">Available Time Slots for {DAY_NAMES[new Date(appointmentDate).getDay()]}</label>
-              {availableSlots.length === 0 ? (
-                <p className="text-sm text-muted-foreground bg-muted/50 p-3 rounded-lg">No slots available on this day. Please select another date.</p>
-              ) : (
-                <div className="flex flex-wrap gap-2">
-                  {availableSlots.map(slot => (
-                    <button key={slot.id} type="button" onClick={() => setSelectedSlotId(slot.id)}
-                      className={`px-4 py-2.5 rounded-lg border text-sm font-medium transition-all flex items-center gap-2 ${
-                        selectedSlotId === slot.id
-                          ? 'bg-primary text-white border-primary shadow-md'
-                          : 'bg-card border-border hover:border-primary/50'
-                      }`}>
-                      <Clock className="w-3.5 h-3.5" />
-                      {formatTime12h(slot.start_time.slice(0, 5))} - {formatTime12h(slot.end_time.slice(0, 5))}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
+          {appointmentDate && (() => {
+            // Timezone-safe day calculation: parse YYYY-MM-DD parts to avoid UTC vs local issues
+            const parts = appointmentDate.split('-');
+            const localDate = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+            const selectedDay = localDate.getDay();
+            const availableDays = [...new Set(timeSlots.map(s => s.day_of_week))];
+            const isAvailableDay = availableDays.includes(selectedDay);
+
+            return (
+              <div>
+                <label className="block text-xs font-medium mb-2">Available Time Slots for {DAY_NAMES[selectedDay]}</label>
+                {!isAvailableDay ? (
+                  <div className="bg-amber-500/10 border border-amber-500/20 p-3 rounded-lg space-y-1.5">
+                    <p className="text-sm text-amber-600 dark:text-amber-400 font-medium">
+                      Dr. {doctor.full_name} does not consult on {DAY_NAMES[selectedDay]}s.
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      Available days: {availableDays.map(d => DAY_NAMES[d]).join(', ')}. Please select a {availableDays.map(d => DAY_NAMES[d]).join(' or ')} date.
+                    </p>
+                  </div>
+                ) : availableSlots.length === 0 ? (
+                  <p className="text-sm text-muted-foreground bg-muted/50 p-3 rounded-lg">No slots available on this day. Please select another date.</p>
+                ) : (
+                  <div className="flex flex-wrap gap-2">
+                    {availableSlots.map(slot => (
+                      <button key={slot.id} type="button" onClick={() => setSelectedSlotId(slot.id)}
+                        className={`px-4 py-2.5 rounded-lg border text-sm font-medium transition-all flex items-center gap-2 ${
+                          selectedSlotId === slot.id
+                            ? 'bg-primary text-white border-primary shadow-md'
+                            : 'bg-card border-border hover:border-primary/50'
+                        }`}>
+                        <Clock className="w-3.5 h-3.5" />
+                        {formatTime12h(slot.start_time.slice(0, 5))} - {formatTime12h(slot.end_time.slice(0, 5))}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })()}
         </div>
 
         {/* Payment (Placeholder) */}

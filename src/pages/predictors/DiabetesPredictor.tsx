@@ -10,6 +10,7 @@ import { showToast } from '../../utils/toast';
 import PredictionResult from '../../components/medical/PredictionResult';
 import type { PredictionData } from '../../lib/types/prediction';
 import { templateRenderer } from '../../utils/templateRenderer';
+import { enhancePredictionWithAI } from '../../services/predictionNarrativeService';
 import { useRequireAuth } from '../../hooks/useRequireAuth';
 import LoginPromptModal from '../../components/auth/LoginPromptModal';
 import { BrainCircuit, Loader2, Send, ArrowLeft, ShieldAlert, Droplets, ChevronDown, Sparkles } from 'lucide-react';
@@ -81,7 +82,7 @@ const DiabetesPredictor: React.FC = () => {
       logPrediction('diabetes', validationResult.data, finalResult);
     } catch {
       const offlineFacts = getLocalPredictionFallback('diabetes', validationResult.data);
-      const fallbackResult = templateRenderer(offlineFacts);
+      const fallbackResult = await enhancePredictionWithAI('diabetes', offlineFacts, validationResult.data);
       setResult(fallbackResult);
       logPrediction('diabetes', validationResult.data, fallbackResult);
       showToast("Edge function unavailable. Using offline local risk assessment.", "warning");

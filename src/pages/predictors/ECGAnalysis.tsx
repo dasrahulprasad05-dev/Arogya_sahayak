@@ -10,6 +10,7 @@ import { showToast } from '../../utils/toast';
 import PredictionResult from '../../components/medical/PredictionResult';
 import type { PredictionData } from '../../lib/types/prediction';
 import { templateRenderer } from '../../utils/templateRenderer';
+import { enhancePredictionWithAI } from '../../services/predictionNarrativeService';
 import { useRequireAuth } from '../../hooks/useRequireAuth';
 import LoginPromptModal from '../../components/auth/LoginPromptModal';
 import { BrainCircuit, Loader2, Send, ArrowLeft, ShieldAlert, Activity, Sparkles } from 'lucide-react';
@@ -71,7 +72,7 @@ const ECGAnalysis: React.FC = () => {
       logPrediction('ecg', validationResult.data, finalResult);
     } catch {
       const offlineFacts = getLocalPredictionFallback('ecg', validationResult.data);
-      const fallbackResult = templateRenderer(offlineFacts);
+      const fallbackResult = await enhancePredictionWithAI('ecg', offlineFacts, validationResult.data);
       setResult(fallbackResult);
       logPrediction('ecg', validationResult.data, fallbackResult);
       showToast("Edge function unavailable. Using offline local risk assessment.", "warning");

@@ -10,6 +10,7 @@ import { showToast } from '../../utils/toast';
 import PredictionResult from '../../components/medical/PredictionResult';
 import type { PredictionData } from '../../lib/types/prediction';
 import { templateRenderer } from '../../utils/templateRenderer';
+import { enhancePredictionWithAI } from '../../services/predictionNarrativeService';
 import { useRequireAuth } from '../../hooks/useRequireAuth';
 import LoginPromptModal from '../../components/auth/LoginPromptModal';
 import { 
@@ -108,7 +109,7 @@ const AnemiaChecker: React.FC = () => {
     } catch (err: any) {
       console.error(err);
       const offlineFacts = getLocalPredictionFallback('anemia', validationResult.data);
-      const fallbackResult = templateRenderer(offlineFacts);
+      const fallbackResult = await enhancePredictionWithAI('anemia', offlineFacts, validationResult.data);
       setResult(fallbackResult);
       logPrediction('anemia', validationResult.data, fallbackResult);
       showToast("Edge function unavailable. Using offline local risk assessment.", "warning");

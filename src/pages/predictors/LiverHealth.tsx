@@ -10,6 +10,7 @@ import { showToast } from '../../utils/toast';
 import PredictionResult from '../../components/medical/PredictionResult';
 import type { PredictionData } from '../../lib/types/prediction';
 import { templateRenderer } from '../../utils/templateRenderer';
+import { enhancePredictionWithAI } from '../../services/predictionNarrativeService';
 import { useRequireAuth } from '../../hooks/useRequireAuth';
 import LoginPromptModal from '../../components/auth/LoginPromptModal';
 import { 
@@ -128,7 +129,7 @@ const LiverHealth: React.FC = () => {
     } catch (err: any) {
       console.error(err);
       const offlineFacts = getLocalPredictionFallback('liver', validationResult.data);
-      const fallbackResult = templateRenderer(offlineFacts);
+      const fallbackResult = await enhancePredictionWithAI('liver', offlineFacts, validationResult.data);
       setResult(fallbackResult);
       logPrediction('liver', validationResult.data, fallbackResult);
       showToast("Edge function unavailable. Using offline local risk assessment.", "warning");

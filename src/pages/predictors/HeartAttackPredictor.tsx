@@ -10,6 +10,7 @@ import { showToast } from '../../utils/toast';
 import PredictionResult from '../../components/medical/PredictionResult';
 import type { PredictionData } from '../../lib/types/prediction';
 import { templateRenderer } from '../../utils/templateRenderer';
+import { enhancePredictionWithAI } from '../../services/predictionNarrativeService';
 import { useRequireAuth } from '../../hooks/useRequireAuth';
 import LoginPromptModal from '../../components/auth/LoginPromptModal';
 import { BrainCircuit, Loader2, Send, ArrowLeft, ShieldAlert, HeartPulse, ChevronDown, Sparkles } from 'lucide-react';
@@ -78,7 +79,7 @@ const HeartAttackPredictor: React.FC = () => {
       logPrediction('heart-attack', validationResult.data, finalResult);
     } catch {
       const offlineFacts = getLocalPredictionFallback('heart-attack', validationResult.data);
-      const fallbackResult = templateRenderer(offlineFacts);
+      const fallbackResult = await enhancePredictionWithAI('heart-attack', offlineFacts, validationResult.data);
       setResult(fallbackResult);
       logPrediction('heart-attack', validationResult.data, fallbackResult);
       showToast("Edge function unavailable. Using offline local risk assessment.", "warning");
