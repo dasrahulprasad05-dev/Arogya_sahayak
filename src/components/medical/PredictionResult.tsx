@@ -92,24 +92,28 @@ const PredictionResult: React.FC<PredictionResultProps> = ({ predictorId, data }
   };
 
   const handleDownloadPdf = async () => {
-    if (data.originalImageUrl || data.heatmapUrl) {
-      setGeneratingPdf(true);
-      try {
-        await generateScanReportPdf({
-          toolName: predictorId.toUpperCase() + ' Imaging Assessment',
-          category: 'Diagnostic Triage',
-          result: data,
-          originalImage: data.originalImageUrl,
-          heatmapImage: data.compositeUrl || data.heatmapUrl,
-        });
-      } catch (err) {
-        console.error('PDF generation error, falling back to print:', err);
-        window.print();
-      } finally {
-        setGeneratingPdf(false);
-      }
-    } else {
+    setGeneratingPdf(true);
+    try {
+      // Format a readable tool name from the predictor ID
+      const toolName = predictorId
+        .replace(/-/g, ' ')
+        .replace(/_/g, ' ')
+        .replace(/\b\w/g, c => c.toUpperCase())
+        + ' Health Assessment';
+
+      await generateScanReportPdf({
+        toolName,
+        category: 'Clinical Risk Assessment',
+        result: data,
+        originalImage: data.originalImageUrl,
+        heatmapImage: data.compositeUrl || data.heatmapUrl,
+      });
+    } catch (err) {
+      console.error('PDF generation error:', err);
+      // Last resort fallback
       window.print();
+    } finally {
+      setGeneratingPdf(false);
     }
   };
 
