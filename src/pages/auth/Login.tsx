@@ -34,7 +34,7 @@ const Login: React.FC = () => {
 
     for (let attempt = 0; attempt <= maxRetries; attempt++) {
       try {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        const { data: authData, error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) {
           // If it's a network/fetch error and we have retries left, retry
           const isNetworkError = error.message?.toLowerCase().includes('fetch') ||
@@ -48,6 +48,43 @@ const Login: React.FC = () => {
           }
           throw error;
         }
+
+        // Check if the user is a registered doctor or admin — redirect them appropriately
+        const userId = authData.user?.id;
+        if (userId) {
+          // Check admin first (admin takes priority)
+          const { data: admin } = await supabase
+            .from('admin_users')
+            .select('user_id')
+            .eq('user_id', userId)
+            .single();
+
+          if (admin) {
+            navigate('/admin');
+            return;
+          }
+
+          // Check doctor
+          const { data: doctor } = await supabase
+            .from('doctors')
+            .select('id, status')
+            .eq('id', userId)
+            .single();
+
+          if (doctor) {
+            if (doctor.status === 'approved') {
+              navigate('/doctor-dashboard');
+              return;
+            } else if (doctor.status === 'pending') {
+              await supabase.auth.signOut();
+              throw new Error('Your doctor registration is pending admin approval. Please use the Doctor Login page once approved.');
+            } else if (doctor.status === 'rejected') {
+              await supabase.auth.signOut();
+              throw new Error('Your doctor registration was rejected. Please contact support or use the Doctor Login page.');
+            }
+          }
+        }
+
         navigate(redirectTo);
         return;
       } catch (err: any) {
