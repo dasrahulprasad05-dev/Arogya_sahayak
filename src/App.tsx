@@ -69,6 +69,7 @@ const DigitalHealthTwin = lazy(() => import('./pages/trackers/DigitalHealthTwin'
 const HealthChat = lazy(() => import('./pages/chat/HealthChat'));
 const BotConnectPage = lazy(() => import('./pages/chat/BotConnectPage'));
 import FloatingChatButton from './components/chat/FloatingChatButton';
+import WelcomeCards from './components/WelcomeCards';
 
 // Doctor System
 const DoctorRegister = lazy(() => import('./pages/auth/DoctorRegister'));
@@ -413,6 +414,7 @@ const App: React.FC = () => {
                     </Routes>
                   </Suspense>
                   <FloatingChatButton />
+                  <WelcomeCards />
                 </BrowserRouter>
                 </FamilyProvider>
               </HealthDispatchProvider>

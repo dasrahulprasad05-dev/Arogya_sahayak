@@ -7,8 +7,19 @@ interface WelcomeCardsProps {
   onDismiss?: () => void;
 }
 
+const DISMISS_KEY = 'arogya_credentials_dismissed';
+
 export const WelcomeCards: React.FC<WelcomeCardsProps> = ({ onDismiss }) => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(() => {
+    try {
+      return (
+        sessionStorage.getItem(DISMISS_KEY) !== 'true' &&
+        localStorage.getItem(DISMISS_KEY) !== 'true'
+      );
+    } catch {
+      return true;
+    }
+  });
 
   const DEV_EMAIL = 'rahulprasadcoding01@gmail.com';
   const WHATSAPP_NUMBER = '909040786464'; // international format (+90 9040786464)
@@ -16,6 +27,12 @@ export const WelcomeCards: React.FC<WelcomeCardsProps> = ({ onDismiss }) => {
 
   const handleClose = () => {
     setIsOpen(false);
+    try {
+      sessionStorage.setItem(DISMISS_KEY, 'true');
+      localStorage.setItem(DISMISS_KEY, 'true');
+    } catch {
+      // ignore storage access errors
+    }
     onDismiss?.();
   };
 
