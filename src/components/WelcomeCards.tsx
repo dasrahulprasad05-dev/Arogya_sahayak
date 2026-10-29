@@ -1,17 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
-import { X, Mail, Sparkles, AlertCircle, ArrowRight, ExternalLink } from 'lucide-react';
-
-const YoutubeIcon: React.FC<{ className?: string }> = ({ className = 'w-6 h-6' }) => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="currentColor"
-    className={className}
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.5 12 3.5 12 3.5s-7.505 0-9.377.55a3.016 3.016 0 0 0-2.122 2.136C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.55 9.376.55 9.376.55s7.505 0 9.377-.55a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
-  </svg>
-);
+import { X, Mail, Sparkles, ExternalLink, Key } from 'lucide-react';
 
 interface WelcomeCardsProps {
   // Optional callback when completely dismissed
@@ -19,20 +8,14 @@ interface WelcomeCardsProps {
 }
 
 export const WelcomeCards: React.FC<WelcomeCardsProps> = ({ onDismiss }) => {
-  // Step 1 = Tutorial card, Step 2 = Contact developer card, null = closed
-  const [currentStep, setCurrentStep] = useState<'tutorial' | 'contact' | null>('tutorial');
+  const [isOpen, setIsOpen] = useState(true);
 
   const DEV_EMAIL = 'rahulprasadcoding01@gmail.com';
   const WHATSAPP_NUMBER = '909040786464'; // international format (+90 9040786464)
   const WHATSAPP_DISPLAY = '+90 9040786464';
 
-  const handleCloseTutorial = () => {
-    // When user closes/crosses card 1, transition to card 2 pop up
-    setCurrentStep('contact');
-  };
-
-  const handleCloseContact = () => {
-    setCurrentStep(null);
+  const handleClose = () => {
+    setIsOpen(false);
     onDismiss?.();
   };
 
@@ -61,107 +44,9 @@ export const WelcomeCards: React.FC<WelcomeCardsProps> = ({ onDismiss }) => {
   return (
     <>
       <AnimatePresence mode="wait">
-        {/* ========================================================= */}
-        {/* CARD 1: YOUTUBE TUTORIAL CARD                             */}
-        {/* ========================================================= */}
-        {currentStep === 'tutorial' && (
+        {isOpen && (
           <motion.div
-            key="tutorial-backdrop"
-            variants={backdropVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-950/75 backdrop-blur-md"
-          >
-            <motion.div
-              variants={cardVariants}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-              className="relative w-full max-w-lg overflow-hidden rounded-3xl bg-gradient-to-b from-slate-900 via-slate-900/95 to-slate-950 border border-red-500/30 shadow-[0_25px_60px_-15px_rgba(239,68,68,0.25)] text-white"
-            >
-              {/* Glowing top ambient line */}
-              <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-red-600 via-rose-500 to-amber-500" />
-              
-              {/* Ambient radial glow */}
-              <div className="absolute -top-24 -right-24 w-56 h-56 bg-red-600/20 rounded-full blur-3xl pointer-events-none" />
-              <div className="absolute -bottom-24 -left-24 w-56 h-56 bg-amber-500/15 rounded-full blur-3xl pointer-events-none" />
-
-              {/* Close Button / Cross Section */}
-              <button
-                onClick={handleCloseTutorial}
-                aria-label="Close tutorial and proceed"
-                title="Close"
-                className="absolute top-4 right-4 z-10 w-9 h-9 flex items-center justify-center rounded-full bg-white/10 hover:bg-red-500/20 hover:text-red-400 text-slate-300 border border-white/10 hover:border-red-500/30 transition-all duration-200 group"
-              >
-                <X className="w-5 h-5 group-hover:rotate-90 transition-transform duration-200" />
-              </button>
-
-              <div className="relative p-6 sm:p-8">
-                {/* Header Icon & Tag */}
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-red-500 to-rose-700 flex items-center justify-center shadow-lg shadow-red-500/30 ring-4 ring-red-500/20 shrink-0">
-                    <YoutubeIcon className="w-8 h-8 text-white fill-white" />
-                  </div>
-                  <div>
-                    <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-red-500/15 border border-red-500/30 text-red-400 text-xs font-semibold uppercase tracking-wider">
-                      <Sparkles className="w-3 h-3" />
-                      Platform Guide
-                    </div>
-                    <h3 className="text-xl sm:text-2xl font-bold font-heading text-white tracking-tight mt-1">
-                      See YouTube Tutorial
-                    </h3>
-                  </div>
-                </div>
-
-                <h4 className="text-base sm:text-lg font-semibold text-slate-200 mb-2">
-                  How to Use Arogya Sahayak Website
-                </h4>
-
-                <p className="text-slate-400 text-sm leading-relaxed mb-5">
-                  Learn how to navigate AI clinical triage, use CNN vital scanners, consult registered doctors, track medication, and claim Ayushman / BSKY health benefits effortlessly.
-                </p>
-
-                {/* Status Callout - No tutorial available yet notice */}
-                <div className="rounded-2xl bg-amber-500/10 border border-amber-500/30 p-4 mb-6 flex items-start gap-3">
-                  <AlertCircle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
-                  <div className="text-xs sm:text-sm">
-                    <span className="font-semibold text-amber-300">Status Update:</span>
-                    <p className="text-slate-300 mt-0.5 leading-relaxed">
-                      The official video walkthrough is currently in final editing. Full accounts with demo credentials and developer access are available directly upon request!
-                    </p>
-                  </div>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="flex flex-col sm:flex-row items-center gap-3">
-                  <button
-                    onClick={handleCloseTutorial}
-                    className="w-full sm:flex-1 py-3 px-5 rounded-xl bg-gradient-to-r from-red-600 via-rose-600 to-red-700 hover:from-red-500 hover:to-rose-600 font-semibold text-sm text-white shadow-lg shadow-red-600/30 flex items-center justify-center gap-2 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
-                  >
-                    <span>Get All Account Credentials</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
-
-                  <button
-                    onClick={handleCloseTutorial}
-                    className="w-full sm:w-auto py-3 px-4 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 text-sm font-medium border border-slate-700 transition-colors flex items-center justify-center gap-1.5"
-                  >
-                    <X className="w-4 h-4 text-slate-400" />
-                    <span>Skip Tutorial</span>
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-
-        {/* ========================================================= */}
-        {/* CARD 2: DEVELOPER CONTACT & CREDENTIALS POPUP             */}
-        {/* ========================================================= */}
-        {currentStep === 'contact' && (
-          <motion.div
-            key="contact-backdrop"
+            key="credentials-backdrop"
             variants={backdropVariants}
             initial="hidden"
             animate="visible"
@@ -173,7 +58,7 @@ export const WelcomeCards: React.FC<WelcomeCardsProps> = ({ onDismiss }) => {
               initial="hidden"
               animate="visible"
               exit="exit"
-              className="relative w-full max-w-lg overflow-hidden rounded-3xl bg-gradient-to-b from-slate-900 via-slate-900/95 to-slate-950 border border-emerald-500/30 shadow-[0_25px_60px_-15px_rgba(16,185,129,0.3)] text-white"
+              className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-3xl bg-gradient-to-b from-slate-900 via-slate-900/95 to-slate-950 border border-emerald-500/30 shadow-[0_25px_60px_-15px_rgba(16,185,129,0.3)] text-white"
             >
               {/* Glowing top line */}
               <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-500" />
@@ -184,7 +69,7 @@ export const WelcomeCards: React.FC<WelcomeCardsProps> = ({ onDismiss }) => {
 
               {/* Cross button */}
               <button
-                onClick={handleCloseContact}
+                onClick={handleClose}
                 aria-label="Close credentials popup"
                 title="Close"
                 className="absolute top-4 right-4 z-10 w-9 h-9 flex items-center justify-center rounded-full bg-white/10 hover:bg-emerald-500/20 hover:text-emerald-400 text-slate-300 border border-white/10 hover:border-emerald-500/30 transition-all duration-200 group"
@@ -278,16 +163,10 @@ export const WelcomeCards: React.FC<WelcomeCardsProps> = ({ onDismiss }) => {
                 </div>
 
                 {/* Footer close / finish */}
-                <div className="flex items-center justify-between pt-2">
+                <div className="flex items-center justify-end pt-2">
                   <button
-                    onClick={() => setCurrentStep('tutorial')}
-                    className="text-xs text-slate-400 hover:text-slate-200 underline decoration-slate-600 underline-offset-4"
-                  >
-                    ← Back to Tutorial Card
-                  </button>
-                  <button
-                    onClick={handleCloseContact}
-                    className="py-2.5 px-6 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-semibold text-xs sm:text-sm shadow-md shadow-emerald-600/30 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+                    onClick={handleClose}
+                    className="w-full sm:w-auto py-2.5 px-6 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-semibold text-xs sm:text-sm shadow-md shadow-emerald-600/30 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
                   >
                     Got It, Continue to Website ✓
                   </button>
@@ -298,23 +177,23 @@ export const WelcomeCards: React.FC<WelcomeCardsProps> = ({ onDismiss }) => {
         )}
       </AnimatePresence>
 
-      {/* Floating launcher button so users can re-open tutorial & contact card anytime */}
-      {currentStep === null && (
+      {/* Floating launcher button so users can re-open credentials card anytime */}
+      {!isOpen && (
         <motion.button
           initial={{ opacity: 0, scale: 0.8, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          onClick={() => setCurrentStep('tutorial')}
-          className="fixed bottom-20 right-5 sm:bottom-6 sm:right-6 z-40 flex items-center gap-2 py-2.5 px-4 rounded-full bg-gradient-to-r from-slate-900 to-slate-800 text-white border border-red-500/40 shadow-xl shadow-red-500/10 hover:border-red-500 transition-all duration-200"
-          title="See Tutorial & Contact Developer"
+          onClick={() => setIsOpen(true)}
+          className="fixed bottom-20 left-5 sm:bottom-6 sm:left-6 z-40 flex items-center gap-2 py-2.5 px-4 rounded-full bg-gradient-to-r from-slate-900 to-slate-800 text-white border border-emerald-500/40 shadow-xl shadow-emerald-500/10 hover:border-emerald-500 transition-all duration-200"
+          title="Account Credentials & Developer Access"
         >
           <span className="relative flex h-2.5 w-2.5">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
           </span>
-          <YoutubeIcon className="w-4 h-4 text-red-400" />
-          <span className="text-xs font-semibold hidden sm:inline">Tutorial & Credentials</span>
+          <Key className="w-4 h-4 text-emerald-400" />
+          <span className="text-xs font-semibold hidden sm:inline">Account Credentials</span>
         </motion.button>
       )}
     </>
