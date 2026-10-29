@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { X, Mail, Sparkles, MessageCircle, AlertCircle, ArrowRight, ExternalLink } from 'lucide-react';
+import { motion, AnimatePresence, type Variants } from 'framer-motion';
+import { X, Mail, Sparkles, AlertCircle, ArrowRight, ExternalLink } from 'lucide-react';
 
 const YoutubeIcon: React.FC<{ className?: string }> = ({ className = 'w-6 h-6' }) => (
   <svg
@@ -36,13 +36,13 @@ export const WelcomeCards: React.FC<WelcomeCardsProps> = ({ onDismiss }) => {
     onDismiss?.();
   };
 
-  const backdropVariants = {
+  const backdropVariants: Variants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1 },
     exit: { opacity: 0 },
   };
 
-  const cardVariants = {
+  const cardVariants: Variants = {
     hidden: { opacity: 0, scale: 0.9, y: 30 },
     visible: { 
       opacity: 1, 
