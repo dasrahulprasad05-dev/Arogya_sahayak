@@ -44,6 +44,7 @@ import {
   TimelineStep, TestimonialCard, FAQItem, MagneticButton,
 } from '../components/landing/LandingComponents';
 import MobileBottomNav from '../components/MobileBottomNav';
+import WelcomeCards from '../components/WelcomeCards';
 
 /* ---------- Animation variants ---------- */
 const easeOutExpo = [0.16, 1, 0.3, 1] as const;
@@ -147,6 +148,9 @@ const LandingPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#030310] text-slate-800 dark:text-slate-100 transition-colors duration-300 relative overflow-hidden flex flex-col font-body pb-24 lg:pb-0">
       <div className="noise-overlay" />
+
+      {/* Tutorial & Developer Contact popup cards */}
+      <WelcomeCards />
 
       {/* ===== Scroll Progress Bar ===== */}
       <motion.div

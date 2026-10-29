@@ -33,6 +33,7 @@ import {
   Camera,
   Mic
 } from 'lucide-react';
+import WelcomeCards from '../components/WelcomeCards';
 
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
@@ -97,6 +98,9 @@ const Dashboard: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-50/60 dark:bg-[#070b14] text-slate-800 dark:text-slate-100 p-3 sm:p-5 md:p-6 font-body selection:bg-primary/30 transition-colors duration-200">
       
+      {/* Tutorial & Developer Credentials Popups */}
+      <WelcomeCards />
+
       {/* ── Ambient Background Glows ─────────────────── */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 dark:bg-primary/10 rounded-full blur-3xl" />
