@@ -50,7 +50,7 @@ export const PasswordStrengthIndicator: React.FC<PasswordStrengthIndicatorProps>
     if (onValidationChange) {
       onValidationChange(metCount === requirements.length);
     }
-  }, [metCount, onValidationChange]);
+  }, [metCount, onValidationChange, requirements.length]);
 
   if (password.length === 0) return null;
 

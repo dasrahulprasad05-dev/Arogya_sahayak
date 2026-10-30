@@ -33,6 +33,7 @@ import {
   Camera,
   Mic
 } from 'lucide-react';
+import WelcomeCards from '../components/WelcomeCards';
 
 
 const Dashboard: React.FC = () => {
@@ -99,6 +100,7 @@ const Dashboard: React.FC = () => {
     <div className="min-h-screen bg-slate-50/60 dark:bg-[#070b14] text-slate-800 dark:text-slate-100 p-3 sm:p-5 md:p-6 font-body selection:bg-primary/30 transition-colors duration-200">
       
       {/* Tutorial & Developer Credentials Popups */}
+      <WelcomeCards />
 
 
       {/* ── Ambient Background Glows ─────────────────── */}

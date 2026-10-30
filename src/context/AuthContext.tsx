@@ -83,15 +83,30 @@ const getSessionWithRetry = async (
 };
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState(true);
   const [isDevBypass, setIsDevBypass] = useState(() => {
     // only active in development modes
     if (import.meta.env.DEV) {
       return localStorage.getItem('arogya_dev_bypass') === 'true';
     }
     return false;
+  });
+  const [user, setUser] = useState<User | null>(() => {
+    if (import.meta.env.DEV && localStorage.getItem('arogya_dev_bypass') === 'true') {
+      return mockUser;
+    }
+    return null;
+  });
+  const [session, setSession] = useState<Session | null>(() => {
+    if (import.meta.env.DEV && localStorage.getItem('arogya_dev_bypass') === 'true') {
+      return mockSession;
+    }
+    return null;
+  });
+  const [loading, setLoading] = useState(() => {
+    if (import.meta.env.DEV && localStorage.getItem('arogya_dev_bypass') === 'true') {
+      return false;
+    }
+    return true;
   });
 
   const toggleDevBypass = useCallback(() => {
@@ -116,9 +131,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     if (isDevBypass) {
-      setUser(mockUser);
-      setSession(mockSession);
-      setLoading(false);
       return;
     }
 

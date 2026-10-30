@@ -81,6 +81,7 @@ function baseLayout(title: string, bodyContent: string): string {
 // 1. WELCOME EMAIL
 // ==========================================
 export function welcomeEmail(name: string, _language: string = 'en'): { subject: string; html: string } {
+  void _language;
   const displayName = name || 'Health Champion';
 
   const body = `

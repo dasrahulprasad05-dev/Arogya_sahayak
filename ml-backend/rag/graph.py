@@ -9,6 +9,7 @@ from rag.emergency_detector import detect_emergency
 from rag.retriever import retriever
 
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY") or os.environ.get("GEMINI_API_KEY") or ""
+GROQ_MODEL = os.environ.get("GROQ_MODEL", "llama-3.1-8b-instant")
 
 # Unauthorized drug patterns to block in post-generation safety check
 PRESCRIPTION_DRUG_PATTERNS = [
@@ -28,7 +29,7 @@ def call_groq_llm(system_prompt: str, user_message: str) -> str:
         "Authorization": f"Bearer {GROQ_API_KEY}"
     }
     payload = {
-        "model": "openai/gpt-oss-20b",
+        "model": GROQ_MODEL,
         "messages": [
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_message}

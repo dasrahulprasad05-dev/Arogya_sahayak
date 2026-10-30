@@ -68,12 +68,6 @@ function computeServerRules(predictorId: string, inputs: Record<string, any>, lo
       flaggedConditions.push("Elevated BP or cholesterol markers.");
       recommendedAction = 'consult_doctor';
     }
-  } else if (predictorId === 'image_analysis') {
-    flaggedConditions.push(`Local MobileNet identified: "${localLabel || 'Unknown'}"`);
-    flaggedConditions.push("Vector feature map analyzed on-device.");
-    riskLevel = 'Moderate';
-    riskScore = 65;
-    recommendedAction = 'consult_doctor';
 
   // ── 10 NEW INDIA-SPECIFIC PREDICTORS ──
   } else if (predictorId === 'malaria') {

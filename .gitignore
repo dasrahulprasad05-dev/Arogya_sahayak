@@ -31,3 +31,10 @@ dist-ssr
 
 # Supabase Local Temp Files
 supabase/.temp
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+

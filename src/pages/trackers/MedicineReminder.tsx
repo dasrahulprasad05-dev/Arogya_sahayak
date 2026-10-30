@@ -18,15 +18,13 @@ const MedicineReminder: React.FC = () => {
   const [frequency, setFrequency] = useState('Daily');
   const [time, setTime] = useState('08:00');
   
-  const [notifGranted, setNotifGranted] = useState(false);
-  const [currentTime, setCurrentTime] = useState(new Date());
-
-  // Check notification status
-  useEffect(() => {
+  const [notifGranted, setNotifGranted] = useState(() => {
     if (typeof window !== 'undefined' && 'Notification' in window) {
-      setNotifGranted(Notification.permission === 'granted');
+      return Notification.permission === 'granted';
     }
-  }, []);
+    return false;
+  });
+  const [currentTime, setCurrentTime] = useState(new Date());
 
   // Update current time to keep countdowns accurate
   useEffect(() => {

@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 
 class PredictionFacts(BaseModel):
     version: str
-    riskLevel: Literal['Low', 'Moderate', 'High', 'Critical']
+    riskLevel: Literal['Low', 'Moderate', 'High', 'Critical', 'Insufficient Data']
     riskScore: int
     flaggedConditions: List[str]
     recommendedAction: Literal['monitor', 'consult_doctor', 'urgent_care']

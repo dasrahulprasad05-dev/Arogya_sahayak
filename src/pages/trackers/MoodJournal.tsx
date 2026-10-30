@@ -163,7 +163,7 @@ const MoodJournal: React.FC = () => {
       const hasActiveStreak = latestDateStr === todayStr || latestDateStr === yesterdayStr;
 
       if (hasActiveStreak) {
-        let current = new Date(uniqueDates[0]);
+        const current = new Date(uniqueDates[0]);
         while (true) {
           const currentStr = current.toDateString();
           const score = logsByDate[currentStr];

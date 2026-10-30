@@ -332,7 +332,7 @@ const ScanPage: React.FC = () => {
               {/* Counter badge */}
               <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground shrink-0">
                 <Layers className="w-3.5 h-3.5 text-primary" />
-                <span>Showing {filteredTools.length + 1} scanners</span>
+                <span>Showing {(activeCategory === 'all' && !searchQuery) ? filteredTools.length + 3 : filteredTools.length} scanners</span>
               </div>
             </div>
 
@@ -407,7 +407,7 @@ const ScanPage: React.FC = () => {
                     title={tool.name}
                     description={tool.description}
                     rgb={cfg.rgb}
-                    index={index + 1}
+                    index={(activeCategory === 'all' && !searchQuery) ? index + 3 : index}
                     footerLabel="Launch Scanner"
                     badge="On-Device • Grad-CAM"
                     onClick={() => setSelectedTool(tool)}

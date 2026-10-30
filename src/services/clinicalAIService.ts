@@ -480,7 +480,7 @@ JSON Schema:
         };
       }
     }
-  } catch (e) {
+  } catch {
     console.warn('Supabase edge function unreachable, using local clinical knowledge base...');
   }
 

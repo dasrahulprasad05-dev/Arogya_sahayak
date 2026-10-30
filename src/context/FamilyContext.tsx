@@ -56,7 +56,9 @@ export const FamilyProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         const parsed = JSON.parse(stored);
         if (Array.isArray(parsed) && parsed.length > 0) return parsed;
       }
-    } catch {}
+    } catch {
+      // ignore storage parse errors
+    }
     return [defaultSelf];
   });
 
@@ -69,7 +71,9 @@ export const FamilyProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     try {
       localStorage.setItem('arogya_family_members', JSON.stringify(members));
       localStorage.setItem('arogya_active_member_id', activeMemberId);
-    } catch {}
+    } catch {
+      // ignore storage write errors
+    }
   }, [members, activeMemberId]);
 
   const activeMember = useMemo(() => {

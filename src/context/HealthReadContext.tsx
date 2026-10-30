@@ -67,20 +67,20 @@ export const HealthReadProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       // Use logged_at (actual event time) with fallback to created_at for older entries
       const eventTime = (log as any).logged_at || log.created_at;
       const logDate = new Date(eventTime).toDateString();
-      if (logDate === todayStr) {
+      if (logDate === todayStr && log?.value) {
         if (log.type === 'water') {
-          water += Number(log.value.glasses || 0);
+          water += Number(log.value?.glasses || 0);
         } else if (log.type === 'sleep') {
-          sleep = Number(log.value.duration || 0);
+          sleep = Number(log.value?.duration || 0);
         } else if (log.type === 'mood') {
-          mood = String(log.value.mood || '');
+          mood = String(log.value?.mood || '');
         } else if (log.type === 'temperature') {
-          temp = Number(log.value.temperature || 0);
+          temp = Number(log.value?.temperature || 0);
         } else if (log.type === 'vitals') {
           vitals = {
-            bp: `${log.value.systolic}/${log.value.diastolic}`,
-            hr: Number(log.value.heartRate || 0),
-            spo2: Number(log.value.spO2 || 0)
+            bp: `${log.value?.systolic ?? 120}/${log.value?.diastolic ?? 80}`,
+            hr: Number(log.value?.heartRate || 0),
+            spo2: Number(log.value?.spO2 || 0)
           };
         }
       }

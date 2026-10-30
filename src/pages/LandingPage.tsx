@@ -44,6 +44,7 @@ import {
   TimelineStep, TestimonialCard, FAQItem, MagneticButton,
 } from '../components/landing/LandingComponents';
 import MobileBottomNav from '../components/MobileBottomNav';
+import WelcomeCards from '../components/WelcomeCards';
 
 
 /* ---------- Animation variants ---------- */
@@ -150,6 +151,7 @@ const LandingPage: React.FC = () => {
       <div className="noise-overlay" />
 
       {/* Tutorial & Developer Contact popup cards */}
+      <WelcomeCards />
 
 
       {/* ===== Scroll Progress Bar ===== */}
