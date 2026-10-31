@@ -122,9 +122,9 @@ export const scanToolsConfig: Record<string, ScanTool> = {
     description: 'Triage musculoskeletal radiographs for cortical bone discontinuity, hairline cracks, and dislocations.',
     category: 'radiology',
     inputModality: 'Musculoskeletal X-rays',
-    labels: ['Intact Cortical Bone Structure', 'Acute Cortical Bone Fracture', 'Hairline / Stress Fracture', 'Joint Dislocation / Space Narrowing'],
+    labels: ['Intact Cortical Bone Structure', 'Acute Cortical Bone Fracture'],
     guidance: 'Ensure the affected skeletal long bone or joint is centered with sharp radiographic contrast and minimal blur.',
-    modelArchitecture: 'MURA ResNet-50 / MobileNetV2 Classifier',
+    modelArchitecture: 'MobileNetV2 Musculoskeletal Classifier',
     calibratedThreshold: 0.50
   },
 
