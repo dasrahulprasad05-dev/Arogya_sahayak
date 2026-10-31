@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.0.0",
+  "model_name": "Arogya Sahayak Lung Cancer Thoracic CT MobileNetV2 Classifier",
+  "scanner_id": "lung_cancer",
+  "modality": "Thoracic CT Scans (Axial Slices)",
+  "input_dimensions": [
+    224,
+    224,
+    3
+  ],
+  "preprocessing": "MobileNetV2 scale [-1, 1]",
+  "classes": [
+    {
+      "index": 0,
+      "label": "Benign Parenchyma / Clear",
+      "sensitivity": 0.9393939393939394,
+      "precision": 0.8378378378378378,
+      "f1_score": 0.8857142857142857
+    },
+    {
+      "index": 1,
+      "label": "Adenocarcinoma (NSCLC)",
+      "sensitivity": 0.9,
+      "precision": 0.45454545454545453,
+      "f1_score": 0.6040268456375839
+    },
+    {
+      "index": 2,
+      "label": "Large Cell Neuroendocrine Carcinoma",
+      "sensitivity": 0.0,
+      "precision": 0.0,
+      "f1_score": 0.0
+    },
+    {
+      "index": 3,
+      "label": "Squamous Cell Carcinoma",
+      "sensitivity": 0.1794871794871795,
+      "precision": 0.5384615384615384,
+      "f1_score": 0.2692307692307692
+    }
+  ],
+  "metrics": {
+    "overall_test_accuracy": 0.5533333333333333,
+    "macro_avg_f1": 0.4397429751456597,
+    "weighted_avg_f1": 0.46619942473633746
+  },
+  "calibrated_threshold": 0.52,
+  "last_conv_layer": "Conv_1",
+  "training_metadata": {
+    "date": "2026-10-31 20:13:40",
+    "institution": "ABIT Cuttack / BPUT Odisha",
+    "developers": [
+      "Rahul Prasad Das",
+      "Purnachandra Swain",
+      "Rohit Kumar Thakur",
+      "Ritik Kumar Swain"
+    ],
+    "guide": "Prof. Rajesh Kumar Sahoo",
+    "dataset_source": "Chest CT-Scan images Dataset (Kaggle: mohamedhanyyy/chest-ctscan-images)",
+    "training_samples": 700,
+    "validation_samples": 150,
+    "test_samples": 150,
+    "hardware": "Google Colab Tesla T4 GPU (Free Tier)"
+  },
+  "clinical_safety_notice": "SCREENING AID ONLY. Not intended as a definitive diagnostic tool for bronchogenic carcinoma. Confirmatory oncological evaluation requires Contrast-Enhanced Chest CT (CECT), PET-CT, histopathological biopsy (TTNB/EBUS), and multidisciplinary tumor board review."
+}

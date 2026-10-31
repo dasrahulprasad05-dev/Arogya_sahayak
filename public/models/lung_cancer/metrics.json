@@ -1,0 +1,39 @@
+{
+  "Benign Parenchyma / Clear": {
+    "precision": 0.8378378378378378,
+    "recall": 0.9393939393939394,
+    "f1-score": 0.8857142857142857,
+    "support": 33.0
+  },
+  "Adenocarcinoma (NSCLC)": {
+    "precision": 0.45454545454545453,
+    "recall": 0.9,
+    "f1-score": 0.6040268456375839,
+    "support": 50.0
+  },
+  "Large Cell Neuroendocrine Carcinoma": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 28.0
+  },
+  "Squamous Cell Carcinoma": {
+    "precision": 0.5384615384615384,
+    "recall": 0.1794871794871795,
+    "f1-score": 0.2692307692307692,
+    "support": 39.0
+  },
+  "accuracy": 0.5533333333333333,
+  "macro avg": {
+    "precision": 0.45771120771120766,
+    "recall": 0.5047202797202797,
+    "f1-score": 0.4397429751456597,
+    "support": 150.0
+  },
+  "weighted avg": {
+    "precision": 0.4758394758394759,
+    "recall": 0.5533333333333333,
+    "f1-score": 0.46619942473633746,
+    "support": 150.0
+  }
+}
