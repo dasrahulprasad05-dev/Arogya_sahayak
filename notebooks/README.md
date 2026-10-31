@@ -17,7 +17,7 @@ Welcome to the **Arogya Sahayak AI Diagnostic Lab**. This directory contains pro
 | **07** | `bone_fracture` | **Bone Fracture Detection** | Musculoskeletal Radiograph | [`07_train_bone_fracture_scanner.ipynb`](./07_train_bone_fracture_scanner.ipynb) | Kaggle `bmadushanirodrigo/fracture-multi-region-x-ray-data` | 🟢 **Live & Deployed** |
 | **08** | `skin_disease` | **Skin Disease Classification** | Dermoscopy / Skin Photos | [`08_train_skin_disease_scanner.ipynb`](./08_train_skin_disease_scanner.ipynb) | Kaggle `kmader/skin-cancer-mnist-ham10000` | 🟢 **Ready to Run** |
 | **09** | `dry_eye` | **Dry Eye Severity Prediction** | Eye & Tear Film Surface | [`09_train_dry_eye_scanner.ipynb`](./09_train_dry_eye_scanner.ipynb) | Curated Ocular Surface Cohort | 🟢 **Ready to Run** |
-| **10** | `keratoconus` | **Keratoconus Early Detection** | Corneal Topography Maps | [`10_train_keratoconus_scanner.ipynb`](./10_train_keratoconus_scanner.ipynb) | Corneal Ectasia Topographic Dataset | 🟢 **Ready to Run** |
+| **10** | `keratoconus` | **Keratoconus Early Detection** | Corneal Topography Maps | [`10_train_keratoconus_scanner.ipynb`](./10_train_keratoconus_scanner.ipynb) | Corneal Ectasia Topographic Dataset | 🟢 **Live & Deployed** |
 
 ---
 

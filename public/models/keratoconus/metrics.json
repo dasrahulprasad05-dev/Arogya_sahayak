@@ -1,0 +1,39 @@
+{
+  "Normal Corneal Curvature": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 30.0
+  },
+  "Subclinical / Forme Fruste Keratoconus": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 30.0
+  },
+  "Moderate Keratoconic Ectasia": {
+    "precision": 0.3333333333333333,
+    "recall": 1.0,
+    "f1-score": 0.5,
+    "support": 30.0
+  },
+  "Advanced Keratoconus with Apical Scarring": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 30.0
+  },
+  "accuracy": 0.5,
+  "macro avg": {
+    "precision": 0.3333333333333333,
+    "recall": 0.5,
+    "f1-score": 0.375,
+    "support": 120.0
+  },
+  "weighted avg": {
+    "precision": 0.3333333333333333,
+    "recall": 0.5,
+    "f1-score": 0.375,
+    "support": 120.0
+  }
+}
