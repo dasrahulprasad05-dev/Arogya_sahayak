@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0.0",
+  "model_name": "Arogya Sahayak Tuberculosis Chest X-Ray MobileNetV2 Classifier",
+  "scanner_id": "tuberculosis",
+  "modality": "Chest Radiographs (PA View)",
+  "input_dimensions": [
+    224,
+    224,
+    3
+  ],
+  "preprocessing": "MobileNetV2 scale [-1, 1]",
+  "classes": [
+    {
+      "index": 0,
+      "label": "Normal Clear Pulmonary Cavity",
+      "sensitivity": 0.9961904761904762,
+      "precision": 0.9649446494464945,
+      "f1_score": 0.9803186504217432
+    },
+    {
+      "index": 1,
+      "label": "Active Pulmonary Tuberculosis (Apical / Cavitary)",
+      "sensitivity": 0.819047619047619,
+      "precision": 0.9772727272727273,
+      "f1_score": 0.8911917098445595
+    }
+  ],
+  "metrics": {
+    "overall_test_accuracy": 0.9666666666666667,
+    "macro_avg_f1": 0.9357551801331514,
+    "weighted_avg_f1": 0.9654641603255458
+  },
+  "calibrated_threshold": 0.52,
+  "last_conv_layer": "Conv_1",
+  "training_metadata": {
+    "date": "2026-10-31 20:05:42",
+    "institution": "ABIT Cuttack / BPUT Odisha",
+    "developers": [
+      "Rahul Prasad Das",
+      "Purnachandra Swain",
+      "Rohit Kumar Thakur",
+      "Ritik Kumar Swain"
+    ],
+    "guide": "Prof. Rajesh Kumar Sahoo",
+    "dataset_source": "Qatar-Dhaka Tuberculosis (TB) Chest X-Ray Database (4,200 Scans)",
+    "training_samples": 2940,
+    "validation_samples": 630,
+    "test_samples": 630,
+    "hardware": "Google Colab Tesla T4 GPU (Free Tier)"
+  },
+  "clinical_safety_notice": "SCREENING AID ONLY. Not intended as a definitive diagnostic tool for Mycobacterium tuberculosis infection. Confirmatory diagnosis requires sputum smear microscopy for acid-fast bacilli (AFB), molecular CBNAAT / GeneXpert assays, and clinical evaluation by a certified pulmonologist under NTEP guidelines."
+}

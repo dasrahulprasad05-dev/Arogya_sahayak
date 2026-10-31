@@ -1,0 +1,27 @@
+{
+  "Normal Clear Pulmonary Cavity": {
+    "precision": 0.9649446494464945,
+    "recall": 0.9961904761904762,
+    "f1-score": 0.9803186504217432,
+    "support": 525.0
+  },
+  "Active Pulmonary Tuberculosis (Apical / Cavitary)": {
+    "precision": 0.9772727272727273,
+    "recall": 0.819047619047619,
+    "f1-score": 0.8911917098445595,
+    "support": 105.0
+  },
+  "accuracy": 0.9666666666666667,
+  "macro avg": {
+    "precision": 0.971108688359611,
+    "recall": 0.9076190476190475,
+    "f1-score": 0.9357551801331514,
+    "support": 630.0
+  },
+  "weighted avg": {
+    "precision": 0.9669993290842,
+    "recall": 0.9666666666666667,
+    "f1-score": 0.9654641603255458,
+    "support": 630.0
+  }
+}
