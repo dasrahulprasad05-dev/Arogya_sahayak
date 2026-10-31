@@ -2,7 +2,8 @@ export interface ScanTool {
   id: string;
   name: string;
   description: string;
-  category: 'radiology' | 'dermatology' | 'ophthalmology' | 'dental' | 'neurology' | 'infectious' | 'gynecology' | 'hematology' | 'pediatrics';
+  category: 'ophthalmology' | 'neurology' | 'pulmonology' | 'dermatology' | 'radiology';
+  inputModality: string;
   labels: string[];
   guidance: string;
   modelArchitecture: string;
@@ -10,167 +11,133 @@ export interface ScanTool {
 }
 
 export const scanToolsConfig: Record<string, ScanTool> = {
-  // ── Existing Core Clinical Scanners ──
-  skin: {
-    id: 'skin',
-    name: 'Skin Lesion & Melanoma CNN',
-    description: 'Screen for dermal abnormal pigmentation, melanomas, or lesions.',
-    category: 'dermatology',
-    labels: ['Melanocytic Nevi', 'Melanoma Risk', 'Benign Keratosis', 'Dermatofibroma', 'Vascular Lesion'],
-    guidance: 'Ensure skin area is well-lit, free of cosmetics, and close to the lens. Hold camera steady.',
-    modelArchitecture: 'DenseNet-121 / MobileNetV2 Fine-Tuned',
-    calibratedThreshold: 0.52
-  },
-  chest: {
-    id: 'chest',
-    name: 'Chest Radiograph (X-Ray) CNN',
-    description: 'Analyze chest radiographs for pneumonic consolidation, opacity, or pleural effusion.',
-    category: 'radiology',
-    labels: ['Normal Lung Field', 'Pneumonia / Consolidation', 'Pleural Effusion', 'Pulmonary Infiltrates', 'Cardiomegaly Indicator'],
-    guidance: 'Align crop boundary strictly to standard chest radiograph edges. Crop out non-lung artifacts.',
-    modelArchitecture: 'CheXNet / DenseNet-121 Backbone',
-    calibratedThreshold: 0.50
-  },
-  bone: {
-    id: 'bone',
-    name: 'Bone Fracture & Density CNN',
-    description: 'Triage musculoskeletal X-rays for cortical bone discontinuity, hairline fractures, or osteopenia.',
-    category: 'radiology',
-    labels: ['Intact Cortical Bone', 'Fracture / Discontinuity Detected', 'Joint Space Narrowing', 'Osteopenic Pattern'],
-    guidance: 'Ensure the affected joint/bone segment is centered with high radiographic contrast and minimal blur.',
-    modelArchitecture: 'ResNet-50 / DenseNet Backbone',
-    calibratedThreshold: 0.50
-  },
-  oral: {
-    id: 'oral',
-    name: 'Oral Mucosa & Cancer CNN',
-    description: 'Triage oral mucosal photographs for erythroplakia, leukoplakia, or ulceration.',
-    category: 'dental',
-    labels: ['Normal Oral Mucosa', 'Leukoplakia (Pre-cancerous)', 'Erythroplakia Patch', 'Oral Ulceration / Suspicious Plaque'],
-    guidance: 'Point bright light source directly inside mouth. Hold lens 10cm from mucosal lesion area.',
-    modelArchitecture: 'EfficientNet-B0 Specialized',
-    calibratedThreshold: 0.50
-  },
-  retina: {
-    id: 'retina',
-    name: 'Diabetic Retinopathy CNN',
-    description: 'Screen fundus photographs for microaneurysms, hemorrhages, or hard exudates.',
+  // 1. Diabetic Retinopathy
+  retinopathy: {
+    id: 'retinopathy',
+    name: 'Diabetic Retinopathy Detection',
+    description: 'Screen retinal fundus photographs for microaneurysms, hemorrhages, and exudates.',
     category: 'ophthalmology',
-    labels: ['No Retinopathy (Normal)', 'Mild Non-proliferative (NPDR)', 'Moderate NPDR', 'Severe / Proliferative (PDR)'],
-    guidance: 'Capture high fidelity central macula-focused fundus image. Avoid optical reflection glare.',
-    modelArchitecture: 'ResNet-50 Retinal Classifier',
-    calibratedThreshold: 0.50
-  },
-  mri: {
-    id: 'mri',
-    name: 'Brain MRI Triage CNN',
-    description: 'Triage brain scan slices for space-occupying lesions or structural midline shifts.',
-    category: 'neurology',
-    labels: ['Normal Structural MRI', 'Space-Occupying Lesion', 'Infarct / Ischemic Pattern', 'Ventricular Asymmetry'],
-    guidance: 'Position axial slice in center of frame. Capture high resolution film crop.',
-    modelArchitecture: 'U-Net / DenseNet Feature Extractor',
+    inputModality: 'Retinal Fundus Image',
+    labels: ['No Retinopathy (Normal)', 'Mild Non-Proliferative (NPDR)', 'Moderate NPDR', 'Severe / Proliferative (PDR)'],
+    guidance: 'Capture high-fidelity macula-centered fundus photo. Avoid flash reflection and optical lens flare.',
+    modelArchitecture: 'MobileNetV2 / ResNet-50 Retinal Classifier',
     calibratedThreshold: 0.52
   },
 
-  // ── 10 NEW India-Specific High-Burden Scanners ──
-  tb_sputum: {
-    id: 'tb_sputum',
-    name: 'Tuberculosis Sputum Smear CNN',
-    description: 'Screen ZN-stained microscopic sputum smears for Acid-Fast Bacilli (AFB) clusters.',
-    category: 'infectious',
-    labels: ['Negative / Non-Acid-Fast', 'Low Bacterial Density (AFB 1+)', 'Moderate AFB Burden (2+)', 'High Bacillary Density (3+)'],
-    guidance: 'Place microscopic sputum slide under bright uniform illumination at 100x oil immersion equivalent or high-res photo.',
-    modelArchitecture: 'MobileNetV2 / ResNet-50 Sputum Classifier',
+  // 2. Alzheimer's Disease
+  alzheimer: {
+    id: 'alzheimer',
+    name: "Alzheimer's Disease Detection",
+    description: 'Analyze structural brain MRI scans for hippocampal volume loss and ventricular enlargement.',
+    category: 'neurology',
+    inputModality: 'Brain MRI (T1-weighted)',
+    labels: ['Non-Demented (Normal Control)', 'Very Mild Cognitive Decline', 'Mild Demented', 'Moderate Alzheimer Dementia'],
+    guidance: 'Upload T1-weighted coronal or axial brain MRI slice with clear contrast around temporal lobes and ventricles.',
+    modelArchitecture: 'MobileNetV2 / 3D Deep Slice Extractor',
     calibratedThreshold: 0.50
   },
-  malaria_smear: {
-    id: 'malaria_smear',
-    name: 'Malaria Parasite Smear CNN',
-    description: 'Screen Giemsa-stained thin blood smears for intra-erythrocytic Plasmodium rings.',
-    category: 'infectious',
-    labels: ['Uninfected Erythrocytes', 'Plasmodium Falciparum Ring Form', 'Plasmodium Vivax Trophozoite', 'Gametocyte Observed'],
-    guidance: 'Focus strictly on monolayer region of Giemsa-stained blood smear. Ensure uniform focal plane.',
-    modelArchitecture: 'NIH Malaria CNN / DenseNet-121',
+
+  // 3. Brain Tumor Grade
+  brain_tumor: {
+    id: 'brain_tumor',
+    name: 'Brain Tumor Grade Classification',
+    description: 'Classify intracranial MRI scans for glioma grade, meningioma, or pituitary neoplasms.',
+    category: 'neurology',
+    inputModality: 'Brain MRI Scans (T1-CE / FLAIR)',
+    labels: ['No Tumor Detected (Healthy)', 'Glioma (Low/High Grade)', 'Meningioma', 'Pituitary Tumor'],
+    guidance: 'Upload contrast-enhanced T1-CE or FLAIR axial slice centered on cranial vault with minimal motion blur.',
+    modelArchitecture: 'DenseNet-121 / MobileNetV2 Tumor Head',
     calibratedThreshold: 0.52
   },
-  cervical_via: {
-    id: 'cervical_via',
-    name: 'Cervical Cancer (VIA Colposcopy) CNN',
-    description: 'Triage visual inspection with acetic acid (VIA) photographs for acetowhite squamous changes.',
-    category: 'gynecology',
-    labels: ['Normal Cervical Epithelium (VIA Negative)', 'Dense Acetowhite Lesion (VIA Positive)', 'Atypical Vascular Punctation', 'Suspicious Ulcerative Mass'],
-    guidance: 'Capture sharp cervical os image 1-minute post-acetic acid application with adequate speculum light.',
-    modelArchitecture: 'EfficientNet-B1 Colposcopy Classifier',
-    calibratedThreshold: 0.50
+
+  // 4. Lung Cancer
+  lung_cancer: {
+    id: 'lung_cancer',
+    name: 'Lung Cancer Detection',
+    description: 'Screen thoracic CT scans for pulmonary nodule spiculation, calcification, and malignancy risks.',
+    category: 'pulmonology',
+    inputModality: 'Thoracic CT Scans (LDCT)',
+    labels: ['Benign Parenchyma / Clear', 'Suspicious Pulmonary Nodule', 'Non-Small Cell Carcinoma (NSCLC)', 'Small Cell Malignancy Risk'],
+    guidance: 'Upload high-resolution thoracic axial CT slice with standard lung window setting (-600 to -700 HU).',
+    modelArchitecture: 'EfficientNet-B1 / MobileNetV2 CT Classifier',
+    calibratedThreshold: 0.52
   },
-  anemia_eye: {
-    id: 'anemia_eye',
-    name: 'Non-Invasive Anemia (Conjunctiva) CNN',
-    description: 'Analyze palpebral conjunctiva eyelid photographs for microvascular pallor indicators.',
-    category: 'hematology',
-    labels: ['Healthy Pink Conjunctiva (Hb > 12 g/dL)', 'Mild Conjunctival Pallor (Hb 10-12)', 'Moderate Anemic Pallor (Hb 7-10)', 'Severe Microvascular Pallor (Hb < 7)'],
-    guidance: 'Gently pull lower eyelid downward in natural daylight. Avoid artificial flash reflections.',
-    modelArchitecture: 'MobileNetV2 Palpebral Chrominance Analyzer',
-    calibratedThreshold: 0.50
-  },
-  cataract_eye: {
-    id: 'cataract_eye',
-    name: 'Cataract & Corneal Opacity CNN',
-    description: 'Evaluate anterior segment and pupillary photos for lens opacity and corneal clouding.',
+
+  // 5. Dry Eye Disease
+  dry_eye: {
+    id: 'dry_eye',
+    name: 'Dry Eye Disease Severity Prediction',
+    description: 'Assess anterior eye and tear film photographs for tear breakup and ocular surface instability.',
     category: 'ophthalmology',
-    labels: ['Clear Optical Axis (Normal)', 'Early Nuclear / Cortical Cataract', 'Mature Dense Cataract', 'Corneal Opacity / Pterygium'],
-    guidance: 'Position camera 15cm from open eye under soft diffused room lighting. Keep pupil centered.',
-    modelArchitecture: 'ODIR ResNet-50 Anterior Eye Classifier',
+    inputModality: 'Eye / Tear Film Photos',
+    labels: ['Normal Tear Film (Grade 0)', 'Mild Tear Instability (Grade 1)', 'Moderate Evaporative Dry Eye (Grade 2)', 'Severe Ocular Surface Breakdown (Grade 3)'],
+    guidance: 'Photograph ocular surface under diffuse illumination showing tear meniscus height along the lower eyelid.',
+    modelArchitecture: 'MobileNetV2 Ocular Surface Analyzer',
     calibratedThreshold: 0.50
   },
-  diabetic_foot: {
-    id: 'diabetic_foot',
-    name: 'Diabetic Foot Ulcer (DFU) CNN',
-    description: 'Assess diabetic plantar and digit ulcers for tissue granulation, necrosis, and Wagner grade.',
+
+  // 6. Keratoconus Early Detection
+  keratoconus: {
+    id: 'keratoconus',
+    name: 'Keratoconus Early Detection',
+    description: 'Triage corneal curvature and anterior segment photos for early ectatic corneal thinning.',
+    category: 'ophthalmology',
+    inputModality: 'Corneal / Eye Topography',
+    labels: ['Normal Corneal Curvature', 'Subclinical / Forme Fruste Keratoconus', 'Moderate Keratoconic Ectasia', 'Advanced Keratoconus with Apical Scarring'],
+    guidance: 'Capture anterior eye cornea or Pentacam topography map showing axial curvature and central elevation.',
+    modelArchitecture: 'ResNet-50 / MobileNetV2 Corneal Topographer',
+    calibratedThreshold: 0.50
+  },
+
+  // 7. Skin Disease Classification
+  skin_disease: {
+    id: 'skin_disease',
+    name: 'Skin Disease Classification',
+    description: 'Classify dermal lesions across melanoma, atypical nevi, psoriasis, and inflammatory plaques.',
     category: 'dermatology',
-    labels: ['Intact Neuropathic Skin', 'Superficial Ulcer (Wagner Grade 1)', 'Deep Ulcer / Tendon Exposure (Grade 2-3)', 'Necrotic / Ischemic Gangrene (Grade 4-5)'],
-    guidance: 'Clean and dry the foot area. Photograph wound perpendicular to the skin surface under bright light.',
-    modelArchitecture: 'DFUC2021 DenseNet-121 Classifier',
+    inputModality: 'Skin / Dermoscopy Images',
+    labels: ['Benign Epidermal Tissue', 'Melanocytic Nevus / Mole', 'Psoriasis / Inflammatory Plaque', 'Eczema / Atopic Dermatitis', 'Melanoma / Carcinoma Risk'],
+    guidance: 'Ensure skin lesion is well-lit in natural daylight, centered, free of cosmetics, hair, or casting shadows.',
+    modelArchitecture: 'ISIC HAM10000 MobileNetV2 Fine-Tuned',
     calibratedThreshold: 0.52
   },
-  neonatal_jaundice: {
-    id: 'neonatal_jaundice',
-    name: 'Neonatal Sclera Jaundice (Bilirubin) CNN',
-    description: 'Screen newborn sclera and forehead dermal color tones for elevated bilirubin risk.',
-    category: 'pediatrics',
-    labels: ['Normal Bilirubin Tone (<5 mg/dL)', 'Mild Physiological Jaundice (5-10 mg/dL)', 'Moderate Hyperbilirubinemia (10-15 mg/dL)', 'High Jaundice Risk (>15 mg/dL)'],
-    guidance: 'Capture newborn face and sclera under indirect natural daylight. Keep baby calm and eyes gently open.',
-    modelArchitecture: 'BiliCam MobileNetV2 Chromaticity Model',
+
+  // 8. Pneumonia Detection
+  pneumonia: {
+    id: 'pneumonia',
+    name: 'Pneumonia Detection',
+    description: 'Screen chest radiographs for focal consolidation, alveolar opacification, and air bronchograms.',
+    category: 'pulmonology',
+    inputModality: 'Chest X-rays (PA View)',
+    labels: ['Normal Clear Lung Parenchyma', 'Bacterial Pneumonia (Focal Consolidation)', 'Viral Pneumonia (Bilateral Interstitial Opacity)'],
+    guidance: 'Upload full upright PA chest radiograph. Ensure bilateral costophrenic angles and lung apices are visible.',
+    modelArchitecture: 'CheXNet / MobileNetV2 Pneumonia Classifier',
     calibratedThreshold: 0.50
   },
-  sickle_cell: {
-    id: 'sickle_cell',
-    name: 'Sickle Cell & Thalassemia Smear CNN',
-    description: 'Examine peripheral blood smear micrographs for sickled drepanocytes and target cells.',
-    category: 'hematology',
-    labels: ['Normal Biconcave Discocytes', 'Sickled Crescent Drepanocytes', 'Codocytes (Target Cells)', 'Microcytic Anisopoikilocytosis'],
-    guidance: 'Capture clear high magnification field from peripheral blood smear. Avoid overlapping thick areas.',
-    modelArchitecture: 'ResNet-50 Hematology Classifier',
+
+  // 9. Bone Fracture Detection
+  bone_fracture: {
+    id: 'bone_fracture',
+    name: 'Bone Fracture Detection',
+    description: 'Triage musculoskeletal radiographs for cortical bone discontinuity, hairline cracks, and dislocations.',
+    category: 'radiology',
+    inputModality: 'Musculoskeletal X-rays',
+    labels: ['Intact Cortical Bone Structure', 'Acute Cortical Bone Fracture', 'Hairline / Stress Fracture', 'Joint Dislocation / Space Narrowing'],
+    guidance: 'Ensure the affected skeletal long bone or joint is centered with sharp radiographic contrast and minimal blur.',
+    modelArchitecture: 'MURA ResNet-50 / MobileNetV2 Classifier',
     calibratedThreshold: 0.50
   },
-  fungal_tinea: {
-    id: 'fungal_tinea',
-    name: 'Superficial Fungal Tinea (Ringworm) CNN',
-    description: 'Triage cutaneous annular scaling plaques for dermatophytosis (Tinea corporis/cruris/versicolor).',
-    category: 'dermatology',
-    labels: ['Non-Fungal Dermal Finding', 'Active Tinea (Ringworm) Annular Border', 'Tinea Versicolor Hypopigmentation', 'Candidal Intertrigo'],
-    guidance: 'Ensure the active outer border of the rash is sharp and centered in focus. Wipe excess sweat.',
-    modelArchitecture: 'ISIC DermNet MobileNetV2 Fine-Tuned',
-    calibratedThreshold: 0.50
-  },
-  dental_fluorosis: {
-    id: 'dental_fluorosis',
-    name: 'Dental Fluorosis & Caries CNN',
-    description: 'Screen anterior teeth photographs for endemic fluorosis enamel mottling and caries.',
-    category: 'dental',
-    labels: ['Healthy Intact Enamel', 'Mild Fluorosis (Chalky White Streaks)', 'Moderate to Severe Fluorosis (Brown Pitting)', 'Active Dental Caries Cavity'],
-    guidance: 'Smile showing front teeth. Wipe teeth with a tissue and shine a light directly across the enamel surface.',
-    modelArchitecture: 'DentalVision EfficientNet-B0',
-    calibratedThreshold: 0.50
+
+  // 10. Tuberculosis Detection
+  tuberculosis: {
+    id: 'tuberculosis',
+    name: 'Tuberculosis Detection',
+    description: 'Analyze chest X-rays for apical fibro-cavitary lesions, miliary mottling, and pleural effusion.',
+    category: 'pulmonology',
+    inputModality: 'Chest X-rays (PA View)',
+    labels: ['Normal Pulmonary Cavity', 'Active Pulmonary Tuberculosis (Apical Cavitation)', 'Miliary TB Infiltrates', 'Healed / Fibrocalcific Lesion'],
+    guidance: 'Upload high-contrast chest X-ray. Inspect apical lung zones and subclavicular areas for infiltrates.',
+    modelArchitecture: 'Shenzhen-Montgomery MobileNetV2 Classifier',
+    calibratedThreshold: 0.52
   }
 };

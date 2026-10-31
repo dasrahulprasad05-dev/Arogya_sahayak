@@ -14,6 +14,317 @@ export interface ClinicalProfile {
 }
 
 export const CLINICAL_KNOWLEDGE_BASE: Record<string, ClinicalProfile> = {
+  // ── 10 NEW / MAPPED CLINICAL PROFILES ──
+  retinopathy: {
+    conditionName: 'Diabetic Retinopathy Microvascular Screening',
+    category: 'Ophthalmology',
+    pathologySummary: 'Retinal fundus image evaluation assessing retinal microvasculature for microaneurysms, blot hemorrhages, cotton-wool spots, and neovascularization.',
+    suspectedFindings: [
+      'Retinal microvascular blot hemorrhages or microaneurysms',
+      'Macular hard exudate rings and cotton wool spots',
+      'Venous beading or neovascular proliferation at optic disc'
+    ],
+    causesAndRiskFactors: [
+      'Prolonged chronic hyperglycemia (elevated HbA1c > 7.0%)',
+      'Uncontrolled systemic arterial hypertension damaging capillary pericytes',
+      'Duration of diabetes mellitus exceeding 5 to 10 years'
+    ],
+    actionablePrecautions: [
+      '👁️ Schedule dilated fundus examination and Optical Coherence Tomography (OCT) with a retina specialist annually.',
+      '🩸 Maintain tight glycemic control (target HbA1c < 7.0%) and monitor fasting blood glucose weekly.',
+      '🩺 Keep blood pressure strictly below 130/80 mmHg to reduce retinal capillary shear stress.',
+      '🚭 Cease tobacco smoking immediately to preserve ocular microvascular perfusion.',
+      '👓 Seek prompt medical review if experiencing sudden onset floaters, dark spots, or vision distortion.'
+    ],
+    emergencyRedFlags: [
+      'Sudden painless loss of vision or curtain-like dark shadow across field of view',
+      'Massive shower of dark floaters or cobweb-like visual distortion',
+      'Severe eye pain with nausea and rainbow halos around lights'
+    ],
+    recommendedSpecialist: 'Vitreoretinal Surgeon / Medical Ophthalmologist',
+    confirmatoryTests: ['Dilated Slit-Lamp Funduscopy', 'Optical Coherence Tomography (OCT Macula)', 'Fundus Fluorescein Angiography (FFA)'],
+    dietAndLifestyle: ['Antioxidant-rich leafy greens (lutein & zeaxanthin)', 'Omega-3 fatty acids (flaxseeds, walnuts)', 'Low glycemic index whole grains (millets, oats)']
+  },
+
+  alzheimer: {
+    conditionName: "Alzheimer's Disease & Neurocognitive Assessment",
+    category: 'Neurology',
+    pathologySummary: 'Structural neuroimaging triage analyzing medial temporal lobe, hippocampal volume shrinkage, and ventriculomegaly consistent with neurodegenerative dementia.',
+    suspectedFindings: [
+      'Medial temporal lobe and hippocampal volumetric reduction',
+      'Ex-vacuo lateral ventricular enlargement and cortical sulcal widening',
+      'Bilateral parietal and temporal cortical thinning'
+    ],
+    causesAndRiskFactors: [
+      'Neurodegenerative extracellular amyloid-beta plaques and tau neurofibrillary tangles',
+      'Advanced age (>65 years) and genetic Apolipoprotein E (APOE-e4) allele carriage',
+      'Cardiovascular risk factors (hypertension, hyperlipidemia, sedentary lifestyle)'
+    ],
+    actionablePrecautions: [
+      '🧠 Engage in daily cognitively stimulating exercises: puzzles, reading, memory games, and learning new skills.',
+      '🚶‍♂️ Maintain 30-45 minutes of aerobic exercise (brisk walking, swimming) daily to boost cerebral blood flow.',
+      '🥗 Adopt the MIND or Mediterranean diet rich in berries, nuts, olive oil, and leafy vegetables.',
+      '😴 Ensure 7-8 hours of restful sleep daily to support glymphatic clearance of neurotoxic proteins.',
+      '📋 Establish predictable daily routines and utilize visual memory prompts for medications and appointments.'
+    ],
+    emergencyRedFlags: [
+      'Acute sudden confusion, delirium, or severe disorientation over hours/days',
+      'Wandering away from home with complete inability to recognize familiar family members',
+      'Sudden onset focal neurological deficits (limb weakness, speech loss)'
+    ],
+    recommendedSpecialist: 'Cognitive Neurologist / Geriatric Neuropsychiatrist',
+    confirmatoryTests: ['High-Resolution 3T Brain MRI with Volumetric Hippocampal Analysis', 'Mini-Mental State Examination (MMSE) / MoCA Test', 'CSF or Amyloid PET Biomarker Imaging'],
+    dietAndLifestyle: ['Walnuts, blueberries, turmeric (curcumin), leafy spinach', 'Strict social engagement and cognitive social networking']
+  },
+
+  brain_tumor: {
+    conditionName: 'Intracranial Space-Occupying Lesion & Neoplasm Triage',
+    category: 'Neurology / Neuro-Oncology',
+    pathologySummary: 'Contrast-enhanced neuroimaging triage assessing for intracranial intra-axial or extra-axial mass lesions, perilesional vasogenic edema, and midline brain shift.',
+    suspectedFindings: [
+      'Focal contrast-enhancing intracranial mass or space-occupying lesion',
+      'Significant surrounding vasogenic edema with sulcal effacement',
+      'Midline structural shift or compression of ventricular system'
+    ],
+    causesAndRiskFactors: [
+      'Primary neoplastic glial cell proliferation (Glioma, Astrocytoma, Glioblastoma)',
+      'Extra-axial dural arachnoid cap cell proliferation (Meningioma)',
+      'Secondary metastatic dissemination from lung, breast, or melanoma'
+    ],
+    actionablePrecautions: [
+      '🛑 Immediate referral to a tertiary neurosurgical center for contrast neuro-navigation planning.',
+      '🚫 Avoid sudden Valsalva maneuvers (straining, heavy lifting) that acutely raise intracranial pressure.',
+      '💊 Take prescribed anti-epileptic medications (e.g. Levetiracetam) conscientiously if seizure risk is identified.',
+      '🛌 Sleep with head elevated 30 degrees to promote intracranial venous drainage.',
+      '📋 Keep a detailed log of headache frequency, severity, morning vomiting, and neurological signs.'
+    ],
+    emergencyRedFlags: [
+      'New-onset generalized or focal seizure episodes',
+      'Projectile early morning vomiting without antecedent nausea accompanied by severe headache',
+      'Rapidly worsening motor hemiparesis, pupil asymmetry, or progressive stupor'
+    ],
+    recommendedSpecialist: 'Neurosurgeon / Neuro-Oncologist',
+    confirmatoryTests: ['3T Brain MRI with Contrast (T1+C, T2, FLAIR, DWI, MRS)', 'Magnetic Resonance Spectroscopy (MRS)', 'Stereotactic or Open Biopsy with Histopathology & IDH/MGMT Profiling'],
+    dietAndLifestyle: ['Anti-inflammatory nutrition', 'Strict low-salt hydration', 'Avoid alcohol and caffeine']
+  },
+
+  lung_cancer: {
+    conditionName: 'Thoracic Pulmonary Nodule & Malignancy Screening',
+    category: 'Pulmonology / Thoracic Oncology',
+    pathologySummary: 'Computed tomography (CT) triage examining pulmonary parenchymal nodules for spiculated margins, subsolid ground-glass opacity (GGO), and pleural tags.',
+    suspectedFindings: [
+      'Focal pulmonary nodule with irregular or spiculated margins (>6mm)',
+      'Ground-glass opacity (GGO) with solid central component',
+      'Associated hilar or mediastinal lymphadenopathy'
+    ],
+    causesAndRiskFactors: [
+      'Active tobacco cigarette/bidi smoking and extensive passive secondhand smoke exposure',
+      'Environmental exposure to radon gas, asbestos, silica, or high industrial particulate matter (PM2.5)',
+      'Chronic pulmonary inflammation (COPD, pulmonary fibrosis, previous TB scar carcinoma)'
+    ],
+    actionablePrecautions: [
+      '🚭 Absolute smoking cessation immediately; enroll in certified tobacco cessation programs.',
+      '🩺 Undergo protocolized Low-Dose CT (LDCT) follow-up as per Fleischner Society pulmonary nodule guidelines.',
+      '🚫 Avoid exposure to biomass cooking smoke (chulha), occupational dust, and chemical fumes.',
+      '🌬️ Practice incentive spirometry to optimize residual lung capacity and pulmonary hygiene.',
+      '🌡️ Seek immediate evaluation for persistent cough lasting more than 3 weeks or unexplained weight loss.'
+    ],
+    emergencyRedFlags: [
+      'Coughing up fresh blood or blood-streaked sputum (hemoptysis)',
+      'Rapidly progressing breathlessness or severe unilateral pleuritic chest pain',
+      'Unexplained hoarseness of voice or superior vena cava syndrome (facial/neck swelling)'
+    ],
+    recommendedSpecialist: 'Thoracic Surgical Oncologist / Pulmonologist',
+    confirmatoryTests: ['Contrast-Enhanced Chest CT (CECT)', 'PET-CT Whole Body Scan', 'CT-guided Transthoracic Needle Biopsy (TTNB) / EBUS-TBNA'],
+    dietAndLifestyle: ['High-protein balanced recovery meals', 'Cruciferous vegetables (broccoli, cabbage)', 'Fresh citrus fruits with Vitamin C']
+  },
+
+  dry_eye: {
+    conditionName: 'Ocular Surface & Tear Film Instability Assessment',
+    category: 'Ophthalmology',
+    pathologySummary: 'Ocular surface evaluation assessing tear film breakup time (TBUT), meibomian gland dysfunction (MGD), and corneal epithelial punctate keratopathy.',
+    suspectedFindings: [
+      'Reduced tear meniscus height and uneven tear film distribution',
+      'Punctate corneal epithelial micro-staining under blue cobalt light',
+      'Meibomian gland orifice capping and marginal conjunctival hypervascularity'
+    ],
+    causesAndRiskFactors: [
+      'Prolonged visual display terminal (VDT) screen exposure reducing natural blink rate',
+      'Air conditioning, dry winds, dust, and environmental low-humidity exposure',
+      'Meibomian Gland Dysfunction (MGD) or systemic autoimmune conditions (Sjögren syndrome)'
+    ],
+    actionablePrecautions: [
+      '💻 Implement the 20-20-20 Rule: Every 20 minutes, gaze at an object 20 feet away for 20 seconds, blinking fully.',
+      '💧 Use preservative-free lubricating artificial tear drops (e.g., Sodium Hyaluronate 0.1-0.18%) 3-4 times daily.',
+      '♨️ Apply warm moist compresses over closed eyelids for 5-10 minutes nightly followed by gentle lid massage.',
+      '🚫 Avoid direct blast of fans, vehicle vents, or air conditioning onto the open eyes.',
+      '👓 Wear wraparound sunglasses in dusty or windy outdoor environments to prevent tear evaporation.'
+    ],
+    emergencyRedFlags: [
+      'Severe intractable ocular pain, photophobia, and extreme redness',
+      'Sudden drop in visual acuity or corneal white opacification',
+      'Copious purulent discharge suggesting bacterial corneal ulcer'
+    ],
+    recommendedSpecialist: 'Cornea & Ocular Surface Specialist / General Ophthalmologist',
+    confirmatoryTests: ['Fluorescein Tear Break-Up Time (TBUT)', "Schirmer's Test (Tear Secretion Rate)", 'Meibography & Ocular Surface Staining (Oxford Scale)'],
+    dietAndLifestyle: ['Omega-3 fatty acid supplementation (1000-2000 mg/day)', 'Ensure 2.5 Liters of daily hydration', 'Use desktop room humidifiers']
+  },
+
+  keratoconus: {
+    conditionName: 'Corneal Ectasia & Keratoconus Early Screening',
+    category: 'Ophthalmology',
+    pathologySummary: 'Corneal structural assessment evaluating progressive non-inflammatory corneal stromal thinning, irregular conical steepening, and Fleischer ring deposition.',
+    suspectedFindings: [
+      'Asymmetric steepening of inferior corneal curvature',
+      'Central or paracentral corneal stromal thinning and high irregular astigmatism',
+      'Vogt striae or iron epithelial deposit line (Fleischer ring)'
+    ],
+    causesAndRiskFactors: [
+      'Chronic, vigorous eye rubbing (frequently associated with allergic ocular pruritus)',
+      'Genetic predisposition, collagen synthesis disorder, and connective tissue laxity',
+      'Onset typically during puberty or second decade of life with rapidly fluctuating astigmatism'
+    ],
+    actionablePrecautions: [
+      '🛑 NEVER RUB YOUR EYES: Eye rubbing causes mechanical shear stress accelerating corneal ectasia.',
+      '💧 Treat underlying ocular allergies with preservative-free anti-allergy drops (e.g. Olopatadine) to eliminate itching.',
+      '🩺 Undergo Corneal Collagen Cross-Linking (CXL / C3R) evaluation early to halt disease progression.',
+      '👓 Avoid frequent spectacle changes without corneal topography; consider specialized rigid gas permeable (RGP) or Scleral lenses.',
+      '🚫 Laser refractive surgery (LASIK / PRK) is strictly contraindicated in keratoconic eyes.'
+    ],
+    emergencyRedFlags: [
+      'Sudden acute clouding/whitening of cornea with pain and vision drop (Acute Corneal Hydrops)',
+      'Rupture of Descemet membrane leading to sudden stromal edema',
+      'Severe photophobia and ocular inflammation'
+    ],
+    recommendedSpecialist: 'Cornea & Refractive Specialist / Ophthalmologist',
+    confirmatoryTests: ['Scheimpflug Corneal Tomography (Pentacam / Sirius)', 'Corneal Pachymetry (Mapping Minimum Stromal Thickness)', 'Anterior Segment Optical Coherence Tomography (AS-OCT)'],
+    dietAndLifestyle: ['Vitamin B2 (Riboflavin) rich foods (almonds, dairy, eggs)', 'Cold compresses to soothe allergic eye itching instead of rubbing']
+  },
+
+  skin_disease: {
+    conditionName: 'Dermatological Lesion & Cutaneous Screening',
+    category: 'Dermatology',
+    pathologySummary: 'Dermoscopic and clinical cutaneous assessment screening for inflammatory plaques (psoriasis, eczema), superficial fungal lesions, and atypical pigmented neoplasms.',
+    suspectedFindings: [
+      'Atypical epidermal pigmentation, erythematous borders, or plaque scaling',
+      'Structural border contour variegation and surface textural changes',
+      'Superficial dermal vascularization or hyperkeratosis'
+    ],
+    causesAndRiskFactors: [
+      'Cumulative solar ultraviolet (UV) radiation exposure and chronic sunburns',
+      'Autoimmune immune dysregulation (Psoriasis, Atopic Eczema)',
+      'Superficial dermatophyte infection, allergens, or chemical contact irritants'
+    ],
+    actionablePrecautions: [
+      '☀️ Apply broad-spectrum SPF 50+ sunscreen daily; avoid direct midday sunlight between 10 AM and 4 PM.',
+      '🔍 Follow the ABCDE rule for moles: check Asymmetry, Border irregularity, Color changes, Diameter >6mm, and Evolution.',
+      '🧴 Apply ceramide-based emollient moisturizers twice daily immediately after bathing to restore dermal skin barrier.',
+      '🚫 Never pick, scratch, chemically cauterize, or use over-the-counter steroid creams without medical prescription.',
+      '🩺 Have any changing, bleeding, or non-healing skin lesion examined with dermoscopy by a dermatologist.'
+    ],
+    emergencyRedFlags: [
+      'Rapid lesion enlargement, spontaneous ulceration, or oozing blood',
+      'Sudden appearance of dark satellite pigmentation around an existing mole',
+      'Widespread blistering eruption with fever and mucous membrane involvement'
+    ],
+    recommendedSpecialist: 'Dermatologist / Dermato-Oncologist',
+    confirmatoryTests: ['Polarized Dermoscopy Examination', 'Punch / Excisional Biopsy with Histopathology', 'Skin Scraping for KOH Mount (if fungal suspected)'],
+    dietAndLifestyle: ['Anti-inflammatory diet (turmeric, leafy vegetables, omega-3 seeds)', 'Wear loose, breathable 100% cotton clothing']
+  },
+
+  pneumonia: {
+    conditionName: 'Pneumonia & Alveolar Consolidation Screening',
+    category: 'Pulmonology / Radiology',
+    pathologySummary: 'Chest radiograph evaluation detecting focal lobar consolidation, bilateral patchy bronchopneumonic opacities, and alveolar air bronchograms.',
+    suspectedFindings: [
+      'Focal radiographic airspace opacity or dense lobar consolidation',
+      'Prominent bronchovascular markings with air bronchogram signs',
+      'Blunting of costophrenic angles suggesting parapneumonic effusion'
+    ],
+    causesAndRiskFactors: [
+      'Bacterial pathogens (Streptococcus pneumoniae, Klebsiella pneumoniae)',
+      'Viral respiratory infections (Influenza, RSV, SARS-CoV-2, Adenovirus)',
+      'Aspiration risk, immunosuppression, biomass smoke inhalation, and elderly age'
+    ],
+    actionablePrecautions: [
+      '🫁 Perform gentle deep diaphragmatic breathing and warm saline steam inhalation (10 mins twice daily) to clear airways.',
+      '💧 Maintain robust oral hydration (2.5 to 3 Liters of warm fluids/broth daily) to liquify thickened secretions.',
+      '🌡️ Monitor body temperature and SpO2 oxygen levels twice daily with a certified finger pulse oximeter.',
+      '💊 Strictly adhere to prescribed antimicrobial therapy; never stop antibiotic courses prematurely.',
+      '🚫 Avoid smoking, passive smoke, chulha biomass fumes, and cold damp drafts.'
+    ],
+    emergencyRedFlags: [
+      'Resting SpO2 oxygen saturation dropping below 93-94%',
+      'Severe respiratory distress, chest indrawing, or inability to speak full sentences',
+      'High fever (>103°F) accompanied by mental confusion, blueness of lips (cyanosis), or hemoptysis'
+    ],
+    recommendedSpecialist: 'Pulmonologist / Chest Physician / Critical Care Specialist',
+    confirmatoryTests: ['High-Resolution Computed Tomography of Chest (HRCT)', 'Sputum Gram Stain & Aerobic Culture Sensitivity', 'Complete Blood Count (CBC with Differential) & CRP/Procalcitonin'],
+    dietAndLifestyle: ['Warm turmeric milk, ginger-tulsi decoction, warm soups', 'Rest in semi-propped upright position (30-45 degrees)']
+  },
+
+  bone_fracture: {
+    conditionName: 'Musculoskeletal Fracture & Cortical Disruption Triage',
+    category: 'Orthopedics / Radiology',
+    pathologySummary: 'Radiographic examination of skeletal extremities assessing cortical bone continuity, trabecular line disruption, joint articulation, and soft tissue swelling.',
+    suspectedFindings: [
+      'Sharp radiolucent cortical line indicating acute skeletal fracture',
+      'Bone fragment displacement, angulation, or impaction',
+      'Articular joint space distortion or peri-articular soft tissue hematoma'
+    ],
+    causesAndRiskFactors: [
+      'Acute mechanical physical trauma, road traffic accidents, or direct impact',
+      'Accidental falls in elderly individuals with underlying osteopenia / osteoporosis',
+      'Repetitive mechanical stress leading to micro-trabecular fatigue fractures'
+    ],
+    actionablePrecautions: [
+      '🛑 Immediately immobilize the affected bone/joint using a rigid splint or sling; avoid any weight-bearing.',
+      '❄️ Apply ice packs wrapped in a clean cloth for 15-20 minutes every 3-4 hours to curb swelling and hematoma formation.',
+      '🩹 Keep the injured limb elevated above the level of the heart to minimize dependent edema.',
+      '🦴 Support skeletal recovery with dietary Calcium (1000-1200 mg/day) and Vitamin D3 under physician guidance.',
+      '🩺 Obtain orthogonal (Antero-Posterior and Lateral) radiographic views to evaluate alignment and intra-articular extension.'
+    ],
+    emergencyRedFlags: [
+      'Bone fragment piercing through the skin surface (Open / Compound Fracture — high infection risk)',
+      'Cold, pale, pulseless extremity or severe progressive numbness (Acute Compartment Syndrome)',
+      'Severe gross anatomical deformity with circulatory compromise'
+    ],
+    recommendedSpecialist: 'Orthopedic Surgeon / Traumatologist',
+    confirmatoryTests: ['Multi-view Orthogonal Plain Radiographs (AP + Lateral + Oblique)', 'CT Scan with 3D Reconstruction (for intra-articular complex fractures)', 'Musculoskeletal Ultrasound / MRI (for occult fractures & ligamentous tears)'],
+    dietAndLifestyle: ['Adequate protein intake for collagen matrix synthesis', 'Dairy, ragi, sesame seeds for natural calcium', 'Strict smoking avoidance (nicotine impairs bone union)']
+  },
+
+  tuberculosis: {
+    conditionName: 'Pulmonary Tuberculosis Fibro-Cavitary Screening',
+    category: 'Pulmonology / Infectious Diseases',
+    pathologySummary: 'Chest radiograph evaluation identifying apical fibro-cavitary infiltrates, subclavicular consolidation, miliary micronodular mottling, and lymphadenopathy.',
+    suspectedFindings: [
+      'Apical or posterior segment upper-lobe cavitation or focal consolidation',
+      'Fibronodular opacities with subclavicular infiltrates and volume loss',
+      'Unilateral pleural effusion or diffuse miliary micronodular pattern'
+    ],
+    causesAndRiskFactors: [
+      'Infection by Mycobacterium tuberculosis via airborne respiratory droplets',
+      'Compromised cell-mediated immunity (malnutrition, diabetes, HIV/immunosuppression)',
+      'Overcrowded living conditions, prolonged close household contact with active TB patients'
+    ],
+    actionablePrecautions: [
+      '🧪 Immediate sputum testing at the nearest government DOTS / NTEP center for free diagnostic confirmation.',
+      '😷 Wear an N95 or surgical mask and practice cough etiquette to prevent transmission to family members.',
+      '💊 Strictly adhere to prescribed Anti-Tubercular Therapy (ATT) regimen under DOTS; never miss a single dose.',
+      '🪟 Ensure excellent cross-ventilation in the home; sunlight and fresh airflow kill airborne bacilli.',
+      '🥗 Consume a high-protein, calorie-dense diet to reverse catabolic weight loss and support immune recovery.'
+    ],
+    emergencyRedFlags: [
+      'Massive hemoptysis (coughing up large volumes of fresh bright red blood >100ml)',
+      'Sudden acute breathlessness with unilateral chest pain (Tension Pneumothorax)',
+      'High continuous fever with severe disorientation or neck stiffness (TB Meningitis risk)'
+    ],
+    recommendedSpecialist: 'Pulmonologist / Chest Physician / NTEP Medical Officer',
+    confirmatoryTests: ['CBNAAT / GeneXpert MTB/RIF Assay (rapid molecular detection & rifampicin resistance)', 'Sputum Smear Microscopy for Acid-Fast Bacilli (AFB Stain)', 'High-Resolution Chest CT (HRCT)'],
+    dietAndLifestyle: ['High protein: eggs, lentils, paneer, soy, roasted chana', 'Adequate dietary zinc, iron, and multivitamin supplementation', 'Complete avoidance of tobacco, bidi, and alcohol']
+  },
+
   chest: {
     conditionName: 'Pulmonary Infiltration & Consolidation Assessment',
     category: 'Pulmonology / Radiology',

@@ -34,16 +34,15 @@ const DEFAULT_SCAN_CFG = {
   glowClass: 'shadow-[0_0_15px_rgba(139,92,246,0.3)]',
 };
 
-type CategoryFilter = 'all' | 'infectious' | 'maternal_child' | 'dermatology' | 'ophthalmology' | 'radiology_neurology' | 'dental';
+type CategoryFilter = 'all' | 'ophthalmology' | 'neurology' | 'pulmonology' | 'dermatology' | 'radiology';
 
 const CATEGORIES: { id: CategoryFilter; label: string; count?: number }[] = [
-  { id: 'all', label: 'All Scanners' },
-  { id: 'infectious', label: 'Infectious & Endemic' },
-  { id: 'maternal_child', label: 'Maternal & Blood' },
-  { id: 'dermatology', label: 'Dermatology & Ulcers' },
-  { id: 'ophthalmology', label: 'Eye & Vision' },
-  { id: 'radiology_neurology', label: 'Radiology & Organs' },
-  { id: 'dental', label: 'Dental & Oral' },
+  { id: 'all', label: 'All 10 Scanners' },
+  { id: 'ophthalmology', label: '👁️ Eye & Vision (3)' },
+  { id: 'neurology', label: '🧠 Brain & Neuro (2)' },
+  { id: 'pulmonology', label: '🫁 Lungs & Chest (3)' },
+  { id: 'dermatology', label: '🧴 Skin & Dermal (1)' },
+  { id: 'radiology', label: '🦴 Bone & Fracture (1)' },
 ];
 
 const ScanPage: React.FC = () => {
@@ -63,18 +62,8 @@ const ScanPage: React.FC = () => {
     return Object.values(scanToolsConfig).filter((tool) => {
       // Category match
       let matchesCategory = true;
-      if (activeCategory === 'infectious') {
-        matchesCategory = tool.category === 'infectious';
-      } else if (activeCategory === 'maternal_child') {
-        matchesCategory = tool.category === 'gynecology' || tool.category === 'hematology' || tool.category === 'pediatrics';
-      } else if (activeCategory === 'dermatology') {
-        matchesCategory = tool.category === 'dermatology';
-      } else if (activeCategory === 'ophthalmology') {
-        matchesCategory = tool.category === 'ophthalmology';
-      } else if (activeCategory === 'radiology_neurology') {
-        matchesCategory = tool.category === 'radiology' || tool.category === 'neurology';
-      } else if (activeCategory === 'dental') {
-        matchesCategory = tool.category === 'dental';
+      if (activeCategory !== 'all') {
+        matchesCategory = tool.category === activeCategory;
       }
 
       // Search match
@@ -234,7 +223,7 @@ const ScanPage: React.FC = () => {
         <div>
           <p className="text-sm font-bold text-amber-600 dark:text-amber-400 flex items-center gap-2">
             <span>⚠️ Clinical Triage &amp; Predictive Precautions Assistant</span>
-            <span className="text-[10px] bg-amber-500/20 px-2 py-0.5 rounded-full font-extrabold uppercase">16 Models + Vision OCR</span>
+            <span className="text-[10px] bg-amber-500/20 px-2 py-0.5 rounded-full font-extrabold uppercase">10 Deep Learning Scanners + Vision OCR</span>
           </p>
           <p className="text-xs text-amber-600/80 dark:text-amber-400/80 leading-relaxed mt-1">
             This scanner suite runs on-device CNN feature extraction with Grad-CAM saliency heatmaps. It identifies suspected conditions and provides{' '}
@@ -409,7 +398,7 @@ const ScanPage: React.FC = () => {
                     rgb={cfg.rgb}
                     index={(activeCategory === 'all' && !searchQuery) ? index + 3 : index}
                     footerLabel="Launch Scanner"
-                    badge="On-Device • Grad-CAM"
+                    badge={tool.inputModality}
                     onClick={() => setSelectedTool(tool)}
                   />
                 );
