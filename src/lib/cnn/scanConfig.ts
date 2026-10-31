@@ -135,7 +135,7 @@ export const scanToolsConfig: Record<string, ScanTool> = {
     description: 'Analyze chest X-rays for apical fibro-cavitary lesions, miliary mottling, and pleural effusion.',
     category: 'pulmonology',
     inputModality: 'Chest X-rays (PA View)',
-    labels: ['Normal Pulmonary Cavity', 'Active Pulmonary Tuberculosis (Apical Cavitation)', 'Miliary TB Infiltrates', 'Healed / Fibrocalcific Lesion'],
+    labels: ['Normal Clear Pulmonary Cavity', 'Active Pulmonary Tuberculosis (Apical / Cavitary)'],
     guidance: 'Upload high-contrast chest X-ray. Inspect apical lung zones and subclavicular areas for infiltrates.',
     modelArchitecture: 'Shenzhen-Montgomery MobileNetV2 Classifier',
     calibratedThreshold: 0.52
