@@ -93,10 +93,18 @@ export const scanToolsConfig: Record<string, ScanTool> = {
   skin_disease: {
     id: 'skin_disease',
     name: 'Skin Disease Classification',
-    description: 'Classify dermal lesions across melanoma, atypical nevi, psoriasis, and inflammatory plaques.',
+    description: 'Classify dermal lesions across melanoma, atypical nevi, basal cell carcinoma, and benign keratoses.',
     category: 'dermatology',
     inputModality: 'Skin / Dermoscopy Images',
-    labels: ['Benign Epidermal Tissue', 'Melanocytic Nevus / Mole', 'Psoriasis / Inflammatory Plaque', 'Eczema / Atopic Dermatitis', 'Melanoma / Carcinoma Risk'],
+    labels: [
+      'Melanocytic Nevus (Benign Mole)',
+      'Melanoma (Malignant Neoplasm)',
+      'Benign Keratosis (Seborrheic Plaque)',
+      'Basal Cell Carcinoma',
+      'Actinic Keratosis (Pre-Cancerous)',
+      'Vascular Lesion (Angioma)',
+      'Dermatofibroma (Benign)'
+    ],
     guidance: 'Ensure skin lesion is well-lit in natural daylight, centered, free of cosmetics, hair, or casting shadows.',
     modelArchitecture: 'ISIC HAM10000 MobileNetV2 Fine-Tuned',
     calibratedThreshold: 0.52

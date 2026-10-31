@@ -15,7 +15,7 @@ Welcome to the **Arogya Sahayak AI Diagnostic Lab**. This directory contains pro
 | **05** | `tuberculosis` | **Tuberculosis Detection** | Chest X-ray (PA View) | [`05_train_tuberculosis_scanner.ipynb`](./05_train_tuberculosis_scanner.ipynb) | Kaggle `tawsifurrahman/tuberculosis-tb-chest-xray-dataset` | 🟢 **Live & Deployed (96.67% Acc)** |
 | **06** | `lung_cancer` | **Lung Cancer CT Screening** | Thoracic CT Scans | [`06_train_lung_cancer_scanner.ipynb`](./06_train_lung_cancer_scanner.ipynb) | Kaggle `mohamedhanyyy/chest-ctscan-images` | 🟢 **Live & Deployed** |
 | **07** | `bone_fracture` | **Bone Fracture Detection** | Musculoskeletal Radiograph | [`07_train_bone_fracture_scanner.ipynb`](./07_train_bone_fracture_scanner.ipynb) | Kaggle `bmadushanirodrigo/fracture-multi-region-x-ray-data` | 🟢 **Ready to Run** |
-| **08** | `skin_disease` | Skin Disease Classification | Dermoscopy / Dermal Photos | `08_train_skin_disease_scanner.ipynb` | Kaggle `kmader/skin-cancer-mnist-ham10000` | 🟡 In Prep |
+| **08** | `skin_disease` | **Skin Disease Classification** | Dermoscopy / Skin Photos | [`08_train_skin_disease_scanner.ipynb`](./08_train_skin_disease_scanner.ipynb) | Kaggle `kmader/skin-cancer-mnist-ham10000` | 🟢 **Ready to Run** |
 | **09** | `dry_eye` | Dry Eye Severity Prediction | Eye & Tear Film Surface | `09_train_dry_eye_scanner.ipynb` | Curated Ocular Surface Cohort | 🟡 In Prep |
 | **10** | `keratoconus` | Keratoconus Early Detection | Corneal Topography Maps | `10_train_keratoconus_scanner.ipynb` | Corneal Ectasia Topographic Dataset | 🟡 In Prep |
 
