@@ -558,23 +558,59 @@ cells.append(make_cell("markdown", [
     "This enables offline, zero-latency cognitive decline assessment on rural smartphones."
 ]))
 
+cells.append(make_cell("markdown", [
+    "---",
+    "## 12. TensorFlow.js Web Export (Direct In-Memory Exporter)",
+    "Export Keras model directly into TensorFlow.js format (`model.json` + `group1-shard1of1.bin`, ~9.5 MB) using pure Python memory buffers."
+]))
+
 cells.append(make_cell("code", [
-    "import tensorflowjs as tfjs",
-    "",
-    "EXPORT_DIR = \"./arogya_alzheimer_tfjs\"",
+    "EXPORT_DIR = \"./arogya_alzheimer_tfjs/web_model\"",
     "os.makedirs(EXPORT_DIR, exist_ok=True)",
     "",
-    "keras_model_path = os.path.join(EXPORT_DIR, \"alzheimer_mobilenetv2.keras\")",
-    "model.save(keras_model_path)",
-    "print(f\"Saved native Keras model: {keras_model_path}\")",
+    "# 1. Extract Keras topology",
+    "try:",
+    "    topology = json.loads(model.to_json())",
+    "except Exception as e:",
+    "    print(f\"Topology warning: {e}\")",
+    "    topology = {}",
     "",
-    "tfjs_target_path = os.path.join(EXPORT_DIR, \"web_model\")",
-    "tfjs.converters.save_keras_model(model, tfjs_target_path)",
-    "print(f\"TensorFlow.js model exported successfully to: {tfjs_target_path}\")",
+    "# 2. Extract weights into binary shard",
+    "manifest_weights = []",
+    "raw_bytes = bytearray()",
+    "for w in model.weights:",
+    "    w_name = w.path if hasattr(w, 'path') else w.name",
+    "    if isinstance(w_name, str) and w_name.endswith(':0'):",
+    "        w_name = w_name[:-2]",
+    "    w_arr = w.numpy().astype(np.float32)",
+    "    manifest_weights.append({",
+    "        \"name\": str(w_name),",
+    "        \"shape\": list(w_arr.shape),",
+    "        \"dtype\": \"float32\"",
+    "    })",
+    "    raw_bytes.extend(w_arr.tobytes())",
     "",
-    "for f in os.listdir(tfjs_target_path):",
-    "    size_mb = os.path.getsize(os.path.join(tfjs_target_path, f)) / (1024 * 1024)",
-    "    print(f\"  📄 {f} ({size_mb:.2f} MB)\")"
+    "shard_filename = \"group1-shard1of1.bin\"",
+    "shard_path = os.path.join(EXPORT_DIR, shard_filename)",
+    "with open(shard_path, \"wb\") as f:",
+    "    f.write(raw_bytes)",
+    "print(f\"  ✅ Saved weight shard: {shard_filename} ({len(raw_bytes) / (1024*1024):.2f} MB)\")",
+    "",
+    "# 3. Write model.json",
+    "tfjs_manifest = {",
+    "    \"format\": \"layers-model\",",
+    "    \"generatedBy\": f\"keras v{tf.__version__}\",",
+    "    \"convertedBy\": \"Arogya Sahayak Direct Exporter\",",
+    "    \"modelTopology\": topology,",
+    "    \"weightsManifest\": [{",
+    "        \"paths\": [shard_filename],",
+    "        \"weights\": manifest_weights",
+    "    }]",
+    "}",
+    "model_json_path = os.path.join(EXPORT_DIR, \"model.json\")",
+    "with open(model_json_path, \"w\", encoding='utf-8') as f:",
+    "    json.dump(tfjs_manifest, f, indent=2)",
+    "print(\"  ✅ Saved model.json topology.\")"
 ]))
 
 # ==========================================
@@ -631,11 +667,11 @@ cells.append(make_cell("code", [
     "    \"clinical_safety_notice\": \"SCREENING AID ONLY. Not intended as a definitive dementia diagnosis. Neurocognitive decline requires formal neuropsychological testing (e.g. MMSE / MoCA), clinical history from caregivers, and evaluation by a neurologist or geriatrician.\"",
     "}",
     "",
-    "model_card_file = os.path.join(tfjs_target_path, \"model_card.json\")",
+    "model_card_file = os.path.join(EXPORT_DIR, \"model_card.json\")",
     "with open(model_card_file, 'w', encoding='utf-8') as f:",
     "    json.dump(model_card, f, indent=2)",
     "",
-    "metrics_file = os.path.join(tfjs_target_path, \"metrics.json\")",
+    "metrics_file = os.path.join(EXPORT_DIR, \"metrics.json\")",
     "with open(metrics_file, 'w', encoding='utf-8') as f:",
     "    json.dump(report, f, indent=2)",
     "",
@@ -660,10 +696,10 @@ cells.append(make_cell("code", [
     "print(f\"Creating deployment archive: {zip_filename}...\")",
     "",
     "with zipfile.ZipFile(zip_filename, 'w', zipfile.ZIP_DEFLATED) as zipf:",
-    "    for root, dirs, filenames in os.walk(tfjs_target_path):",
+    "    for root, dirs, filenames in os.walk(EXPORT_DIR):",
     "        for fname in filenames:",
     "            fpath = os.path.join(root, fname)",
-    "            arcname = os.path.relpath(fpath, tfjs_target_path)",
+    "            arcname = os.path.relpath(fpath, EXPORT_DIR)",
     "            zipf.write(fpath, arcname)",
     "            print(f\"  Added: {arcname}\")",
     "",
@@ -710,3 +746,4 @@ with open(output_path, "w", encoding="utf-8") as f:
 
 print(f"Successfully generated: {output_path}")
 print(f"Total cells: {len(cells)}")
+

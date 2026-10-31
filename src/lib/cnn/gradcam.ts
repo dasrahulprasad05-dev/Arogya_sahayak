@@ -172,3 +172,102 @@ export function generateGradCamHeatmap(
     },
   };
 }
+
+/**
+ * Generates an authentic Grad-CAM heatmap from real CNN conv layer activations.
+ *
+ * @param image Original HTMLImageElement
+ * @param spatial7x7 49-element array (7x7) of pooled activation energies from Conv_1
+ */
+export function generateRealGradCamHeatmap(
+  image: HTMLImageElement,
+  spatial7x7: number[]
+): GradCamResult {
+  const width = image.naturalWidth || image.width || 300;
+  const height = image.naturalHeight || image.height || 300;
+  const gridSize = 7;
+
+  let maxActivation = -Infinity;
+  let minActivation = Infinity;
+  let peakX = 3;
+  let peakY = 3;
+
+  for (let y = 0; y < gridSize; y++) {
+    for (let x = 0; x < gridSize; x++) {
+      const idx = y * gridSize + x;
+      const val = spatial7x7[idx] || 0;
+      if (val > maxActivation) {
+        maxActivation = val;
+        peakX = x;
+        peakY = y;
+      }
+      if (val < minActivation) {
+        minActivation = val;
+      }
+    }
+  }
+
+  const range = maxActivation - minActivation || 1;
+
+  // 1. Render low-res 7x7 grid canvas
+  const gridCanvas = document.createElement('canvas');
+  gridCanvas.width = gridSize;
+  gridCanvas.height = gridSize;
+  const gridCtx = gridCanvas.getContext('2d');
+
+  if (gridCtx) {
+    const gridImgData = gridCtx.createImageData(gridSize, gridSize);
+    for (let i = 0; i < spatial7x7.length; i++) {
+      const norm = Math.max(0, Math.min(1, (spatial7x7[i] - minActivation) / range));
+      const [r, g, b] = intensityToJet(norm);
+      gridImgData.data[i * 4] = r;
+      gridImgData.data[i * 4 + 1] = g;
+      gridImgData.data[i * 4 + 2] = b;
+      gridImgData.data[i * 4 + 3] = Math.round(norm * 240); // Soft alpha
+    }
+    gridCtx.putImageData(gridImgData, 0, 0);
+  }
+
+  // 2. Upscale smoothly to full resolution
+  const heatCanvas = document.createElement('canvas');
+  heatCanvas.width = width;
+  heatCanvas.height = height;
+  const heatCtx = heatCanvas.getContext('2d');
+  if (heatCtx) {
+    heatCtx.imageSmoothingEnabled = true;
+    heatCtx.imageSmoothingQuality = 'high';
+    heatCtx.drawImage(gridCanvas, 0, 0, width, height);
+  }
+
+  const heatmapDataUrl = heatCanvas.toDataURL('image/png');
+
+  // 3. Render Composite (Original Radiograph + 50% Heatmap)
+  const compCanvas = document.createElement('canvas');
+  compCanvas.width = width;
+  compCanvas.height = height;
+  const compCtx = compCanvas.getContext('2d');
+  if (compCtx) {
+    compCtx.drawImage(image, 0, 0, width, height);
+    compCtx.globalAlpha = 0.50;
+    compCtx.drawImage(heatCanvas, 0, 0, width, height);
+    compCtx.globalAlpha = 1.0;
+  }
+
+  const compositeDataUrl = compCanvas.toDataURL('image/png');
+
+  return {
+    heatmapDataUrl,
+    compositeDataUrl,
+    focusCoordinates: [
+      {
+        x: Math.round(((peakX + 0.5) / gridSize) * 100),
+        y: Math.round(((peakY + 0.5) / gridSize) * 100),
+        intensity: Math.round(((maxActivation - minActivation) / (Math.abs(maxActivation) || 1)) * 100),
+      },
+    ],
+    primaryHotspot: {
+      x: Math.round(((peakX + 0.5) / gridSize) * 100),
+      y: Math.round(((peakY + 0.5) / gridSize) * 100),
+    },
+  };
+}

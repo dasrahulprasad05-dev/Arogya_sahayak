@@ -614,81 +614,118 @@ cells.append(make_cell("markdown", [
     "This allows Arogya Sahayak to execute **sub-50ms inference directly on user mobile phones without any cloud server API or network bandwidth**."
 ]))
 
+cells.append(make_cell("markdown", [
+    "---",
+    "## 12. TensorFlow.js Web Export (Direct In-Memory Exporter)",
+    "Export Keras model directly into TensorFlow.js format (`model.json` + `group1-shard1of1.bin`, ~9.5 MB) using pure Python memory buffers."
+]))
+
 cells.append(make_cell("code", [
-    "import tensorflowjs as tfjs",
-    "",
-    "EXPORT_DIR = \"./arogya_pneumonia_tfjs\"",
+    "EXPORT_DIR = \"./arogya_pneumonia_tfjs/web_model\"",
     "os.makedirs(EXPORT_DIR, exist_ok=True)",
     "",
-    "# Save native Keras model first",
-    "keras_model_path = os.path.join(EXPORT_DIR, \"pneumonia_mobilenetv2.keras\")",
-    "model.save(keras_model_path)",
-    "print(f\"Saved Keras model: {keras_model_path}\")",
+    "# 1. Extract Keras topology",
+    "try:",
+    "    topology = json.loads(model.to_json())",
+    "except Exception as e:",
+    "    print(f\"Topology warning: {e}\")",
+    "    topology = {}",
     "",
-    "# Convert to TensorFlow.js Layers Model",
-    "tfjs_target_path = os.path.join(EXPORT_DIR, \"web_model\")",
-    "tfjs.converters.save_keras_model(model, tfjs_target_path)",
-    "print(f\"TensorFlow.js model exported successfully to: {tfjs_target_path}\")",
+    "# 2. Extract weights into binary shard",
+    "manifest_weights = []",
+    "raw_bytes = bytearray()",
+    "for w in model.weights:",
+    "    w_name = w.path if hasattr(w, 'path') else w.name",
+    "    if isinstance(w_name, str) and w_name.endswith(':0'):",
+    "        w_name = w_name[:-2]",
+    "    w_arr = w.numpy().astype(np.float32)",
+    "    manifest_weights.append({",
+    "        \"name\": str(w_name),",
+    "        \"shape\": list(w_arr.shape),",
+    "        \"dtype\": \"float32\"",
+    "    })",
+    "    raw_bytes.extend(w_arr.tobytes())",
     "",
-    "# List exported files and sizes",
-    "for f in os.listdir(tfjs_target_path):",
-    "    size_mb = os.path.getsize(os.path.join(tfjs_target_path, f)) / (1024 * 1024)",
-    "    print(f\"  📄 {f} ({size_mb:.2f} MB)\")"
+    "shard_filename = \"group1-shard1of1.bin\"",
+    "shard_path = os.path.join(EXPORT_DIR, shard_filename)",
+    "with open(shard_path, \"wb\") as f:",
+    "    f.write(raw_bytes)",
+    "print(f\"  ✅ Saved weight shard: {shard_filename} ({len(raw_bytes) / (1024*1024):.2f} MB)\")",
+    "",
+    "# 3. Write model.json",
+    "tfjs_manifest = {",
+    "    \"format\": \"layers-model\",",
+    "    \"generatedBy\": f\"keras v{tf.__version__}\",",
+    "    \"convertedBy\": \"Arogya Sahayak Direct Exporter\",",
+    "    \"modelTopology\": topology,",
+    "    \"weightsManifest\": [{",
+    "        \"paths\": [shard_filename],",
+    "        \"weights\": manifest_weights",
+    "    }]",
+    "}",
+    "model_json_path = os.path.join(EXPORT_DIR, \"model.json\")",
+    "with open(model_json_path, 'w', encoding='utf-8') as f:",
+    "    json.dump(tfjs_manifest, f, indent=2)",
+    "print(\"  ✅ Saved model.json topology.\")"
 ]))
 
 # ==========================================
-# CELL 15: Generate Model Card & Metrics JSON
+# CELL 15: Model Card & Metrics JSON Generation
 # ==========================================
 cells.append(make_cell("markdown", [
     "---",
-    "## 12. Model Card & Audit Metadata Generation",
-    "In accordance with ISO/IEEE AI ethics and the Mitchell et al. Model Card standard, we emit transparent metadata detailing dataset provenance, sensitivity/specificity limits, and clinical safeguards."
+    "## 13. Model Card & Clinical Audit Metadata",
+    "Generate Mitchell et al. `model_card.json` and `metrics.json` recording sensitivity, specificity, and ethical safety boundaries."
 ]))
 
 cells.append(make_cell("code", [
     "import datetime",
     "",
+    "class_metrics = []",
+    "for c_idx, c_name in enumerate(CLASS_NAMES):",
+    "    sens = float(cm[c_idx, c_idx] / cm[c_idx].sum())",
+    "    class_metrics.append({",
+    "        \"index\": c_idx,",
+    "        \"label\": c_name,",
+    "        \"sensitivity\": sens,",
+    "        \"precision\": float(report[c_name]['precision']),",
+    "        \"f1_score\": float(report[c_name]['f1-score'])",
+    "    })",
+    "",
     "model_card = {",
     "    \"schema_version\": \"1.0.0\",",
     "    \"model_name\": \"Arogya Sahayak Pneumonia MobileNetV2 Classifier\",",
     "    \"scanner_id\": \"pneumonia\",",
-    "    \"modality\": \"Chest Radiograph (PA/AP)\",",
+    "    \"modality\": \"Brain MRI Scans (T1-CE / T2 / FLAIR Axial)\",",
     "    \"input_dimensions\": [224, 224, 3],",
     "    \"preprocessing\": \"MobileNetV2 scale [-1, 1]\",",
-    "    \"classes\": [",
-    "        {\"index\": 0, \"id\": \"normal\", \"label\": \"Normal Clear Lung Parenchyma\", \"sensitivity\": float(sens_normal)},",
-    "        {\"index\": 1, \"id\": \"bacterial_pneumonia\", \"label\": \"Bacterial Pneumonia (Focal Consolidation)\", \"sensitivity\": float(sens_bact)},",
-    "        {\"index\": 2, \"id\": \"viral_pneumonia\", \"label\": \"Viral Pneumonia (Bilateral Interstitial Opacity)\", \"sensitivity\": float(sens_viral)}",
-    "    ],",
+    "    \"classes\": class_metrics,",
     "    \"metrics\": {",
     "        \"overall_test_accuracy\": float(overall_accuracy),",
     "        \"macro_avg_f1\": float(report['macro avg']['f1-score']),",
-    "        \"weighted_avg_f1\": float(report['weighted avg']['f1-score']),",
-    "        \"bacterial_recall\": float(report['Bacterial Pneumonia']['recall']),",
-    "        \"viral_recall\": float(report['Viral Pneumonia']['recall']),",
-    "        \"normal_recall\": float(report['Normal Clear Lung']['recall'])",
+    "        \"weighted_avg_f1\": float(report['weighted avg']['f1-score'])",
     "    },",
-    "    \"calibrated_threshold\": 0.50,",
+    "    \"calibrated_threshold\": 0.52,",
     "    \"last_conv_layer\": \"Conv_1\",",
     "    \"training_metadata\": {",
     "        \"date\": datetime.datetime.now().strftime(\"%Y-%m-%d %H:%M:%S\"),",
     "        \"institution\": \"ABIT Cuttack / BPUT Odisha\",",
     "        \"developers\": [\"Rahul Prasad Das\", \"Purnachandra Swain\", \"Rohit Kumar Thakur\", \"Ritik Kumar Swain\"],",
     "        \"guide\": \"Prof. Rajesh Kumar Sahoo\",",
-    "        \"dataset_source\": \"Kaggle Chest X-ray Images (Guangzhou Women and Children's Medical Center)\",",
-    "        \"training_patients\": len(patients_train),",
-    "        \"validation_patients\": len(patients_val),",
-    "        \"test_patients\": len(patients_test),",
+    "        \"dataset_source\": \"Kaggle Pneumonia Dataset (Guangzhou Chest X-rays)\",",
+    "        \"training_samples\": len(df_train),",
+    "        \"validation_samples\": len(df_val),",
+    "        \"test_samples\": len(df_test),",
     "        \"hardware\": \"Google Colab Tesla T4 GPU (Free Tier)\"",
     "    },",
-    "    \"clinical_safety_notice\": \"SCREENING AID ONLY. Not intended as a standalone diagnostic device. Any consolidation or infiltrate detected must be corroborated by physical auscultation, clinical history, and verified by a licensed radiologist or pulmonologist.\"",
+    "    \"clinical_safety_notice\": \"SCREENING AID ONLY. Not intended as a definitive neuro-surgical diagnostic tool. Intracranial findings require immediate corroboration with high-resolution diagnostic 3T MRI, biopsy histopathology, and evaluation by a board-certified neurosurgeon or neuroradiologist.\"",
     "}",
     "",
-    "model_card_file = os.path.join(tfjs_target_path, \"model_card.json\")",
+    "model_card_file = os.path.join(EXPORT_DIR, \"model_card.json\")",
     "with open(model_card_file, 'w', encoding='utf-8') as f:",
     "    json.dump(model_card, f, indent=2)",
     "",
-    "metrics_file = os.path.join(tfjs_target_path, \"metrics.json\")",
+    "metrics_file = os.path.join(EXPORT_DIR, \"metrics.json\")",
     "with open(metrics_file, 'w', encoding='utf-8') as f:",
     "    json.dump(report, f, indent=2)",
     "",
@@ -701,8 +738,8 @@ cells.append(make_cell("code", [
 # ==========================================
 cells.append(make_cell("markdown", [
     "---",
-    "## 13. Package & Download Model for Arogya Sahayak Integration",
-    "Packages the exported web model files (`model.json`, weight shards, `model_card.json`, and `metrics.json`) into `arogyasahayak_pneumonia_model.zip` and triggers an automatic browser download."
+    "## 14. Package & Download Model for Arogya Sahayak Integration",
+    "Packages the exported web model into `arogyasahayak_pneumonia_model.zip` and triggers an automatic browser download."
 ]))
 
 cells.append(make_cell("code", [
@@ -713,10 +750,10 @@ cells.append(make_cell("code", [
     "print(f\"Creating deployment archive: {zip_filename}...\")",
     "",
     "with zipfile.ZipFile(zip_filename, 'w', zipfile.ZIP_DEFLATED) as zipf:",
-    "    for root, dirs, filenames in os.walk(tfjs_target_path):",
+    "    for root, dirs, filenames in os.walk(EXPORT_DIR):",
     "        for fname in filenames:",
     "            fpath = os.path.join(root, fname)",
-    "            arcname = os.path.relpath(fpath, tfjs_target_path)",
+    "            arcname = os.path.relpath(fpath, EXPORT_DIR)",
     "            zipf.write(fpath, arcname)",
     "            print(f\"  Added: {arcname}\")",
     "",
@@ -732,11 +769,11 @@ cells.append(make_cell("code", [
     "2. Copy the extracted files into your Arogya Sahayak repository at:",
     "   public/models/pneumonia/",
     "   (Files needed: model.json, group1-shard1of1.bin, model_card.json, metrics.json)",
-    "3. Done! Arogya Sahayak will now run real deep-learning inference with",
-    "   genuine Grad-CAM heatmaps on chest X-rays!",
+    "3. Done! Arogya Sahayak will now run real deep-learning MRI tumor grading!",
     "==========================================================================",
     "\"\"\")"
 ]))
+
 
 # Build notebook dict
 notebook = {

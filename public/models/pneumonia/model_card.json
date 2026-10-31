@@ -1,0 +1,27 @@
+{
+  "model_name": "Arogya Sahayak Pneumonia MobileNetV2 Classifier",
+  "scanner_id": "pneumonia",
+  "modality": "Chest Radiograph (PA/AP)",
+  "input_dimensions": [
+    224,
+    224,
+    3
+  ],
+  "classes": [
+    {
+      "index": 0,
+      "label": "Normal Clear Lung Parenchyma"
+    },
+    {
+      "index": 1,
+      "label": "Bacterial Pneumonia (Focal Consolidation)"
+    },
+    {
+      "index": 2,
+      "label": "Viral Pneumonia (Bilateral Interstitial Opacity)"
+    }
+  ],
+  "calibrated_threshold": 0.5,
+  "last_conv_layer": "Conv_1",
+  "clinical_source": "Guangzhou Pediatric Chest X-ray Cohort"
+}
