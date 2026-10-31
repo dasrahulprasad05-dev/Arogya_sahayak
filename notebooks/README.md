@@ -9,8 +9,8 @@ Welcome to the **Arogya Sahayak AI Diagnostic Lab**. This directory contains pro
 | # | Scanner ID | Condition | Modality | Notebook File | Public Dataset | Status |
 |---|---|---|---|---|---|---|
 | **01** | `pneumonia` | **Pneumonia Detection** | Chest X-ray (PA/AP) | [`01_train_pneumonia_scanner.ipynb`](./01_train_pneumonia_scanner.ipynb) | Kaggle `paultimothymooney/chest-xray-pneumonia` | 🟢 **Ready to Run** |
-| **02** | `skin_disease` | Skin Disease Classification | Dermoscopy / Dermal Photos | `02_train_skin_disease_scanner.ipynb` | Kaggle `kmader/skin-cancer-mnist-ham10000` | 🟡 In Prep |
-| **03** | `brain_tumor` | Brain Tumor Grade Classification | Brain MRI (T1-CE / FLAIR) | `03_train_brain_tumor_scanner.ipynb` | Kaggle `masoudnickparvar/brain-tumor-mri-dataset` | 🟡 In Prep |
+| **02** | `brain_tumor` | **Brain Tumor Grade Classification** | Brain MRI (T1-CE / FLAIR) | [`02_train_brain_tumor_scanner.ipynb`](./02_train_brain_tumor_scanner.ipynb) | Kaggle `masoudnickparvar/brain-tumor-mri-dataset` | 🟢 **Ready to Run** |
+| **03** | `skin_disease` | Skin Disease Classification | Dermoscopy / Dermal Photos | `03_train_skin_disease_scanner.ipynb` | Kaggle `kmader/skin-cancer-mnist-ham10000` | 🟡 In Prep |
 | **04** | `tuberculosis` | Tuberculosis Detection | Chest X-ray (PA View) | `04_train_tuberculosis_scanner.ipynb` | Kaggle `tawsifurrahman/tuberculosis-tb-chest-xray-dataset` | 🟡 In Prep |
 | **05** | `bone_fracture` | Bone Fracture Detection | Musculoskeletal Radiograph | `05_train_bone_fracture_scanner.ipynb` | Kaggle `bmadushanirodrigo/fracture-multi-region-x-ray-data` | 🟡 In Prep |
 | **06** | `retinopathy` | Diabetic Retinopathy Detection | Retinal Fundus Image | `06_train_retinopathy_scanner.ipynb` | Kaggle `sovitrath/diabetic-retinopathy-224x224-gaussian-filtered` | 🟡 In Prep |
@@ -77,3 +77,4 @@ arogyasahayak_pneumonia_model/
 - **Zero Data Leakage:** Grouped patient splitting prevents overfitting where multiple images of one patient skew evaluation.
 - **Explainable AI:** Grad-CAM extracts actual partial derivatives $\frac{\partial y^c}{\partial A^k}$ from MobileNetV2's last conv layer (`Conv_1`), displaying genuine anatomical heatmaps over alveolar consolidations and infiltrates.
 - **100% Free & Open-Source:** No paid GPU cloud subscriptions or commercial APIs required. Runs within Colab's free 12-hour session limits.
+
