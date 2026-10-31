@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.0.0",
+  "model_name": "Arogya Sahayak Dry Eye Ocular Surface MobileNetV2 Classifier",
+  "scanner_id": "dry_eye",
+  "modality": "Anterior Eye / Tear Film Photos",
+  "input_dimensions": [
+    224,
+    224,
+    3
+  ],
+  "preprocessing": "MobileNetV2 scale [-1, 1]",
+  "classes": [
+    {
+      "index": 0,
+      "label": "Normal Tear Film (Grade 0)",
+      "sensitivity": 1.0,
+      "precision": 1.0,
+      "f1_score": 1.0
+    },
+    {
+      "index": 1,
+      "label": "Mild Tear Instability (Grade 1)",
+      "sensitivity": 0.0,
+      "precision": 0.0,
+      "f1_score": 0.0
+    },
+    {
+      "index": 2,
+      "label": "Moderate Evaporative Dry Eye (Grade 2)",
+      "sensitivity": 0.0,
+      "precision": 0.0,
+      "f1_score": 0.0
+    },
+    {
+      "index": 3,
+      "label": "Severe Ocular Surface Breakdown (Grade 3)",
+      "sensitivity": 0.0,
+      "precision": 0.0,
+      "f1_score": 0.0
+    }
+  ],
+  "metrics": {
+    "overall_test_accuracy": 1.0,
+    "macro_avg_f1": 1.0,
+    "weighted_avg_f1": 1.0
+  },
+  "calibrated_threshold": 0.5,
+  "last_conv_layer": "Conv_1",
+  "training_metadata": {
+    "date": "2026-10-31 21:15:01",
+    "institution": "ABIT Cuttack / BPUT Odisha",
+    "developers": [
+      "Rahul Prasad Das",
+      "Purnachandra Swain",
+      "Rohit Kumar Thakur",
+      "Ritik Kumar Swain"
+    ],
+    "guide": "Prof. Rajesh Kumar Sahoo",
+    "dataset_source": "Curated Ocular Surface & Tear Film Stability Cohort",
+    "training_samples": 751,
+    "validation_samples": 161,
+    "test_samples": 162,
+    "hardware": "Google Colab Tesla T4 GPU (Free Tier)"
+  },
+  "clinical_safety_notice": "SCREENING AID ONLY. Not intended as a definitive diagnostic tool for Keratoconjunctivitis Sicca or corneal ulceration. Confirmatory ophthalmic diagnosis requires in-person slit-lamp examination with fluorescein / lissamine green staining, Schirmer test, and tear film osmolarity measurement by an eye specialist."
+}
