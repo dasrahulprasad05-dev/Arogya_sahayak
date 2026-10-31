@@ -1,0 +1,87 @@
+{
+  "schema_version": "1.0.0",
+  "model_name": "Arogya Sahayak Skin Disease HAM10000 MobileNetV2 Classifier",
+  "scanner_id": "skin_disease",
+  "modality": "Skin Dermoscopy Images",
+  "input_dimensions": [
+    224,
+    224,
+    3
+  ],
+  "preprocessing": "MobileNetV2 scale [-1, 1]",
+  "classes": [
+    {
+      "index": 0,
+      "label": "Melanocytic Nevus (Benign Mole)",
+      "sensitivity": 0.5606361829025845,
+      "precision": 0.9368770764119602,
+      "f1_score": 0.7014925373134329
+    },
+    {
+      "index": 1,
+      "label": "Melanoma (Malignant Neoplasm)",
+      "sensitivity": 0.15568862275449102,
+      "precision": 0.4727272727272727,
+      "f1_score": 0.23423423423423423
+    },
+    {
+      "index": 2,
+      "label": "Benign Keratosis (Seborrheic Plaque)",
+      "sensitivity": 0.22424242424242424,
+      "precision": 0.2534246575342466,
+      "f1_score": 0.2379421221864952
+    },
+    {
+      "index": 3,
+      "label": "Basal Cell Carcinoma",
+      "sensitivity": 0.7922077922077922,
+      "precision": 0.14022988505747128,
+      "f1_score": 0.23828125
+    },
+    {
+      "index": 4,
+      "label": "Actinic Keratosis (Pre-Cancerous)",
+      "sensitivity": 0.20408163265306123,
+      "precision": 0.15151515151515152,
+      "f1_score": 0.17391304347826086
+    },
+    {
+      "index": 5,
+      "label": "Vascular Lesion (Angioma)",
+      "sensitivity": 0.6363636363636364,
+      "precision": 0.1794871794871795,
+      "f1_score": 0.28
+    },
+    {
+      "index": 6,
+      "label": "Dermatofibroma (Benign)",
+      "sensitivity": 0.23529411764705882,
+      "precision": 0.03305785123966942,
+      "f1_score": 0.057971014492753624
+    }
+  ],
+  "metrics": {
+    "overall_test_accuracy": 0.4763805721889554,
+    "macro_avg_f1": 0.2748334573864538,
+    "weighted_avg_f1": 0.5443073602408608
+  },
+  "calibrated_threshold": 0.52,
+  "last_conv_layer": "Conv_1",
+  "training_metadata": {
+    "date": "2026-10-31 21:17:26",
+    "institution": "ABIT Cuttack / BPUT Odisha",
+    "developers": [
+      "Rahul Prasad Das",
+      "Purnachandra Swain",
+      "Rohit Kumar Thakur",
+      "Ritik Kumar Swain"
+    ],
+    "guide": "Prof. Rajesh Kumar Sahoo",
+    "dataset_source": "ISIC HAM10000 Benchmark (Kaggle: kmader/skin-cancer-mnist-ham10000)",
+    "training_samples": 7010,
+    "validation_samples": 1502,
+    "test_samples": 1503,
+    "hardware": "Google Colab Tesla T4 GPU (Free Tier)"
+  },
+  "clinical_safety_notice": "SCREENING AID ONLY. Not intended as a definitive diagnostic tool for malignant melanoma or carcinomas. Confirmatory diagnosis requires in-person polarized dermoscopy, ABCDE clinical rule verification, and punch / excisional biopsy with histopathological examination by a board-certified dermatologist."
+}
