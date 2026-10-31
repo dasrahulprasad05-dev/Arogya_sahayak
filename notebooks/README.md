@@ -10,7 +10,7 @@ Welcome to the **Arogya Sahayak AI Diagnostic Lab**. This directory contains pro
 |---|---|---|---|---|---|---|
 | **01** | `pneumonia` | **Pneumonia Detection** | Chest X-ray (PA/AP) | [`01_train_pneumonia_scanner.ipynb`](./01_train_pneumonia_scanner.ipynb) | Kaggle `paultimothymooney/chest-xray-pneumonia` | 🟢 **Ready to Run** |
 | **02** | `brain_tumor` | **Brain Tumor Grade Classification** | Brain MRI (T1-CE / FLAIR) | [`02_train_brain_tumor_scanner.ipynb`](./02_train_brain_tumor_scanner.ipynb) | Kaggle `masoudnickparvar/brain-tumor-mri-dataset` | 🟢 **Ready to Run** |
-| **03** | `alzheimer` | **Alzheimer's Dementia Staging** | Brain MRI (T1-weighted) | [`03_train_alzheimer_scanner.ipynb`](./03_train_alzheimer_scanner.ipynb) | Kaggle `sachinkumar413/alzheimer-mri-dataset` | 🟢 **Ready to Run** |
+| **03** | `alzheimer` | **Alzheimer's Dementia Staging** | Brain MRI (T1-weighted) | [`03_train_alzheimer_scanner.ipynb`](./03_train_alzheimer_scanner.ipynb) | Kaggle `tourist55/alzheimers-dataset-4-class-of-images` | 🟢 **Ready to Run** |
 | **04** | `tuberculosis` | Tuberculosis Detection | Chest X-ray (PA View) | `04_train_tuberculosis_scanner.ipynb` | Kaggle `tawsifurrahman/tuberculosis-tb-chest-xray-dataset` | 🟡 In Prep |
 | **05** | `bone_fracture` | Bone Fracture Detection | Musculoskeletal Radiograph | `05_train_bone_fracture_scanner.ipynb` | Kaggle `bmadushanirodrigo/fracture-multi-region-x-ray-data` | 🟡 In Prep |
 | **06** | `retinopathy` | Diabetic Retinopathy Detection | Retinal Fundus Image | `06_train_retinopathy_scanner.ipynb` | Kaggle `sovitrath/diabetic-retinopathy-224x224-gaussian-filtered` | 🟡 In Prep |

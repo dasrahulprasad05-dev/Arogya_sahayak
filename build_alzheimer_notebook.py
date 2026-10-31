@@ -106,14 +106,14 @@ cells.append(make_cell("code", [
 cells.append(make_cell("markdown", [
     "---",
     "## 2. Dataset Acquisition via KaggleHub (Zero API Key)",
-    "We use the benchmark Alzheimer's MRI dataset (`sachinkumar413/alzheimer-mri-dataset`), compiling 6,400 validated T1-weighted brain MRI scans across all 4 stages of cognitive impairment."
+    "We use the benchmark Alzheimer's MRI dataset (`tourist55/alzheimers-dataset-4-class-of-images`), compiling over 6,400 validated T1-weighted brain MRI scans across all 4 stages of cognitive impairment."
 ]))
 
 cells.append(make_cell("code", [
     "import kagglehub",
     "",
     "print(\"Downloading Alzheimer MRI dataset via KaggleHub (Zero API Key)...\")",
-    "dataset_raw_path = kagglehub.dataset_download(\"sachinkumar413/alzheimer-mri-dataset\")",
+    "dataset_raw_path = kagglehub.dataset_download(\"tourist55/alzheimers-dataset-4-class-of-images\")",
     "print(f\"Dataset downloaded successfully to: {dataset_raw_path}\")",
     "",
     "# Inspect folder layout",
