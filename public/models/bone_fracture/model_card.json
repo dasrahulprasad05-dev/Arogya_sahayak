@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0.0",
+  "model_name": "Arogya Sahayak Bone Fracture Musculoskeletal MobileNetV2 Classifier",
+  "scanner_id": "bone_fracture",
+  "modality": "Musculoskeletal Radiographs (Extremity X-rays)",
+  "input_dimensions": [
+    224,
+    224,
+    3
+  ],
+  "preprocessing": "MobileNetV2 scale [-1, 1]",
+  "classes": [
+    {
+      "index": 0,
+      "label": "Intact Cortical Bone Structure",
+      "sensitivity": 0.6567901234567901,
+      "precision": 0.7018469656992085,
+      "f1_score": 0.6785714285714286
+    },
+    {
+      "index": 1,
+      "label": "Acute Cortical Bone Fracture",
+      "sensitivity": 0.7095115681233933,
+      "precision": 0.6650602409638554,
+      "f1_score": 0.6865671641791045
+    }
+  ],
+  "metrics": {
+    "overall_test_accuracy": 0.6826196473551638,
+    "macro_avg_f1": 0.6825692963752665,
+    "weighted_avg_f1": 0.682488734807431
+  },
+  "calibrated_threshold": 0.5,
+  "last_conv_layer": "Conv_1",
+  "training_metadata": {
+    "date": "2026-10-31 20:50:02",
+    "institution": "ABIT Cuttack / BPUT Odisha",
+    "developers": [
+      "Rahul Prasad Das",
+      "Purnachandra Swain",
+      "Rohit Kumar Thakur",
+      "Ritik Kumar Swain"
+    ],
+    "guide": "Prof. Rajesh Kumar Sahoo",
+    "dataset_source": "Fracture Multi-Region X-ray Dataset (Kaggle: bmadushanirodrigo/fracture-multi-region-x-ray-data)",
+    "training_samples": 7406,
+    "validation_samples": 1587,
+    "test_samples": 1588,
+    "hardware": "Google Colab Tesla T4 GPU (Free Tier)"
+  },
+  "clinical_safety_notice": "SCREENING AID ONLY. Not intended as a definitive diagnostic tool for skeletal trauma or occult fractures. Confirmatory orthopedic diagnosis requires orthogonal multi-view radiographs (AP, Lateral, Oblique), clinical palpation, and review by an orthopedic specialist."
+}
