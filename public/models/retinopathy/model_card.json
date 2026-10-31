@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.0.0",
+  "model_name": "Arogya Sahayak Diabetic Retinopathy MobileNetV2 Classifier",
+  "scanner_id": "retinopathy",
+  "modality": "Retinal Fundus Photography (Macula-Centered)",
+  "input_dimensions": [
+    224,
+    224,
+    3
+  ],
+  "preprocessing": "MobileNetV2 scale [-1, 1]",
+  "classes": [
+    {
+      "index": 0,
+      "label": "No Retinopathy (Normal)",
+      "sensitivity": 0.6974169741697417,
+      "precision": 0.8552036199095022,
+      "f1_score": 0.7682926829268293
+    },
+    {
+      "index": 1,
+      "label": "Mild Non-Proliferative (NPDR)",
+      "sensitivity": 0.32142857142857145,
+      "precision": 0.20930232558139536,
+      "f1_score": 0.2535211267605634
+    },
+    {
+      "index": 2,
+      "label": "Moderate NPDR",
+      "sensitivity": 0.10666666666666667,
+      "precision": 0.26229508196721313,
+      "f1_score": 0.15165876777251186
+    },
+    {
+      "index": 3,
+      "label": "Severe / Proliferative (PDR)",
+      "sensitivity": 0.5753424657534246,
+      "precision": 0.23076923076923078,
+      "f1_score": 0.32941176470588235
+    }
+  ],
+  "metrics": {
+    "overall_test_accuracy": 0.4818181818181818,
+    "macro_avg_f1": 0.3757210855414467,
+    "weighted_avg_f1": 0.4894552257475791
+  },
+  "calibrated_threshold": 0.52,
+  "last_conv_layer": "Conv_1",
+  "training_metadata": {
+    "date": "2026-10-31 19:48:35",
+    "institution": "ABIT Cuttack / BPUT Odisha",
+    "developers": [
+      "Rahul Prasad Das",
+      "Purnachandra Swain",
+      "Rohit Kumar Thakur",
+      "Ritik Kumar Swain"
+    ],
+    "guide": "Prof. Rajesh Kumar Sahoo",
+    "dataset_source": "APTOS 2019 Blindness Detection / Gaussian-Filtered Fundus",
+    "training_samples": 2563,
+    "validation_samples": 549,
+    "test_samples": 550,
+    "hardware": "Google Colab Tesla T4 GPU (Free Tier)"
+  },
+  "clinical_safety_notice": "SCREENING AID ONLY. Not intended as a substitute for dilated indirect ophthalmoscopy or optical coherence tomography (OCT) performed by a certified vitreoretinal specialist. Any detected NPDR or PDR requires urgent clinical dilated retinal exam."
+}
