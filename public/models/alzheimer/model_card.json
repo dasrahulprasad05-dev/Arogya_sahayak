@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.0.0",
+  "model_name": "Arogya Sahayak Alzheimer MRI MobileNetV2 Classifier",
+  "scanner_id": "alzheimer",
+  "modality": "Brain MRI (T1-weighted Axial/Coronal)",
+  "input_dimensions": [
+    224,
+    224,
+    3
+  ],
+  "preprocessing": "MobileNetV2 scale [-1, 1]",
+  "classes": [
+    {
+      "index": 0,
+      "label": "Non-Demented (Normal Control)",
+      "sensitivity": 0.8109375,
+      "precision": 0.5123395853899309,
+      "f1_score": 0.6279491833030852
+    },
+    {
+      "index": 1,
+      "label": "Very Mild Cognitive Decline",
+      "sensitivity": 0.18452380952380953,
+      "precision": 0.421195652173913,
+      "f1_score": 0.25662251655629137
+    },
+    {
+      "index": 2,
+      "label": "Mild Demented",
+      "sensitivity": 0.47802569303583503,
+      "precision": 0.5451040863531226,
+      "f1_score": 0.5093659942363112
+    },
+    {
+      "index": 3,
+      "label": "Moderate Alzheimer Dementia",
+      "sensitivity": 0.8529111338100103,
+      "precision": 0.8468559837728195,
+      "f1_score": 0.8498727735368957
+    }
+  ],
+  "metrics": {
+    "overall_test_accuracy": 0.5627269725982172,
+    "macro_avg_f1": 0.5609526169081459,
+    "weighted_avg_f1": 0.5318861027607491
+  },
+  "calibrated_threshold": 0.5,
+  "last_conv_layer": "Conv_1",
+  "training_metadata": {
+    "date": "2026-10-31 19:30:27",
+    "institution": "ABIT Cuttack / BPUT Odisha",
+    "developers": [
+      "Rahul Prasad Das",
+      "Purnachandra Swain",
+      "Rohit Kumar Thakur",
+      "Ritik Kumar Swain"
+    ],
+    "guide": "Prof. Rajesh Kumar Sahoo",
+    "dataset_source": "Kaggle Alzheimer MRI Dataset (6,400 scans)",
+    "training_samples": 28268,
+    "validation_samples": 6058,
+    "test_samples": 6058,
+    "hardware": "Google Colab Tesla T4 GPU (Free Tier)"
+  },
+  "clinical_safety_notice": "SCREENING AID ONLY. Not intended as a definitive dementia diagnosis. Neurocognitive decline requires formal neuropsychological testing (e.g. MMSE / MoCA), clinical history from caregivers, and evaluation by a neurologist or geriatrician."
+}

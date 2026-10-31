@@ -1,0 +1,39 @@
+{
+  "Non-Demented (Normal Control)": {
+    "precision": 0.5123395853899309,
+    "recall": 0.8109375,
+    "f1-score": 0.6279491833030852,
+    "support": 1920.0
+  },
+  "Very Mild Cognitive Decline": {
+    "precision": 0.421195652173913,
+    "recall": 0.18452380952380953,
+    "f1-score": 0.25662251655629137,
+    "support": 1680.0
+  },
+  "Mild Demented": {
+    "precision": 0.5451040863531226,
+    "recall": 0.47802569303583503,
+    "f1-score": 0.5093659942363112,
+    "support": 1479.0
+  },
+  "Moderate Alzheimer Dementia": {
+    "precision": 0.8468559837728195,
+    "recall": 0.8529111338100103,
+    "f1-score": 0.8498727735368957,
+    "support": 979.0
+  },
+  "accuracy": 0.5627269725982172,
+  "macro avg": {
+    "precision": 0.5813738269224464,
+    "recall": 0.5815995340924137,
+    "f1-score": 0.5609526169081459,
+    "support": 6058.0
+  },
+  "weighted avg": {
+    "precision": 0.5491220949869099,
+    "recall": 0.5627269725982172,
+    "f1-score": 0.5318861027607491,
+    "support": 6058.0
+  }
+}
