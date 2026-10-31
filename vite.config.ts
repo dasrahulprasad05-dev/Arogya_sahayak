@@ -45,13 +45,43 @@ export default defineConfig({
             }
           },
           {
-            urlPattern: /\.(?:js|css|html|ico|png|jpg|jpeg|svg|gif)$/i,
+            urlPattern: ({ request }) => request.destination === 'document',
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'html-cache',
+              networkTimeoutSeconds: 3
+            }
+          },
+          {
+            urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp|ico)$/i,
             handler: 'CacheFirst',
+            options: {
+              cacheName: 'images-cache',
+              expiration: {
+                maxEntries: 100,
+                maxAgeSeconds: 30 * 24 * 60 * 60
+              }
+            }
+          },
+          {
+            urlPattern: /\.(?:js|css)$/i,
+            handler: 'StaleWhileRevalidate',
             options: {
               cacheName: 'static-assets-cache',
               expiration: {
                 maxEntries: 200,
-                maxAgeSeconds: 30 * 24 * 60 * 60 // 30 days
+                maxAgeSeconds: 7 * 24 * 60 * 60
+              }
+            }
+          },
+          {
+            urlPattern: /\/models\/.*\.(?:json|bin)$/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'tfjs-models-cache',
+              expiration: {
+                maxEntries: 50,
+                maxAgeSeconds: 30 * 24 * 60 * 60
               }
             }
           }
