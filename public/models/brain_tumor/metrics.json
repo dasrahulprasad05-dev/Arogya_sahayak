@@ -1,0 +1,39 @@
+{
+  "No Tumor Detected (Healthy)": {
+    "precision": 0.8524590163934426,
+    "recall": 0.9629629629629629,
+    "f1-score": 0.9043478260869565,
+    "support": 270.0
+  },
+  "Glioma (Low/High Grade)": {
+    "precision": 0.775,
+    "recall": 0.5740740740740741,
+    "f1-score": 0.6595744680851063,
+    "support": 270.0
+  },
+  "Meningioma": {
+    "precision": 0.695364238410596,
+    "recall": 0.3888888888888889,
+    "f1-score": 0.498812351543943,
+    "support": 270.0
+  },
+  "Pituitary Tumor": {
+    "precision": 0.6061320754716981,
+    "recall": 0.9518518518518518,
+    "f1-score": 0.7406340057636888,
+    "support": 270.0
+  },
+  "accuracy": 0.7194444444444444,
+  "macro avg": {
+    "precision": 0.7322388325689342,
+    "recall": 0.7194444444444444,
+    "f1-score": 0.7008421628699236,
+    "support": 1080.0
+  },
+  "weighted avg": {
+    "precision": 0.7322388325689342,
+    "recall": 0.7194444444444444,
+    "f1-score": 0.7008421628699236,
+    "support": 1080.0
+  }
+}

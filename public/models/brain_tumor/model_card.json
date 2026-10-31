@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.0.0",
+  "model_name": "Arogya Sahayak Brain Tumor MRI MobileNetV2 Classifier",
+  "scanner_id": "brain_tumor",
+  "modality": "Brain MRI Scans (T1-CE / T2 / FLAIR Axial)",
+  "input_dimensions": [
+    224,
+    224,
+    3
+  ],
+  "preprocessing": "MobileNetV2 scale [-1, 1]",
+  "classes": [
+    {
+      "index": 0,
+      "label": "No Tumor Detected (Healthy)",
+      "sensitivity": 0.9629629629629629,
+      "precision": 0.8524590163934426,
+      "f1_score": 0.9043478260869565
+    },
+    {
+      "index": 1,
+      "label": "Glioma (Low/High Grade)",
+      "sensitivity": 0.5740740740740741,
+      "precision": 0.775,
+      "f1_score": 0.6595744680851063
+    },
+    {
+      "index": 2,
+      "label": "Meningioma",
+      "sensitivity": 0.3888888888888889,
+      "precision": 0.695364238410596,
+      "f1_score": 0.498812351543943
+    },
+    {
+      "index": 3,
+      "label": "Pituitary Tumor",
+      "sensitivity": 0.9518518518518518,
+      "precision": 0.6061320754716981,
+      "f1_score": 0.7406340057636888
+    }
+  ],
+  "metrics": {
+    "overall_test_accuracy": 0.7194444444444444,
+    "macro_avg_f1": 0.7008421628699236,
+    "weighted_avg_f1": 0.7008421628699236
+  },
+  "calibrated_threshold": 0.52,
+  "last_conv_layer": "Conv_1",
+  "training_metadata": {
+    "date": "2026-10-31 17:01:12",
+    "institution": "ABIT Cuttack / BPUT Odisha",
+    "developers": [
+      "Rahul Prasad Das",
+      "Purnachandra Swain",
+      "Rohit Kumar Thakur",
+      "Ritik Kumar Swain"
+    ],
+    "guide": "Prof. Rajesh Kumar Sahoo",
+    "dataset_source": "Kaggle Brain Tumor MRI Dataset (7,023 scans)",
+    "training_samples": 5040,
+    "validation_samples": 1080,
+    "test_samples": 1080,
+    "hardware": "Google Colab Tesla T4 GPU (Free Tier)"
+  },
+  "clinical_safety_notice": "SCREENING AID ONLY. Not intended as a definitive neuro-surgical diagnostic tool. Intracranial findings require immediate corroboration with high-resolution diagnostic 3T MRI, biopsy histopathology, and evaluation by a board-certified neurosurgeon or neuroradiologist."
+}
