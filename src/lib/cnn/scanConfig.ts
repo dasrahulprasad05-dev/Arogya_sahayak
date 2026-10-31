@@ -57,9 +57,9 @@ export const scanToolsConfig: Record<string, ScanTool> = {
     description: 'Screen thoracic CT scans for pulmonary nodule spiculation, calcification, and malignancy risks.',
     category: 'pulmonology',
     inputModality: 'Thoracic CT Scans (LDCT)',
-    labels: ['Benign Parenchyma / Clear', 'Suspicious Pulmonary Nodule', 'Non-Small Cell Carcinoma (NSCLC)', 'Small Cell Malignancy Risk'],
+    labels: ['Benign Parenchyma / Clear', 'Adenocarcinoma (NSCLC)', 'Large Cell Neuroendocrine Carcinoma', 'Squamous Cell Carcinoma'],
     guidance: 'Upload high-resolution thoracic axial CT slice with standard lung window setting (-600 to -700 HU).',
-    modelArchitecture: 'EfficientNet-B1 / MobileNetV2 CT Classifier',
+    modelArchitecture: 'MobileNetV2 Thoracic CT Classifier',
     calibratedThreshold: 0.52
   },
 

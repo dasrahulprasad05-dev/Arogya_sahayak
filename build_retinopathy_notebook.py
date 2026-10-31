@@ -748,3 +748,4 @@ with open(output_path, "w", encoding="utf-8") as f:
 
 print(f"Successfully generated: {output_path}")
 print(f"Total cells: {len(cells)}")
+

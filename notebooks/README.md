@@ -8,14 +8,14 @@ Welcome to the **Arogya Sahayak AI Diagnostic Lab**. This directory contains pro
 
 | # | Scanner ID | Condition | Modality | Notebook File | Public Dataset | Status |
 |---|---|---|---|---|---|---|
-| **01** | `pneumonia` | **Pneumonia Detection** | Chest X-ray (PA/AP) | [`01_train_pneumonia_scanner.ipynb`](./01_train_pneumonia_scanner.ipynb) | Kaggle `paultimothymooney/chest-xray-pneumonia` | 🟢 **Ready to Run** |
-| **02** | `brain_tumor` | **Brain Tumor Grade Classification** | Brain MRI (T1-CE / FLAIR) | [`02_train_brain_tumor_scanner.ipynb`](./02_train_brain_tumor_scanner.ipynb) | Kaggle `masoudnickparvar/brain-tumor-mri-dataset` | 🟢 **Ready to Run** |
-| **03** | `alzheimer` | **Alzheimer's Dementia Staging** | Brain MRI (T1-weighted) | [`03_train_alzheimer_scanner.ipynb`](./03_train_alzheimer_scanner.ipynb) | Kaggle `tourist55/alzheimers-dataset-4-class-of-images` | 🟢 **Ready to Run** |
-| **04** | `tuberculosis` | Tuberculosis Detection | Chest X-ray (PA View) | `04_train_tuberculosis_scanner.ipynb` | Kaggle `tawsifurrahman/tuberculosis-tb-chest-xray-dataset` | 🟡 In Prep |
-| **05** | `bone_fracture` | Bone Fracture Detection | Musculoskeletal Radiograph | `05_train_bone_fracture_scanner.ipynb` | Kaggle `bmadushanirodrigo/fracture-multi-region-x-ray-data` | 🟡 In Prep |
-| **06** | `retinopathy` | Diabetic Retinopathy Detection | Retinal Fundus Image | `06_train_retinopathy_scanner.ipynb` | Kaggle `sovitrath/diabetic-retinopathy-224x224-gaussian-filtered` | 🟡 In Prep |
-| **07** | `skin_disease` | Skin Disease Classification | Dermoscopy / Dermal Photos | `07_train_skin_disease_scanner.ipynb` | Kaggle `kmader/skin-cancer-mnist-ham10000` | 🟡 In Prep |
-| **08** | `lung_cancer` | Lung Cancer CT Screening | Thoracic CT Scans | `08_train_lung_cancer_scanner.ipynb` | Kaggle `mohamedhanyyy/chest-ctscan-images` | 🟡 In Prep |
+| **01** | `pneumonia` | **Pneumonia Detection** | Chest X-ray (PA/AP) | [`01_train_pneumonia_scanner.ipynb`](./01_train_pneumonia_scanner.ipynb) | Kaggle `paultimothymooney/chest-xray-pneumonia` | 🟢 **Live & Deployed** |
+| **02** | `brain_tumor` | **Brain Tumor Grade Classification** | Brain MRI (T1-CE / FLAIR) | [`02_train_brain_tumor_scanner.ipynb`](./02_train_brain_tumor_scanner.ipynb) | Kaggle `masoudnickparvar/brain-tumor-mri-dataset` | 🟢 **Live & Deployed** |
+| **03** | `alzheimer` | **Alzheimer's Dementia Staging** | Brain MRI (T1-weighted) | [`03_train_alzheimer_scanner.ipynb`](./03_train_alzheimer_scanner.ipynb) | Kaggle `uraninjo/augmented-alzheimer-mri-dataset` | 🟢 **Live & Deployed** |
+| **04** | `retinopathy` | **Diabetic Retinopathy Detection** | Retinal Fundus Image | [`04_train_retinopathy_scanner.ipynb`](./04_train_retinopathy_scanner.ipynb) | Kaggle `sovitrath/diabetic-retinopathy-224x224-gaussian-filtered` | 🟢 **Live & Deployed** |
+| **05** | `tuberculosis` | **Tuberculosis Detection** | Chest X-ray (PA View) | [`05_train_tuberculosis_scanner.ipynb`](./05_train_tuberculosis_scanner.ipynb) | Kaggle `tawsifurrahman/tuberculosis-tb-chest-xray-dataset` | 🟢 **Ready to Run** |
+| **06** | `lung_cancer` | **Lung Cancer CT Screening** | Thoracic CT Scans | [`06_train_lung_cancer_scanner.ipynb`](./06_train_lung_cancer_scanner.ipynb) | Kaggle `mohamedhanyyy/chest-ctscan-images` | 🟢 **Ready to Run** |
+| **07** | `bone_fracture` | Bone Fracture Detection | Musculoskeletal Radiograph | `07_train_bone_fracture_scanner.ipynb` | Kaggle `bmadushanirodrigo/fracture-multi-region-x-ray-data` | 🟡 In Prep |
+| **08** | `skin_disease` | Skin Disease Classification | Dermoscopy / Dermal Photos | `08_train_skin_disease_scanner.ipynb` | Kaggle `kmader/skin-cancer-mnist-ham10000` | 🟡 In Prep |
 | **09** | `dry_eye` | Dry Eye Severity Prediction | Eye & Tear Film Surface | `09_train_dry_eye_scanner.ipynb` | Curated Ocular Surface Cohort | 🟡 In Prep |
 | **10** | `keratoconus` | Keratoconus Early Detection | Corneal Topography Maps | `10_train_keratoconus_scanner.ipynb` | Corneal Ectasia Topographic Dataset | 🟡 In Prep |
 
