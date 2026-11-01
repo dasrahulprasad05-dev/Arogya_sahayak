@@ -430,14 +430,21 @@ JSON Schema:
         const data = await response.json();
         const rawContent = data.choices?.[0]?.message?.content || '';
         
-        // Strip markdown blocks if any
-        const cleaned = rawContent
-          .replace(/^```json\s*/i, '')
-          .replace(/^```\s*/i, '')
-          .replace(/\s*```$/i, '')
-          .trim();
-
-        const parsed = JSON.parse(cleaned);
+        // Robust JSON extraction with regex fallback for LLM output
+        let parsed: any = null;
+        try {
+          const cleaned = rawContent
+            .replace(/^```json\s*/i, '')
+            .replace(/^```\s*/i, '')
+            .replace(/\s*```$/i, '')
+            .trim();
+          parsed = JSON.parse(cleaned);
+        } catch {
+          const jsonMatch = rawContent.match(/\{[\s\S]*\}/);
+          if (jsonMatch) {
+            parsed = JSON.parse(jsonMatch[0]);
+          }
+        }
         if (parsed.content && Array.isArray(parsed.recommendations)) {
           return {
             content: parsed.content,
