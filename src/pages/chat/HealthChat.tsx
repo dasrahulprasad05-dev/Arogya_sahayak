@@ -5,6 +5,7 @@ import { useLanguage } from '../../context/LanguageContext';
 import type { Language } from '../../context/LanguageContext';
 import { getClinicalAssessment } from '../../services/clinicalAIService';
 import type { StructuredResponse } from '../../services/clinicalAIService';
+import { normalizeSpecialtyId } from '../../lib/types/doctor';
 import jsPDF from 'jspdf';
 import { sanitizePdfText } from '../../utils/scanPdfReport';
 import {
@@ -646,12 +647,17 @@ const HealthChat: React.FC = () => {
 
                           {/* Pre-fill Doctor Booking */}
                           <button
-                            onClick={() => navigate('/doctors', { 
-                              state: { 
-                                specialist: msg.structured?.specialist, 
-                                triageSummary: msg.structured?.content 
-                              } 
-                            })}
+                            onClick={() => {
+                              const rawSpecialist = msg.structured?.specialist || '';
+                              const specialtyId = normalizeSpecialtyId(rawSpecialist);
+                              navigate(`/doctors${specialtyId ? `?specialty=${specialtyId}` : ''}`, { 
+                                state: { 
+                                  prefillSpecialist: rawSpecialist || specialtyId,
+                                  specialist: rawSpecialist || specialtyId, 
+                                  triageSummary: msg.structured?.content 
+                                } 
+                              });
+                            }}
                             className="bg-gradient-to-r from-primary to-violet-600 hover:from-primary/90 hover:to-violet-600/90 text-white font-bold py-2 px-3 rounded-xl flex items-center gap-1.5 text-[11px] shadow-md shadow-primary/20 transition-all outline-none focus:outline-none"
                           >
                             <Stethoscope className="w-3.5 h-3.5" />

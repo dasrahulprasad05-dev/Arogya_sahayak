@@ -3,6 +3,7 @@ import { useSearchParams, useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { supabase } from '../../integrations/supabase/client';
 import type { Doctor } from '../../lib/types/doctor';
+import { normalizeSpecialtyId } from '../../lib/types/doctor';
 import DoctorCard from '../../components/doctors/DoctorCard';
 import {
   Search, Stethoscope, SlidersHorizontal,
@@ -39,24 +40,24 @@ const DoctorDirectory: React.FC = () => {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedSpecialty, setSelectedSpecialty] = useState<string>(searchParams.get('specialty') || '');
+  const [selectedSpecialty, setSelectedSpecialty] = useState<string>(() => {
+    const raw = searchParams.get('specialty') || searchParams.get('specialist') || location.state?.prefillSpecialist || location.state?.specialist;
+    return normalizeSpecialtyId(raw);
+  });
   const [sortBy, setSortBy] = useState<SortOption>('rating');
   const [showFilters, setShowFilters] = useState(false);
 
-  // Check navigation state for AI chatbot referral
-  const prefillSpecialist = location.state?.prefillSpecialist;
+  // Check navigation state or referral label
+  const referralSpecialist = location.state?.prefillSpecialist || location.state?.specialist;
 
+  // Keep selectedSpecialty in sync if query parameters or location state change
   useEffect(() => {
-    if (prefillSpecialist) {
-      const match = SPECIALTIES.find(s => 
-        prefillSpecialist.toLowerCase().includes(s.id) || 
-        prefillSpecialist.toLowerCase().includes(s.name.toLowerCase())
-      );
-      if (match) {
-        setSelectedSpecialty(match.id);
-      }
+    const raw = searchParams.get('specialty') || searchParams.get('specialist') || location.state?.prefillSpecialist || location.state?.specialist;
+    const normalized = normalizeSpecialtyId(raw);
+    if (normalized && normalized !== selectedSpecialty) {
+      setSelectedSpecialty(normalized);
     }
-  }, [prefillSpecialist]);
+  }, [searchParams, location.state]);
 
   useEffect(() => {
     const fetchDoctors = async () => {
@@ -86,20 +87,15 @@ const DoctorDirectory: React.FC = () => {
 
   // Update URL params when specialty changes
   useEffect(() => {
+    const current = searchParams.get('specialty');
     if (selectedSpecialty) {
-      setSearchParams({ specialty: selectedSpecialty });
-    } else {
-      setSearchParams({});
+      if (current !== selectedSpecialty) {
+        setSearchParams({ specialty: selectedSpecialty }, { replace: true });
+      }
+    } else if (current) {
+      setSearchParams({}, { replace: true });
     }
-  }, [selectedSpecialty, setSearchParams]);
-
-  // Check URL for specialty param on mount (from predictor redirect)
-  useEffect(() => {
-    const sp = searchParams.get('specialty');
-    if (sp && sp !== selectedSpecialty) {
-      setSelectedSpecialty(sp);
-    }
-  }, []);
+  }, [selectedSpecialty, searchParams, setSearchParams]);
 
   const filteredAndSorted = useMemo(() => {
     let result = [...doctors];
@@ -158,8 +154,8 @@ const DoctorDirectory: React.FC = () => {
         </button>
       </div>
 
-      {/* AI Triage Referral Banner */}
-      {prefillSpecialist && (
+      {/* AI Triage / Specialist Referral Banner */}
+      {selectedSpecialty && (
         <motion.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
@@ -168,14 +164,14 @@ const DoctorDirectory: React.FC = () => {
           <div className="flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-primary shrink-0 animate-pulse" />
             <span>
-              <strong>AI Triage Referral:</strong> Filtered for <strong>{prefillSpecialist}</strong> based on your consultation.
+              <strong>AI Referral Filter:</strong> Showing verified <strong>{referralSpecialist || SPECIALTIES.find(s => s.id === selectedSpecialty)?.name || selectedSpecialty}</strong> doctors based on your health assessment.
             </span>
           </div>
           <button
             onClick={() => setSelectedSpecialty('')}
-            className="text-muted-foreground hover:text-foreground text-[11px] underline shrink-0"
+            className="text-muted-foreground hover:text-foreground text-[11px] underline shrink-0 font-medium cursor-pointer"
           >
-            Clear Filter
+            Clear Filter (Show All)
           </button>
         </motion.div>
       )}

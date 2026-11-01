@@ -140,3 +140,112 @@ export const PREDICTOR_SPECIALTY_MAP: Record<string, string[]> = {
 // Day names for time slots
 export const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 export const DAY_NAMES_SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+// Helper to normalize any specialist string (from AI chat, triage, or clinical AI)
+// to a valid doctor_specialties id
+export const normalizeSpecialtyId = (input?: string | null): string => {
+  if (!input || typeof input !== 'string') return '';
+  const clean = input.toLowerCase().trim().replace(/[-_\s]+/g, ' ');
+
+  // Exact ID match first
+  const validIds = [
+    'cardiologist', 'diabetologist', 'nephrologist', 'hepatologist',
+    'hematologist', 'endocrinologist', 'oncologist', 'neurologist',
+    'pulmonologist', 'dermatologist', 'gynecologist', 'psychiatrist',
+    'orthopedic', 'general_physician', 'pediatrician', 'ophthalmologist',
+    'dentist', 'ent'
+  ];
+  if (validIds.includes(clean)) return clean;
+
+  // Eye / Vision
+  if (clean.includes('ophthal') || clean.includes('opthal') || clean.includes('optho') || clean.includes('eye') || clean.includes('retin') || clean.includes('vision') || clean.includes('cataract')) {
+    return 'ophthalmologist';
+  }
+
+  // Heart
+  if (clean.includes('cardio') || clean.includes('heart') || clean.includes('ecg')) {
+    return 'cardiologist';
+  }
+
+  // Kidney
+  if (clean.includes('nephro') || clean.includes('kidney') || clean.includes('renal')) {
+    return 'nephrologist';
+  }
+
+  // Liver / Gastro
+  if (clean.includes('hepato') || clean.includes('gastro') || clean.includes('liver') || clean.includes('digest') || clean.includes('stomach') || clean.includes('jaundice')) {
+    return 'hepatologist';
+  }
+
+  // Lungs / Respiratory
+  if (clean.includes('pulmon') || clean.includes('lung') || clean.includes('respirat') || clean.includes('chest') || clean.includes('asthma') || clean.includes('cough') || clean.includes('tuberculosis')) {
+    return 'pulmonologist';
+  }
+
+  // Diabetes / Sugar
+  if (clean.includes('diabet') || clean.includes('sugar')) {
+    return 'diabetologist';
+  }
+
+  // Hormones / Thyroid / Endocrine
+  if (clean.includes('endocrin') || clean.includes('thyroid') || clean.includes('hormon')) {
+    return 'endocrinologist';
+  }
+
+  // Women / Pregnancy / Gynecologist
+  if (clean.includes('gyne') || clean.includes('obgyn') || clean.includes('obstetric') || clean.includes('pregnan') || clean.includes('pcos') || clean.includes('women')) {
+    return 'gynecologist';
+  }
+
+  // Brain / Neuro
+  if (clean.includes('neuro') || clean.includes('brain') || clean.includes('stroke')) {
+    return 'neurologist';
+  }
+
+  // Skin
+  if (clean.includes('derma') || clean.includes('skin') || clean.includes('fungal')) {
+    return 'dermatologist';
+  }
+
+  // Bone / Ortho
+  if (clean.includes('ortho') || clean.includes('bone') || clean.includes('joint') || clean.includes('fracture')) {
+    return 'orthopedic';
+  }
+
+  // Mental Health
+  if (clean.includes('psych') || clean.includes('mental') || clean.includes('depress') || clean.includes('anxiety')) {
+    return 'psychiatrist';
+  }
+
+  // Dental / Teeth
+  if (clean.includes('dent') || clean.includes('oral') || clean.includes('teeth') || clean.includes('tooth')) {
+    return 'dentist';
+  }
+
+  // Pediatric / Children
+  if (clean.includes('pediat') || clean.includes('child') || clean.includes('baby') || clean.includes('infant')) {
+    return 'pediatrician';
+  }
+
+  // Cancer / Oncology
+  if (clean.includes('onco') || clean.includes('cancer') || clean.includes('tumor')) {
+    return 'oncologist';
+  }
+
+  // Blood / Hematology
+  if (clean.includes('hemat') || clean.includes('blood') || clean.includes('anemia')) {
+    return 'hematologist';
+  }
+
+  // ENT
+  if (clean.includes('ent') || clean.includes('ear') || clean.includes('throat')) {
+    return 'ent';
+  }
+
+  // General Physician
+  if (clean.includes('physician') || clean.includes('general') || clean.includes('primary') || clean.includes('mbbs')) {
+    return 'general_physician';
+  }
+
+  return '';
+};
