@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
-import { X, Mail, Sparkles, ExternalLink, Key } from 'lucide-react';
+import { X, Mail, Sparkles, ExternalLink } from 'lucide-react';
 
 interface WelcomeCardsProps {
   // Optional callback when completely dismissed
@@ -194,25 +194,7 @@ export const WelcomeCards: React.FC<WelcomeCardsProps> = ({ onDismiss }) => {
         )}
       </AnimatePresence>
 
-      {/* Floating launcher button so users can re-open credentials card anytime */}
-      {!isOpen && (
-        <motion.button
-          initial={{ opacity: 0, scale: 0.8, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => setIsOpen(true)}
-          className="fixed bottom-20 left-5 sm:bottom-6 sm:left-6 z-40 flex items-center gap-2 py-2.5 px-4 rounded-full bg-gradient-to-r from-slate-900 to-slate-800 text-white border border-emerald-500/40 shadow-xl shadow-emerald-500/10 hover:border-emerald-500 transition-all duration-200"
-          title="Account Credentials & Developer Access"
-        >
-          <span className="relative flex h-2.5 w-2.5">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
-          </span>
-          <Key className="w-4 h-4 text-emerald-400" />
-          <span className="text-xs font-semibold hidden sm:inline">Account Credentials</span>
-        </motion.button>
-      )}
+
     </>
   );
 };
