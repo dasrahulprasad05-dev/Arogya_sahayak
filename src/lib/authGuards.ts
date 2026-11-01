@@ -24,3 +24,4 @@ export const ADMIN_DOCTOR_LOGIN_ERROR =
 
 export const ADMIN_REGISTER_ERROR = 
   'This email is reserved for Administrator access and cannot be registered as a patient or doctor.';
+
