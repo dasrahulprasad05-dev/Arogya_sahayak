@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../../integrations/supabase/client';
+import { isAdminEmail, ADMIN_DOCTOR_LOGIN_ERROR } from '../../lib/authGuards';
 import { Stethoscope, Mail, Lock, ShieldAlert, ArrowRight, Eye, EyeOff } from 'lucide-react';
 
 const DoctorLogin: React.FC = () => {
@@ -16,9 +17,28 @@ const DoctorLogin: React.FC = () => {
     setLoading(true);
     setErrorMsg(null);
 
+    // Strict restriction: Prevent Administrator accounts from logging in through Doctor portal
+    if (isAdminEmail(email)) {
+      setErrorMsg(ADMIN_DOCTOR_LOGIN_ERROR);
+      setLoading(false);
+      return;
+    }
+
     try {
       const { data: authData, error: authError } = await supabase.auth.signInWithPassword({ email, password });
       if (authError) throw authError;
+
+      // Check if user is an admin — reject admin login on doctor portal
+      const { data: admin } = await supabase
+        .from('admin_users')
+        .select('user_id')
+        .eq('user_id', authData.user.id)
+        .single();
+
+      if (admin || isAdminEmail(authData.user.email)) {
+        await supabase.auth.signOut();
+        throw new Error(ADMIN_DOCTOR_LOGIN_ERROR);
+      }
 
       // Check if user is a registered doctor
       const { data: doctor, error: docError } = await supabase

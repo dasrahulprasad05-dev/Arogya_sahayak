@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '../../integrations/supabase/client';
 import { useAuth } from '../../context/AuthContext';
+import { isAdminEmail } from '../../lib/authGuards';
 import type { Doctor } from '../../lib/types/doctor';
 import { DAY_NAMES_SHORT } from '../../lib/types/doctor';
 import { formatTime12h } from '../../utils/formatTime';
@@ -49,7 +50,28 @@ const AdminDashboard: React.FC = () => {
     }
   }, []);
 
-  useEffect(() => { fetchDoctors(); }, [fetchDoctors]);
+  useEffect(() => {
+    const verifyAdmin = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        navigate('/admin-login');
+        return;
+      }
+      const { data: admin } = await supabase
+        .from('admin_users')
+        .select('user_id')
+        .eq('user_id', user.id)
+        .single();
+
+      if (!admin && !isAdminEmail(user.email)) {
+        await supabase.auth.signOut();
+        navigate('/admin-login');
+        return;
+      }
+      fetchDoctors();
+    };
+    verifyAdmin();
+  }, [fetchDoctors, navigate]);
 
   const handleAction = async (doctorId: string, action: 'approved' | 'rejected') => {
     setActionLoading(doctorId);

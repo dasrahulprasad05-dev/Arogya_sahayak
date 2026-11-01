@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { useTheme } from '../../context/ThemeContext';
 import { supabase } from '../../integrations/supabase/client';
+import { isAdminEmail, ADMIN_REGISTER_ERROR } from '../../lib/authGuards';
 import { sendWelcomeEmail } from '../../lib/emailService';
 import { Activity, Mail, Lock, User as UserIcon, ShieldAlert, ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { PasswordStrengthIndicator } from '../../components/auth/PasswordStrengthIndicator';
@@ -35,6 +36,11 @@ const Register: React.FC = () => {
     e.preventDefault();
     if (!isPasswordValid) {
       setErrorMsg('Please ensure your password meets all requirements.');
+      return;
+    }
+
+    if (isAdminEmail(email)) {
+      setErrorMsg(ADMIN_REGISTER_ERROR);
       return;
     }
     

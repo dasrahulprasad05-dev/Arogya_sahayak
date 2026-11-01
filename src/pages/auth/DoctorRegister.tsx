@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../../integrations/supabase/client';
+import { isAdminEmail, ADMIN_REGISTER_ERROR } from '../../lib/authGuards';
 import { INDIAN_STATES, getDistrictsForState } from '../../data/indianLocations';
 import { DAY_NAMES } from '../../lib/types/doctor';
 import { formatTime12h } from '../../utils/formatTime';
@@ -84,6 +85,10 @@ const DoctorRegister: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isAdminEmail(email)) {
+      setErrorMsg(ADMIN_REGISTER_ERROR);
+      return;
+    }
     setLoading(true);
     setErrorMsg(null);
 

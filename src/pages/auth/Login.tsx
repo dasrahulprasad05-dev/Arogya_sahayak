@@ -3,10 +3,11 @@ import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { supabase } from '../../integrations/supabase/client';
+import { isAdminEmail, ADMIN_PATIENT_LOGIN_ERROR } from '../../lib/authGuards';
 import { Activity, Mail, Lock, ShieldAlert, ArrowRight, Eye, EyeOff } from 'lucide-react';
 
 const Login: React.FC = () => {
-  const { toggleDevBypass, isAuthenticated } = useAuth();
+  const { toggleDevBypass, isAuthenticated, user } = useAuth();
   const { t } = useLanguage();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -17,17 +18,28 @@ const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  // If already authenticated, redirect to dashboard
+  // If already authenticated, redirect to dashboard (block admin users from patient portal)
   React.useEffect(() => {
     if (isAuthenticated) {
+      if (isAdminEmail(user?.email)) {
+        supabase.auth.signOut();
+        return;
+      }
       navigate(redirectTo);
     }
-  }, [isAuthenticated, navigate, redirectTo]);
+  }, [isAuthenticated, user, navigate, redirectTo]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setErrorMsg(null);
+
+    // Strict restriction: Prevent Administrator accounts from logging in through Patient portal
+    if (isAdminEmail(email)) {
+      setErrorMsg(ADMIN_PATIENT_LOGIN_ERROR);
+      setLoading(false);
+      return;
+    }
 
     const maxRetries = 3;
     const baseDelay = 1000;
@@ -52,16 +64,16 @@ const Login: React.FC = () => {
         // Check if the user is a registered doctor or admin — redirect them appropriately
         const userId = authData.user?.id;
         if (userId) {
-          // Check admin first (admin takes priority)
+          // Strictly reject Admin users attempting to log in as a Patient
           const { data: admin } = await supabase
             .from('admin_users')
             .select('user_id')
             .eq('user_id', userId)
             .single();
 
-          if (admin) {
-            navigate('/admin');
-            return;
+          if (admin || isAdminEmail(authData.user?.email)) {
+            await supabase.auth.signOut();
+            throw new Error(ADMIN_PATIENT_LOGIN_ERROR);
           }
 
           // Check doctor
