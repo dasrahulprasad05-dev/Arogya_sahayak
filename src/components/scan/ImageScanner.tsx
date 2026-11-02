@@ -111,6 +111,15 @@ const ImageScanner: React.FC<ImageScannerProps> = ({
     reader.readAsDataURL(file);
   };
 
+  const handleLoadSample = (url: string) => {
+    setErrorMsg(null);
+    setQualityReport(null);
+    setActiveHeatmapUrl(null);
+    setShowHeatmapPreview(false);
+    lastInferredSrcRef.current = null;
+    setImageSrc(url);
+  };
+
   const handleRunInference = async () => {
     if (!imageRef.current || !modelReady || !imageSrc) return;
     
@@ -290,13 +299,25 @@ const ImageScanner: React.FC<ImageScannerProps> = ({
                   <span className="text-sm font-bold text-foreground block">Upload or Capture Medical Image</span>
                   <p className="text-[10px] text-muted-foreground mt-1">Accepts clinical photos, radiographs, or Dermatoscope scans (PNG/JPG)</p>
                 </div>
-                <button
-                  onClick={() => fileInputRef.current?.click()}
-                  type="button"
-                  className={`text-white font-bold py-2.5 px-6 rounded-xl text-xs transition-all bg-gradient-to-r ${gradientClass} ${glowClass} hover:scale-[1.02] transform touch-target shadow-md`}
-                >
-                  Select Patient Scan Image
-                </button>
+                <div className="flex flex-wrap items-center justify-center gap-2.5">
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    type="button"
+                    className={`text-white font-bold py-2.5 px-6 rounded-xl text-xs transition-all bg-gradient-to-r ${gradientClass} ${glowClass} hover:scale-[1.02] transform touch-target shadow-md`}
+                  >
+                    Select Patient Scan Image
+                  </button>
+                  {toolId === 'retinopathy' && (
+                    <button
+                      onClick={() => handleLoadSample('/samples/diabetic_retinopathy_sample.jpg')}
+                      type="button"
+                      className="text-xs font-semibold px-4 py-2.5 rounded-xl border border-amber-500/40 bg-amber-500/10 hover:bg-amber-500/20 text-amber-500 transition-all flex items-center gap-1.5 shadow-sm"
+                    >
+                      <Sparkles className="w-3.5 h-3.5" />
+                      <span>Use Demo Fundus Image</span>
+                    </button>
+                  )}
+                </div>
                 <input 
                   ref={fileInputRef}
                   type="file" 
